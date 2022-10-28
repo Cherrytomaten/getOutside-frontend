@@ -1,0 +1,50 @@
+{
+  "name": "nextjs-project-skeleton",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": "16.x",
+    "npm": "please-use-yarn",
+    "yarn": "1.x"
+  },
+  "browserslist": [
+    "chrome 61",
+    "edge 16",
+    "firefox 60",
+    "opera 48",
+    "safari 11"
+  ],
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}":[
+      "yarn prettier --write",
+      "yarn eslint --fix"
+    ]
+  },
+  "dependencies": {
+    "next": "12.3.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@aacn_org/eslint-plugin-tailwind-classname-order": "^0.2.7",
+    "@types/node": "18.11.0",
+    "@types/react": "18.0.21",
+    "@types/react-dom": "18.0.6",
+    "autoprefixer": "^10.4.12",
+    "eslint": "^8.25.0",
+    "eslint-config-next": "12.3.1",
+    "eslint-config-prettier": "^8.5.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "postcss": "^8.4.18",
+    "prettier": "2.7.1",
+    "tailwindcss": "^3.1.8",
+    "typescript": "4.8.4"
+  }
+}
