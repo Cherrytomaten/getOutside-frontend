@@ -13,8 +13,14 @@ Please follow a clean pull request structure.
 There must be a title in this format: `Feature|Bugfix|Hotfix|Release: Title`","- If applicable, add your issue ticket (e.g. `A-100`) with a slash in the title (Feature/A-100: Title)","- Use `Feature` for enhancements or new functionality","- Use `Bugfix` only if you fixed a known bug","- Use `Hotfix` for problems introduced by previous merges","- Use proper capitalization in your title"]'
 Please also always provide a short description, explaining your changes.
 An example for a good pr title would be: 'Feature: Setup Server connection'
+When your pull request has the desired structure, the pr will automatically be labeled with the `Good structure` tag. Requests without this label
+will be ignored until a proper format is provided.
 
 ## Pull request approval
 After your request, atleast one or more members have to check out your code and approve it. If a developer finds an error or has some sort of
 misunderstanding, they can comment on certain code passages and instead of approving the pr, the author will be requested to make changes to his code
 before the pr gets approved.
+
+## Merge approved request
+After a request has been approved, it's always the 'honor' of the original author to merge the pr into the branch. Please use 'squash and merge' for
+your merge. The default title can be kept as such but please remove the optional description.
