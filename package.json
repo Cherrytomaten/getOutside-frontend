@@ -15,6 +15,7 @@
     "safari 11"
   ],
   "scripts": {
+    "install:frozen": "yarn install --frozen-lockfile",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
