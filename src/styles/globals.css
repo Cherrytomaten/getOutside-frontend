@@ -1,3 +1,80 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    @font-face {
+        font-family: 'Lato';
+        src: url('../../public/fonts/Lato-thin.ttf');
+        font-weight: 100;
+    }
+
+    @font-face {
+        font-family: 'Lato';
+        src: url('../../public/fonts/Lato-thinItalic.ttf');
+        font-weight: 100;
+        font-style: italic;
+    }
+
+    @font-face {
+        font-family: 'Lato';
+        src: url('../../public/fonts/Lato-Light.ttf');
+        font-weight: 300;
+    }
+
+    @font-face {
+        font-family: 'Lato';
+        src: url('../../public/fonts/Lato-LightItalic.ttf');
+        font-weight: 300;
+        font-style: italic;
+    }
+
+    @font-face {
+        font-family: 'Lato';
+        src: url('../../public/fonts/Lato-regular.ttf');
+        font-weight: 400;
+    }
+
+    @font-face {
+        font-family: 'Lato';
+        src: url('../../public/fonts/Lato-italic.ttf');
+        font-weight: 400;
+        font-style: italic;
+    }
+
+    @font-face {
+        font-family: 'Lato';
+        src: url('../../public/fonts/Lato-Bold.ttf');
+        font-weight: 700;
+    }
+
+    @font-face {
+        font-family: 'Lato';
+        src: url('../../public/fonts/Lato-BoldItalic.ttf');
+        font-weight: 700;
+        font-style: italic;
+    }
+
+    @font-face {
+        font-family: 'Lato';
+        src: url('../../public/fonts/Lato-Black.ttf');
+        font-weight: 900;
+    }
+
+    @font-face {
+        font-family: 'Lato';
+        src: url('../../public/fonts/Lato-Black.ttf');
+        font-weight: 900;
+        font-style: italic;
+    }
+
+    :root {
+        font-size: 16px;
+        font-family: 'Lato', sans-serif;
+    }
+
+    html, body {
+        scroll-behavior: smooth;
+        @apply bg-dark-sea;
+    }
+}

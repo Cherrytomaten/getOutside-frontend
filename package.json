@@ -21,7 +21,7 @@
     "lint": "next lint"
   },
   "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}":[
+    "**/*.{js,jsx,ts,tsx}": [
       "yarn prettier --write",
       "yarn eslint --fix"
     ]
