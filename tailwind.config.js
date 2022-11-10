@@ -7,7 +7,18 @@ module.exports = {
     './src/components/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    fontFamily: {
+      lato: ['Lato', 'sans-serif'],
+    },
+    extend: {
+      colors: {
+        'dark-sea': '#22343C',
+        'bright-seaweed': '#3ED598',
+        'hovered-seaweed': '#82e7bd',
+        'dark-seaweed': '#005C53',
+        'orange-sun': '#FF5C00'
+      }
+    },
   },
   plugins: [],
 };
