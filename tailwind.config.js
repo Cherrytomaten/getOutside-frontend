@@ -16,8 +16,10 @@ module.exports = {
         'bright-seaweed': '#3ED598',
         'hovered-seaweed': '#82e7bd',
         'dark-seaweed': '#005C53',
-        'orange-sun': '#FF5C00'
-      }
+        'orange-sun': '#FF5C00',
+        'default-font': '#f0f0f0',
+        'star-color': '#ffe000',
+      },
     },
   },
   plugins: [],
