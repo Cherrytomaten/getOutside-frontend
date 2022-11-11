@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import Logo from '@/resources/svg/Logo'
+import { ShowPasswordToggle } from "@/components/ShowPasswordToggle";
 
 type SignUpFormProps = {
     title: string,
@@ -16,7 +17,9 @@ function Signup() {
 
     function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        validateForm();
+        if (validateForm()) {
+            
+        }
     }
 
     function validateForm(): boolean {
@@ -57,7 +60,7 @@ function Signup() {
             validator = false;
         }
         // one uppercase, one digit, three lowercase, length of atleast 8
-        else if (!/^(?=.*[A-Z])(?=.*[0-9]).{8}$/.test(formData.password)) {
+        else if (!/^(?=.*[A-Z])(?=.*[0-9]).{8,}$/.test(formData.password)) {
             data = {...data, password: 'Das gewählte Passwort ist zu schwach!\n Es sollte mindestens ein Großbuchstaben, eine Zahl und eine mindestlänge von 8 Zeichen beinhalten.'};
             validator = false;
         } else {
@@ -90,7 +93,7 @@ function Signup() {
             if (preFilledPassword !== '') { setFormData(f => ({...f, password: preFilledPassword})) }
 
             const preFilledEmail = (document.getElementById('signup-mail') as HTMLInputElement)?.value;
-            //if (preFilledEmail !== '') { setFormData({...formData, email: preFilledEmail}) }
+            if (preFilledEmail !== '') { setFormData(f => ({...f, email: preFilledEmail})) }
         }
     }, []);
 
@@ -106,7 +109,7 @@ function Signup() {
                             defaultValue="preselect"
                             className={`cursor-pointer ${formErrors.title !== '' ? 'border-2 border-red-600' : ''}`}
                             onChange={(e) => setFormData({...formData, title: e.target.value})}
-                            onClick={() => setFormErrors({...formData, title: ''})}
+                            onClick={() => setFormErrors({...formErrors, title: ''})}
                     >
                         <option value="preselect" disabled hidden>Bitte auswählen</option>
                         <option value="Herr">Herr</option>
@@ -120,7 +123,7 @@ function Signup() {
                     <input type="text"
                            className={`${formErrors.fname !== '' ? 'border-2 border-red-600' : ''}`}
                            onChange={(e) => setFormData({...formData, fname: e.target.value})}
-                           onClick={() => setFormErrors({...formData, fname: ''})}
+                           onClick={() => setFormErrors({...formErrors, fname: ''})}
                            placeholder="Vorname"
                            id="signup-fname" />
                     { formErrors.fname !== '' && <p className="text-red-600">{formErrors.fname}</p> }
@@ -130,7 +133,7 @@ function Signup() {
                     <input type="text"
                            className={`${formErrors.lname !== '' ? 'border-2 border-red-600' : ''}`}
                            onChange={(e) => setFormData({...formData, lname: e.target.value})}
-                           onClick={() => setFormErrors({...formData, lname: ''})}
+                           onClick={() => setFormErrors({...formErrors, lname: ''})}
                            placeholder="Nachname"
                            id="signup-lname" />
                     { formErrors.lname !== '' && <p className="text-red-600">{formErrors.lname}</p> }
@@ -140,7 +143,7 @@ function Signup() {
                     <input type="email"
                            className={`${formErrors.email !== '' ? 'border-2 border-red-600' : ''}`}
                            onChange={(e) => setFormData({...formData, email: e.target.value})}
-                           onClick={() => setFormErrors({...formData, email: ''})}
+                           onClick={() => setFormErrors({...formErrors, email: ''})}
                            placeholder="Email"
                            id="signup-mail" />
                     { formErrors.email !== '' && <p className="text-red-600">{formErrors.email}</p> }
@@ -150,7 +153,7 @@ function Signup() {
                     <input type="password"
                            className={`${formErrors.password !== '' ? 'border-2 border-red-600' : ''}`}
                            onChange={(e) => setFormData({...formData, password: e.target.value})}
-                           onClick={() => setFormErrors({...formData, password: ''})}
+                           onClick={() => setFormErrors({...formErrors, password: ''})}
                            placeholder="Passwort"
                            id="signup-password" />
                     { formErrors.password !== '' && <p className="text-red-600">{formErrors.password}</p> }
@@ -160,7 +163,7 @@ function Signup() {
                     <input type="password"
                            className={`${formErrors.cpassword !== '' ? 'border-2 border-red-600' : ''}`}
                            onChange={(e) => setFormData({...formData, cpassword: e.target.value})}
-                           onClick={() => setFormErrors({...formData, cpassword: ''})}
+                           onClick={() => setFormErrors({...formErrors, cpassword: ''})}
                            placeholder="Passwort"
                            id="signup-password-confirm" />
                     { formErrors.cpassword !== '' && <p className="text-red-600">{formErrors.cpassword}</p> }
