@@ -5,65 +5,65 @@
 @layer base {
     @font-face {
         font-family: 'Lato';
-        src: url('../../public/fonts/Lato-thin.ttf');
+        src: url('/fonts/Lato-Thin.ttf') format('truetype');
         font-weight: 100;
     }
 
     @font-face {
         font-family: 'Lato';
-        src: url('../../public/fonts/Lato-thinItalic.ttf');
+        src: url('/fonts/Lato-ThinItalic.ttf');
         font-weight: 100;
         font-style: italic;
     }
 
     @font-face {
         font-family: 'Lato';
-        src: url('../../public/fonts/Lato-Light.ttf');
+        src: url('/fonts/Lato-Light.ttf');
         font-weight: 300;
     }
 
     @font-face {
         font-family: 'Lato';
-        src: url('../../public/fonts/Lato-LightItalic.ttf');
+        src: url('/fonts/Lato-LightItalic.ttf');
         font-weight: 300;
         font-style: italic;
     }
 
     @font-face {
         font-family: 'Lato';
-        src: url('../../public/fonts/Lato-regular.ttf');
+        src: url('/fonts/Lato-Regular.ttf');
         font-weight: 400;
     }
 
     @font-face {
         font-family: 'Lato';
-        src: url('../../public/fonts/Lato-italic.ttf');
+        src: url('/fonts/Lato-Italic.ttf');
         font-weight: 400;
         font-style: italic;
     }
 
     @font-face {
         font-family: 'Lato';
-        src: url('../../public/fonts/Lato-Bold.ttf');
+        src: url('/fonts/Lato-Bold.ttf');
         font-weight: 700;
     }
 
     @font-face {
         font-family: 'Lato';
-        src: url('../../public/fonts/Lato-BoldItalic.ttf');
+        src: url('/fonts/Lato-BoldItalic.ttf');
         font-weight: 700;
         font-style: italic;
     }
 
     @font-face {
         font-family: 'Lato';
-        src: url('../../public/fonts/Lato-Black.ttf');
+        src: url('/fonts/Lato-Black.ttf');
         font-weight: 900;
     }
 
     @font-face {
         font-family: 'Lato';
-        src: url('../../public/fonts/Lato-Black.ttf');
+        src: url('/fonts/Lato-Black.ttf');
         font-weight: 900;
         font-style: italic;
     }
