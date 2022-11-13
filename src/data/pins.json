@@ -1,0 +1,367 @@
+{
+  "type": "FeatureCollection",
+  "crs": {
+    "type": "name",
+    "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 960,
+        "FACILITYID": 28014,
+        "NAME": "Bearbrook Skateboard Park",
+        "TYPE": "skatePark",
+        "ADDRESS": "8720 Russell Road",
+        "OPEN": null,
+        "NOTES": "Outdoor",
+        "DESCRIPTION": "Flat asphalt surface, 5 components",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.520008, 13.404954]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 1219,
+        "FACILITYID": 28001,
+        "NAME": "Bob MacQuarrie Skateboard Park (SK8 Extreme Park)",
+        "TYPE": "skatePark",
+        "ADDRESS": "1490 Youville Drive",
+        "OPEN": null,
+        "NOTES": "Outdoor",
+        "DESCRIPTION": "Flat asphalt surface, 10 components, City run learn to skateboard programs, City run skateboard camps in summer",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.480894, 13.355937]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 1157,
+        "FACILITYID": 28002,
+        "NAME": "Walter Baker Basketball Park",
+        "TYPE": "basketball",
+        "ADDRESS": "100 Charlie Rogers Place",
+        "OPEN": null,
+        "NOTES": "Outdoor",
+        "DESCRIPTION": "Concrete bowl, 7,000 sq ft",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.494056, 13.442307]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 9,
+        "FACILITYID": 28006,
+        "NAME": "Roving Baskteball Park Location",
+        "TYPE": "basketball",
+        "ADDRESS": "2785 8th Line Road",
+        "OPEN": null,
+        "NOTES": "Outdoor - Mobile",
+        "DESCRIPTION": "Flat surface, 5 components",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.520057, 13.406163]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 1160,
+        "FACILITYID": 28007,
+        "NAME": "Roving volleyball Location",
+        "TYPE": "volleyball",
+        "ADDRESS": "10 Warner Colpitts Lane",
+        "OPEN": null,
+        "NOTES": "Indoor - Summer",
+        "DESCRIPTION": "Flat surface, 5 components",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.520057, 13.426163]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 1693,
+        "FACILITYID": 28016,
+        "NAME": "Legacy volleball Park",
+        "TYPE": "volleyball",
+        "ADDRESS": "101 Centrepointe Drive",
+        "OPEN": null,
+        "NOTES": "Outdoor",
+        "DESCRIPTION": "Large concrete bowl, many street and vertical components, 17,000 sq ft",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.510057, 13.426163]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 1717,
+        "FACILITYID": 28018,
+        "NAME": "Greenboro Spa",
+        "TYPE": "spa",
+        "ADDRESS": "3142 Conroy Road",
+        "OPEN": null,
+        "NOTES": "Outdoor",
+        "DESCRIPTION": "Flat asphalt surface, 5 components",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.524057, 13.426163]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 137,
+        "FACILITYID": 28019,
+        "NAME": "Bridlewood Spa",
+        "TYPE": "spa",
+        "ADDRESS": "65 Stonehaven Drive",
+        "OPEN": null,
+        "NOTES": "Outdoor",
+        "DESCRIPTION": "Flat asphalt surface, 5 components",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.528057, 13.426163]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 1133,
+        "FACILITYID": 28020,
+        "NAME": "Roving Parkour Park Location",
+        "TYPE": "parkour",
+        "ADDRESS": "100 Clifford Campbell Street",
+        "OPEN": null,
+        "NOTES": "Outdoor",
+        "DESCRIPTION": "Flat surface, 5 components",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.528057, 13.428163]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 657,
+        "FACILITYID": 28000,
+        "NAME": "Wolfsburg parkour  Park Location",
+        "TYPE": "parkour",
+        "ADDRESS": "110 Malvern Drive",
+        "OPEN": null,
+        "NOTES": "Outdoor",
+        "DESCRIPTION": "Flat surface, 5 components",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.485894, 13.355937]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 653,
+        "FACILITYID": 28008,
+        "NAME": "Roving Skateboard Park Location",
+        "ADDRESS": "5660 Osgoode Main Street",
+        "OPEN": null,
+        "NOTES": "Outdoor - Mobile",
+        "DESCRIPTION": "Flat surface, 5 components",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.485894, 13.395937]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 812,
+        "FACILITYID": 35050,
+        "NAME": "Charlie Bowins Handball",
+        "TYPE": "handball",
+        "ADDRESS": "435 Bronson Avenue",
+        "OPEN": null,
+        "NOTES": "Outdoor (Commemoratively named Charlie Bowins Skateboard Park on June 10, 2015)",
+        "DESCRIPTION": "Flat concrete surface, 10 plus components (large half pipe), City run learn to skateboard programs, City run skateboard camps in summer",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.513345, 13.367827]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 2457,
+        "FACILITYID": 35637,
+        "NAME": "Diamond Jubilee Skateboard Park",
+        "TYPE": "skatepark",
+        "ADDRESS": "2810 Findlay Creek Drive",
+        "OPEN": null,
+        "NOTES": "Outdoor",
+        "DESCRIPTION": "Flat asphalt surface, 5 components",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.527015, 13.357242]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 430,
+        "FACILITYID": 28005,
+        "NAME": "Blackburn Skateboard Park",
+        "TYPE": "skatepark",
+        "ADDRESS": "190 Glen Park Drive",
+        "OPEN": null,
+        "NOTES": "Outdoor",
+        "DESCRIPTION": "Flat asphalt surface, 5 components",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.476764, 13.395532]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 989,
+        "FACILITYID": 28017,
+        "NAME": "Goulbourn Spa",
+        "ADDRESS": "1500 Shea Road",
+        "OPEN": null,
+        "NOTES": "Outdoor",
+        "DESCRIPTION": "Flat asphalt surface, 6 components",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.529453, 13.357305]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 330,
+        "FACILITYID": 28003,
+        "NAME": "Manotick Skateboard Park",
+        "TYPE": "skatepark",
+        "ADDRESS": "5572 Doctor Leach Drive",
+        "OPEN": null,
+        "NOTES": "Outdoor - Joined with basketball",
+        "DESCRIPTION": "Flat asphalt surface, 8 components",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.54462, 13.402843]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 693,
+        "FACILITYID": 28010,
+        "NAME": "Pankow Tennis Park Location",
+        "TYPE": "tennis",
+        "ADDRESS": "1448 Meadow Drive",
+        "OPEN": null,
+        "NOTES": "Outdoor - Mobile",
+        "DESCRIPTION": "Flat surface, 5 components",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.567899, 13.393548]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 2544,
+        "FACILITYID": 35667,
+        "NAME": "Berrigan Tennis Park",
+        "TYPE": "tennis",
+        "ADDRESS": "51 Berrigan Drive",
+        "OPEN": null,
+        "NOTES": "Outdoor",
+        "DESCRIPTION": "Flat concrete surface, 10 plus components",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.549739, 13.331575]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 2599,
+        "FACILITYID": 49251,
+        "NAME": "Eugène Martineau tennis Park",
+        "TYPE": "tennis",
+        "ADDRESS": "710 Mikinak Road",
+        "OPEN": null,
+        "NOTES": "Outdoor",
+        "DESCRIPTION": "Flat surface, 5 components",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.560175, 13.392729]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 2278,
+        "FACILITYID": 49211,
+        "NAME": "Vista Speedball Park",
+        "TYPE": "speedball",
+        "ADDRESS": "720 Vistapark Drive",
+        "OPEN": null,
+        "NOTES": "Outdoor",
+        "DESCRIPTION": "Flat surface, 5 components",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.555263, 13.443703]
+      }
+    }
+  ]
+}
