@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import style from '../../styles/Home.module.css';
 import { Icon } from 'leaflet';
 import * as pinsData from '../../data/pins.json';
+import Filters from '../Filter/Filters';
 
 type PinProps = {
   type: string;
@@ -56,48 +57,54 @@ function Map() {
   //     },
   //   };
   return (
-    <MapContainer
-      className={style.map}
-      center={position}
-      zoom={12}
-      scrollWheelZoom={true}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {pinsData.features.map((pin) => (
-        <Marker
-          onClick={() => {
-            // which parks is set as active
-            setActivePin(pin);
-            console.log('click pin: ', pin);
-          }}
-          onClose={() => {
-            setActivePin(null);
-            console.log('null');
-          }}
-          key={pin.properties.PARK_ID}
-          position={[pin.geometry.coordinates[0], pin.geometry.coordinates[1]]}
-          icon={icon}
-        >
-          <Popup>
+    <div>
+      <Filters />
+      <MapContainer
+        className={style.map}
+        center={position}
+        zoom={12}
+        scrollWheelZoom={true}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {pinsData.features.map((pin) => (
+          <Marker
+            // onClick={() => {
+            //   // which parks is set as active
+            //   setActivePin(pin);
+            //   console.log('click pin: ', pin);
+            // }}
+            // onClose={() => {
+            //   setActivePin(null);
+            //   console.log('null');
+            // }}
+            key={pin.properties.PARK_ID}
+            position={[
+              pin.geometry.coordinates[0],
+              pin.geometry.coordinates[1],
+            ]}
+            icon={icon}
+          >
+            <Popup>
+              <div>
+                <h2>{pin.properties.NAME}</h2>
+                <p>{pin.properties.DESCRIPTION}</p>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+        {activePin && (
+          <Popup position={[52.520008, 13.404954]}>
             <div>
-              <h2>{pin.properties.NAME}</h2>
-              <p>{pin.properties.DESCRIPTION}</p>
+              <h2>{activePin.properties.NAME}</h2>
+              <p>{activePin.properties.DESCRIPTION}</p>
             </div>
           </Popup>
-        </Marker>
-      ))}
-      {activePin && (
-        <Popup position={[52.520008, 13.404954]}>
-          <div>
-            <h2>{activePin.properties.NAME}</h2>
-            <p>{activePin.properties.DESCRIPTION}</p>
-          </div>
-        </Popup>
-      )}
-    </MapContainer>
+        )}
+      </MapContainer>
+    </div>
   );
 }
 
