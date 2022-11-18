@@ -24,38 +24,17 @@ type PinProps = {
     coordinates: number[];
   };
 };
+
 const position = [52.520008, 13.404954];
-const position2 = [52.480894, 13.355937];
-const position3 = [52.494056, 13.442307];
-const position4 = [52.520057, 13.406163];
+
 export const icon = new Icon({
   iconUrl: '/pin.png',
   iconSize: [70, 70],
 });
 
+// render the marker inside the filter and delete the wholelayer
+
 function Map() {
-  const [activePin, setActivePin] = React.useState(null);
-  // const [activePin, setActivePin] =
-  //   useState <
-  //   PinProps >
-  //   {
-  //     type: '';
-  //     properties: {
-  //       PARK_ID: 0;
-  //       FACILITYID: 0;
-  //       NAME: '';
-  //       TYPE: '';
-  //       ADDRESS: '';
-  //       OPEN: null;
-  //       NOTES: '';
-  //       DESCRIPTION: '';
-  //       PICTURE: null;
-  //     },
-  //     geometry: {
-  //       type: '';
-  //       coordinates: [];
-  //     },
-  //   };
   return (
     <div>
       <Filters />
@@ -71,15 +50,6 @@ function Map() {
         />
         {pinsData.features.map((pin) => (
           <Marker
-            // onClick={() => {
-            //   // which parks is set as active
-            //   setActivePin(pin);
-            //   console.log('click pin: ', pin);
-            // }}
-            // onClose={() => {
-            //   setActivePin(null);
-            //   console.log('null');
-            // }}
             key={pin.properties.PARK_ID}
             position={[
               pin.geometry.coordinates[0],
@@ -89,20 +59,12 @@ function Map() {
           >
             <Popup>
               <div>
-                <h2>{pin.properties.NAME}</h2>
+                <h1>{pin.properties.NAME}</h1>
                 <p>{pin.properties.DESCRIPTION}</p>
               </div>
             </Popup>
           </Marker>
         ))}
-        {activePin && (
-          <Popup position={[52.520008, 13.404954]}>
-            <div>
-              <h2>{activePin.properties.NAME}</h2>
-              <p>{activePin.properties.DESCRIPTION}</p>
-            </div>
-          </Popup>
-        )}
       </MapContainer>
     </div>
   );

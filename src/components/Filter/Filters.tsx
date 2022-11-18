@@ -32,6 +32,7 @@ type ActivityType =
 const aActivities = [
   ...new Set(pinsData.features.map((activity) => activity.properties.TYPE)),
 ];
+
 export default function Filters() {
   const [locationFilter, setFilter] = React.useState<ActivityType[]>([]);
   // const [pinFilter, setFilter] = React.useState<ActivityType[]>([]);
@@ -45,9 +46,11 @@ export default function Filters() {
         onChange={(event) => {
           const isChecked = event.target.checked;
           setFilter((currentFilter) => {
+            // if checked add activity to current activities
             if (isChecked) {
               return [...currentFilter, activity];
             }
+            // if unchecked filter this activity out
             return currentFilter.filter(
               (filterActivity) => filterActivity !== activity
             );
@@ -60,20 +63,17 @@ export default function Filters() {
   // how can i return pin with the matching type ????
   return (
     <div>
+      <div>
+        <ul>
+          <div>{aActivities.map(checkboxFilter)}</div>
+        </ul>
+      </div>
       <ul>
-        <div>{aActivities.map(checkboxFilter)}</div>
+        {pinsData.features.map((data) => {
+          if (locationFilter.length === 0) return true;
+          return locationFilter.includes(data.properties.TYPE);
+        })}
       </ul>
-
-      {/* <ul>
-        {pinsData.features
-          .filter((data) => {
-            if (locationFilter.length === 0) return true;
-            return locationFilter.includes(data.properties.TYPE);
-          })
-          .map((data) => (
-            <li>{data}</li>
-          ))}
-      </ul> */}
     </div>
   );
 }
