@@ -35,9 +35,19 @@ function Pins({ ...props }: PinProps) {
     }
   }, [counter]);
 
-  // display a number comments depending on the counter (Hook)
+  // display a number of comments depending on the counter (Hook)
   function showComments() {
     return props.comments.slice(0, counter);
+  }
+
+  function calcDescElemHeight(id: string): string {
+    const elemHeight = document.getElementById(id)?.offsetHeight;
+    if (elemHeight !== null && elemHeight) {
+      // returns height of elem calculated with the parents padding
+      return (elemHeight + (2 * 12)) + "px";
+    }
+
+    return "auto";
   }
 
   // increment counter
@@ -108,14 +118,14 @@ function Pins({ ...props }: PinProps) {
             {/* Beschreibung */}
             <div className="mb-5">
               <h3 className="mb-1 text-lg">Description:</h3>
-              {/* TODO: fix animation */}
               <div
-                // using style because its faster to render than tailwind
-                style={{ maxHeight: expandDesc ? '20rem' : '5.5rem' }}
-                className="ease via-dark-seaweed to-dark-sea p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-1000 hover:bg-pos-100 hover:shadow-custom hover:cursor-pointer"
+                // using style because it's faster to render than tailwind
+                style={{ maxHeight: expandDesc ? calcDescElemHeight('desc-text-elem') : '5rem' }}
+                className="ease via-dark-seaweed to-dark-sea p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 hover:bg-pos-100 hover:shadow-custom hover:cursor-pointer"
                 onClick={() => setExpandDesc(!expandDesc)}
               >
                 <p
+                    id="desc-text-elem"
                 // className={expandDesc ? '' : 'truncate'}
                 >
                   {props.desc}
@@ -197,23 +207,22 @@ function Pins({ ...props }: PinProps) {
                         </motion.div>
                       ))}
                     </AnimatePresence>
-
-                    {/* TODO: have margin between the buttons (only when both are visible) */}
-                    <div className="flex justify-around">
+                    <div className="w-full h-12 flex justify-around">
                       <button
                         id="show-more-comments-btn"
                         className={` ${
                           counter < props.comments.length ? '' : 'hidden'
-                        } flex-auto w-32 h-12 border-solid border rounded-full border-bright-seaweed transition-all hover:text-dark-sea hover:bg-bright-seaweed`}
+                        } flex-auto w-full h-full border-solid border rounded-full border-bright-seaweed transition-all hover:text-dark-sea hover:bg-bright-seaweed`}
                         onClick={showMoreComments}
                       >
                         Show More
                       </button>
+                      <div className={` ${(counter > minimumComments && counter < props.comments.length) ? '' : 'hidden'}  h-full w-5`}></div>
                       <button
                         id="show-less-comments-btn"
                         className={` ${
                           counter > minimumComments ? '' : 'hidden'
-                        } flex-auto w-32 h-12 border-solid border rounded-full border-bright-seaweed transition-all≤≤≤≤≤ hover:text-dark-sea hover:bg-bright-seaweed`}
+                        } flex-auto w-full h-full border-solid border rounded-full border-bright-seaweed transition-all≤≤≤≤≤ hover:text-dark-sea hover:bg-bright-seaweed`}
                         onClick={showLessComments}
                       >
                         Show Less
