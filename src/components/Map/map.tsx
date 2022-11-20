@@ -48,7 +48,8 @@ function Map() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {pinsData.features.map((pin) => (
+        {/* <Filters /> */}
+        {/* {pinsData.features.map((pin) => (
           <Marker
             key={pin.properties.PARK_ID}
             position={[
@@ -64,7 +65,7 @@ function Map() {
               </div>
             </Popup>
           </Marker>
-        ))}
+        ))} */}
       </MapContainer>
     </div>
   );
