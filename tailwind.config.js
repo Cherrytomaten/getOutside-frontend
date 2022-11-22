@@ -14,6 +14,7 @@ module.exports = {
       colors: {
         'dark-sea': '#22343C',
         'dark-sea-hover': '#1d2c33',
+        'dark-sea-semi-transparent': '#22343Cbb',
         'bright-seaweed': '#3ED598',
         'hovered-seaweed': '#82e7bd',
         'dark-seaweed': '#005C53',
@@ -22,13 +23,8 @@ module.exports = {
         'star-color': '#ffe000',
       },
       boxShadow: {
-        custom: '2px 2px 10px 7px rgba(29, 44, 51, 1)',
-      },
-      backgroundImage: {
-        'dark-linear-135':
-          'linear-gradient(135deg, rgba(36,61,65,1) 0%, rgba(0,92,83,1) 100%)',
-        'light-linear-135':
-          'linear-gradient(135deg, rgba(0,92,83,1) 0%, rgba(62,213,152,1) 100%)',
+        'shadow-dark-sea-hover': '2px 2px 10px 7px #1d2c33',
+        'glowing-bright-seaweed': '0 0 10px 3px #3ED598',
       },
       backgroundSize: {
         'size-200': '200% 200%',
@@ -37,7 +33,24 @@ module.exports = {
         'pos-0': '0% 0%',
         'pos-100': '100% 100%',
       },
+      animation: {
+        'custom-bounce': 'c-bounce 1s infinite',
+        'custom-bounce-delay-1': 'c-bounce 1s 220ms infinite',
+        'custom-bounce-delay-2': 'c-bounce 1s 440ms infinite',
+      },
+      keyframes: {
+        'c-bounce': {
+          '0%, 100%': {
+            'transform': 'translateY(-100%)',
+            'animation-timing-function': 'cubic-bezier(0.8, 0, 1, 1)',
+          },
+          '50%': {
+            'transform': 'translateY(0)',
+            'animation-timing-function': 'cubic-bezier(0, 0, 0.2, 1)',
+          },
+        },
+      },
     },
   },
-  plugins: [require('@tailwindcss/line-clamp')],
+  plugins: [],
 };

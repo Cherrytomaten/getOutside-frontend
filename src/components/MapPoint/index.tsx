@@ -1,10 +1,10 @@
 import CloseSvg from '@/resources/svg/Close';
-import RenderStars from '@/components/Pins/StarRendering';
+import RenderStars from '@/components/MapPoint/StarRendering';
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 
-type PinProps = {
+type MapPointProps = {
   uuid: string;
   name: string;
   desc: string;
@@ -15,14 +15,14 @@ type PinProps = {
   image: ImageProps;
 };
 
-function Pins({ ...props }: PinProps) {
+function MapPoint({ ...props }: MapPointProps) {
   // Review
   const allStars: JSX.Element[] = RenderStars(props.rating, '34', '34');
   const ratingAsString = props.rating.toString();
   // Hooks
   const minimumComments: number = 2;
   const [counter, setCounter] = useState<number>(minimumComments); // Counter for number of shown comments
-  const isMounted = useRef(false); // used to check if its components first mount
+  const isMounted = useRef(false); // used to check if the component did mount for the first time
   const [expandDesc, setExpandDesc] = useState<boolean>(false); // boolean to open the description
 
   // automatically scroll down if a new comment appears
@@ -36,22 +36,24 @@ function Pins({ ...props }: PinProps) {
   }, [counter]);
 
   // display a number of comments depending on the counter (Hook)
-  function showComments() {
+  function showComments(): CommentProps[] {
     return props.comments.slice(0, counter);
   }
 
+  // calculates height of elem considering parents
   function calcDescElemHeight(id: string): string {
     const elemHeight = document.getElementById(id)?.offsetHeight;
+    console.log('height: ', elemHeight);
     if (elemHeight !== null && elemHeight) {
       // returns height of elem calculated with the parents padding
-      return (elemHeight + (2 * 12)) + "px";
+      return elemHeight + 2 * 12 + 'px';
     }
 
-    return "auto";
+    return 'auto';
   }
 
   // increment counter
-  function showMoreComments() {
+  function showMoreComments(): void {
     if (counter < props.comments.length) {
       setCounter(counter + 1);
     } else {
@@ -60,7 +62,7 @@ function Pins({ ...props }: PinProps) {
   }
 
   // decrement counter
-  function showLessComments() {
+  function showLessComments(): void {
     if (counter > minimumComments) {
       setCounter(counter - 1);
     } else {
@@ -90,6 +92,7 @@ function Pins({ ...props }: PinProps) {
             id="close-button"
             className="absolute top-2 right-2 bg-default-font/50 rounded-full hover:cursor-pointer"
             onClick={closePopUp}
+            title="Close"
           >
             <CloseSvg width="40" height="40" />
           </div>
@@ -102,7 +105,7 @@ function Pins({ ...props }: PinProps) {
             <h1>{props.name}</h1>
           </div>
           <div className="mb-[10%] text-center">
-            <ul title={`Bewertung: ${ratingAsString}`}>
+            <ul title={`Average Rating: ${ratingAsString}`}>
               {allStars.map((star, index) => (
                 <li key={index} className="inline">
                   {star}
@@ -120,16 +123,15 @@ function Pins({ ...props }: PinProps) {
               <h3 className="mb-1 text-lg">Description:</h3>
               <div
                 // using style because it's faster to render than tailwind
-                style={{ maxHeight: expandDesc ? calcDescElemHeight('desc-text-elem') : '5rem' }}
-                className="ease via-dark-seaweed to-dark-sea p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 hover:bg-pos-100 hover:shadow-custom hover:cursor-pointer"
+                style={{
+                  maxHeight: expandDesc
+                    ? calcDescElemHeight('desc-text-elem')
+                    : '5rem',
+                }}
+                className="ease via-dark-seaweed to-dark-sea p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 hover:bg-pos-100 hover:shadow-shadow-dark-sea-hover hover:cursor-pointer"
                 onClick={() => setExpandDesc(!expandDesc)}
               >
-                <p
-                    id="desc-text-elem"
-                // className={expandDesc ? '' : 'truncate'}
-                >
-                  {props.desc}
-                </p>
+                <p id="desc-text-elem">{props.desc}</p>
               </div>
             </div>
             {/* Adresse */}
@@ -217,12 +219,19 @@ function Pins({ ...props }: PinProps) {
                       >
                         Show More
                       </button>
-                      <div className={` ${(counter > minimumComments && counter < props.comments.length) ? '' : 'hidden'}  h-full w-5`}></div>
+                      <div
+                        className={` ${
+                          counter > minimumComments &&
+                          counter < props.comments.length
+                            ? ''
+                            : 'hidden'
+                        }  h-full w-5`}
+                      ></div>
                       <button
                         id="show-less-comments-btn"
                         className={` ${
                           counter > minimumComments ? '' : 'hidden'
-                        } flex-auto w-full h-full border-solid border rounded-full border-bright-seaweed transition-all≤≤≤≤≤ hover:text-dark-sea hover:bg-bright-seaweed`}
+                        } flex-auto w-full h-full border-solid border rounded-full border-bright-seaweed transition-all hover:text-dark-sea hover:bg-bright-seaweed`}
                         onClick={showLessComments}
                       >
                         Show Less
@@ -239,4 +248,4 @@ function Pins({ ...props }: PinProps) {
   );
 }
 
-export { Pins };
+export { MapPoint };

@@ -1,5 +1,7 @@
-import { Pins } from '@/components/Pins';
+import { MapPoint } from '@/components/MapPoint';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 
+// PIN COMPONENT #######################
 const comments: CommentProps[] = [
   {
     author: 'Gerhard',
@@ -35,31 +37,26 @@ const opening: OpeningProps = {
   saturday: '12.00-24.00',
   sunday: '12.00-22.00',
 };
+// ###################################
 
 function Home() {
   return (
     <main className="w-full h-screen flex justify-center items-center bg-dark-sea">
-      <Pins
+      {/* <MapPoint
         uuid={'akjbd-223321--'}
         name={'Basketball Platz'}
         desc={
-          'Hier muss eine aussagekräftige Beschreibung stehen. Hier muss eine aussagekräftige Beschreibung stehen, die diesen Basketball-Platz wirklich gut beschreibt. Es ist ein'
+          'Hier muss eine aussagekräftige Beschreibung stehen, die diesen Basketball-Platz wirklich gut beschreibt. Es ist ein sehr schöner Basketball-Platz.'
         }
         address={'Luxemburger Straße 100, 12345 Berlin'}
         opening={opening}
         rating={4.5}
         comments={comments}
         image={img}
-      />
+      /> */}
+      <LoadingSpinner />
     </main>
   );
 }
 
 export default Home;
-
-
-// kurze Desc:
-// Hier muss eine aussagekräftige Beschreibung stehen.
-
-// lange Desc:
-// Hier muss eine aussagekräftige Beschreibung stehen, die diesen Basketball-Platz wirklich gut beschreibt. Es ist ein sehr schöner Basketball-Platz.
