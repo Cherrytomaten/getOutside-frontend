@@ -4,7 +4,6 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import style from '../../styles/Home.module.css';
 import { Icon } from 'leaflet';
 import * as pinsData from '../../data/pins.json';
-import Filters from '../Filter/Filters';
 
 type PinProps = {
   type: string;
@@ -39,7 +38,7 @@ type ActivityType =
 const position = [52.520008, 13.404954];
 
 const aActivities = [
-  ...new Set(pinsData.features.map((activity) => activity.properties.TYPE)),
+  ...new Set(pinsData.mappoint.map((activity) => activity.properties.TYPE)),
 ];
 
 export const icon = new Icon({
@@ -51,7 +50,6 @@ export const icon = new Icon({
 
 function Map() {
   const [locationFilter, setFilter] = React.useState<ActivityType[]>([]);
-  // const [pinFilter, setFilter] = React.useState<ActivityType[]>([]);
   const checkboxFilter = (activity: ActivityType) => (
     <div>
       <input
@@ -79,9 +77,8 @@ function Map() {
 
   return (
     <div>
-      <ul>
-        <div>{aActivities.map(checkboxFilter)}</div>
-      </ul>
+      {/* <Dropdown /> */}
+      {aActivities.map(checkboxFilter)}
       {/* <Filters /> */}
       <MapContainer
         className={style.map}
@@ -96,11 +93,11 @@ function Map() {
         <div>
           <div>
             {/* {pinsData.features.map((data: PinProps) => {  // what about the pin type???*/}
-            {pinsData.features.map((data) => {
+            {pinsData.mappoint.map((data: PinProps) => {
               if (locationFilter.length === 0)
                 return (
                   <div>
-                    {pinsData.features.map((pin) => (
+                    {pinsData.mappoint.map((pin) => (
                       <Marker
                         key={pin.properties.PARK_ID}
                         position={[
@@ -122,8 +119,6 @@ function Map() {
               return (
                 locationFilter.includes(data.properties.TYPE) && (
                   <div>
-                    {/* <MapContainer> */}
-                    {/* {pinsData.features.map((pin) => ( */}
                     <Marker
                       key={data.properties.PARK_ID}
                       position={[
@@ -139,33 +134,12 @@ function Map() {
                         </div>
                       </Popup>
                     </Marker>
-                    {/* ))} */}
-                    {/* </MapContainer> */}
                   </div>
                 )
               );
-              // if locationFilter.includes(data.properties.TYPE); return <Marker>
             })}
           </div>
         </div>
-        {/* <Filters /> */}
-        {/* {pinsData.features.map((pin) => (
-          <Marker
-            key={pin.properties.PARK_ID}
-            position={[
-              pin.geometry.coordinates[0],
-              pin.geometry.coordinates[1],
-            ]}
-            icon={icon}
-          >
-            <Popup>
-              <div>
-                <h1>{pin.properties.NAME}</h1>
-                <p>{pin.properties.DESCRIPTION}</p>
-              </div>
-            </Popup>
-          </Marker>
-        ))} */}
       </MapContainer>
     </div>
   );
