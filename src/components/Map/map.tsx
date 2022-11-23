@@ -1,7 +1,6 @@
 import 'leaflet/dist/leaflet.css';
 import React, { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import style from '../../styles/Home.module.css';
 import { Icon } from 'leaflet';
 import * as pinsData from '../../data/pins.json';
 
@@ -46,8 +45,6 @@ export const icon = new Icon({
   iconSize: [70, 70],
 });
 
-// render the marker inside the filter and delete the wholelayer
-
 function Map() {
   const [locationFilter, setFilter] = React.useState<ActivityType[]>([]);
   const checkboxFilter = (activity: ActivityType) => (
@@ -79,9 +76,8 @@ function Map() {
     <div>
       {/* <Dropdown /> */}
       {aActivities.map(checkboxFilter)}
-      {/* <Filters /> */}
       <MapContainer
-        className={style.map}
+        className="w-screen h-[95vh] mx-auto mt-12"
         center={position}
         zoom={12}
         scrollWheelZoom={true}
@@ -92,7 +88,6 @@ function Map() {
         />
         <div>
           <div>
-            {/* {pinsData.features.map((data: PinProps) => {  // what about the pin type???*/}
             {pinsData.mappoint.map((data: PinProps) => {
               if (locationFilter.length === 0)
                 return (

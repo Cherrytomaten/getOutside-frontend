@@ -22,8 +22,7 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx",
-    "src/components/Map/map.jsx"
+    "**/*.tsx"
   ],
   "exclude": ["node_modules"]
 }

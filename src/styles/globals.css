@@ -77,4 +77,12 @@
         scroll-behavior: smooth;
         @apply bg-dark-sea;
     }
+
+    .map {
+        width: 100vw;
+        height: 95vh;
+        margin-top:  50px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
