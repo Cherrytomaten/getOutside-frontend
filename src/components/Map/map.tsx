@@ -1,7 +1,7 @@
 import 'leaflet/dist/leaflet.css';
-import React, { useState } from 'react';
+import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { Icon } from 'leaflet';
+import { Icon, LatLngExpression } from 'leaflet';
 import * as pinsData from '../../data/pins.json';
 
 type PinProps = {
@@ -34,7 +34,7 @@ type ActivityType =
   | 'speedball'
   | string;
 
-const position = [52.520008, 13.404954];
+const position: LatLngExpression = [52.520008, 13.404954];
 
 const aActivities = [
   ...new Set(pinsData.mappoint.map((activity) => activity.properties.TYPE)),
