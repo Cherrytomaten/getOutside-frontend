@@ -1,6 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
 import Logo from '@/resources/svg/Logo'
-import { ShowPasswordToggle } from "@/components/ShowPasswordToggle";
 
 type SignUpFormProps = {
     title: string,
