@@ -3,6 +3,7 @@ import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Icon, LatLngExpression } from 'leaflet';
 import * as pinsData from '../../data/pins.json';
+import { Select, Box } from 'theme-ui';
 
 type PinProps = {
   type: string;
@@ -42,7 +43,7 @@ const aActivities = [
 
 export const icon = new Icon({
   iconUrl: '/pin.png',
-  iconSize: [70, 70],
+  iconSize: [33, 45],
 });
 
 function Map() {
@@ -74,7 +75,14 @@ function Map() {
 
   return (
     <div>
-      {/* <Dropdown /> */}
+      <Select
+        defaultValue="select Activity"
+        onChange={(event) => checkboxFilter}
+      >
+        {aActivities.map((checkboxFilter, i) => {
+          return <option key={i}>{checkboxFilter}</option>;
+        })}
+      </Select>
       {aActivities.map(checkboxFilter)}
       <MapContainer
         className="w-screen h-[95vh] mx-auto mt-12"
