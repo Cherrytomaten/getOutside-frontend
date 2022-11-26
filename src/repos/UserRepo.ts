@@ -2,8 +2,9 @@ import { IUserRepo } from "@/types/Repo/IUserRepo";
 import axios from "axios";
 import { FetchUserDataResponseProps } from "@/types/Auth/FetchUserDataResponseProps";
 import { FetchUserDataErrorProps } from "@/types/Auth/FetchUserDataErrorProps";
-import { setCookie } from "@/util/cookieManager";
+import { deleteCookies, setCookies } from "@/util/cookieManager";
 import { AUTH_REFRESH_TOKEN, AUTH_TOKEN } from "@/types/constants";
+import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 
 class UserRepo implements IUserRepo {
     /**
@@ -13,13 +14,15 @@ class UserRepo implements IUserRepo {
      * @returns the complete userdata with username etc. aswell as a JWT, refresh token & expiration date
      */
     public async authUser(email: string, password: string): Promise<UserProps> {
-        return await axios.post('/api/user/login', {
+        return await axios.post('/api/auth/login', {
             email: email,
             password: password
         })
             .then((res: FetchUserDataResponseProps) => {
-                setCookie(AUTH_TOKEN, res.data.token, res.data.expiration);
-                setCookie(AUTH_REFRESH_TOKEN, res.data.refreshToken, 24);
+                setCookies([
+                    { name: AUTH_TOKEN, value: res.data.token, expHrs: res.data.expiration },
+                    { name: AUTH_REFRESH_TOKEN, value: res.data.refreshToken, expHrs: 24 }
+                ]);
                 return Promise.resolve(res.data);
             })
             .catch((err: FetchUserDataErrorProps) => {
@@ -27,9 +30,25 @@ class UserRepo implements IUserRepo {
             })
     }
 
+    /**
+     * Repo function to log in an existing user based on the cookie token that was found
+     * @param token from the stored cookies
+     * @returns the complete userdata with username etc. aswell as a JWT, refresh token & expiration date
+     */
     public async getUserByToken(token: string): Promise<UserProps> {
-        console.log("res")
-        throw new Error("Method not implemented.");
+        return await axios.get('/api/auth/by-token', {
+            params: { token: token }
+        })
+            .then((res: FetchUserDataResponseProps) => {
+                setCookies([
+                    { name: AUTH_TOKEN, value: res.data.token, expHrs: res.data.expiration },
+                    { name: AUTH_REFRESH_TOKEN, value: res.data.refreshToken, expHrs: 24 }
+                ]);
+                return Promise.resolve(res.data);
+            })
+            .catch((err: FetchUserDataErrorProps) => {
+                return Promise.reject(err.response.data);
+            })
     }
 
     delete(t: UserProps): Promise<any> {
@@ -48,8 +67,21 @@ class UserRepo implements IUserRepo {
         return Promise.resolve({} as UserProps);
     }
 
-    refreshToken(token: string): Promise<{ token: string }> {
-        return Promise.resolve({token: ""});
+    public async refreshToken(refToken: string): Promise<TokenPayload> {
+        return await axios.get('/api/auth/refresh-token', {
+            params: { refToken: refToken }
+        })
+            .then((res: { data: TokenPayload }) => {
+                setCookies([
+                    { name: AUTH_TOKEN, value: res.data.token, expHrs: res.data.expiration },
+                    { name: AUTH_REFRESH_TOKEN, value: res.data.refreshToken, expHrs: 24 }
+                ]);
+                return Promise.resolve(res.data);
+        })
+            .catch((err: FetchUserDataErrorProps) => {
+                deleteCookies([AUTH_TOKEN, AUTH_REFRESH_TOKEN]);
+                return Promise.reject(err.response.data);
+            })
     }
 
     save(t: UserProps): Promise<any> {

@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { isSamePassword } from "@/util/passwordManager";
+import { mockUser } from "@/simulation/userdataSim";
 
 type LoginServerRequest = NextApiRequest & {
     body: {
@@ -7,22 +8,6 @@ type LoginServerRequest = NextApiRequest & {
         password: string,
     }
 }
-
-type MockData = UserProps & {
-    MOCK_password: string;
-}
-
-const mockUser: MockData[] = [{
-    userId: "U1",
-    firstname: 'Max',
-    lastname: 'Mustermann',
-    MOCK_password: '$2b$10$RozTlWGXFA1pL8K3ey0rguKEifNgOMzZIdn2xQU9UEMsXLyg73Oq2', // password123#
-    email: 'max@mail.de',
-    token: "Bearer ABCD1234",
-    refreshToken: "Bearer EFGH5678",
-    expiration: 1
-}];
-
 
 export default function handler(_req: LoginServerRequest, res: NextApiResponse) {
     const userObj = mockUser.find(elem => elem.email === _req.body.email);

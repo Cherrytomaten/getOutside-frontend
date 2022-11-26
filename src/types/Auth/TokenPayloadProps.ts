@@ -1,7 +1,7 @@
-type TokenPayloadProps = {
+type TokenPayload = {
     token: string,
     refreshToken: string
     expiration: number
 }
 
-export type { TokenPayloadProps };
+export type { TokenPayload };

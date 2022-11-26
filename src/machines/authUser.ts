@@ -7,8 +7,8 @@ const fetchAuthUserMachine = createMachine<AuthContext, AuthEvent, AuthTypestate
     predictableActionArguments: true,
     context: {
         user: null,
-        retries: 0,
-        err: null
+        err: null,
+        refreshAttempted: false
     },
     states: {
         idle: {
@@ -20,18 +20,20 @@ const fetchAuthUserMachine = createMachine<AuthContext, AuthEvent, AuthTypestate
             entry: ['fetchUserAuth'],
             on: {
                 RESOLVE_AUTH: { target: 'success', actions: ['setUserAuthData'] },
-                REJECT_AUTH: { target: 'failure', actions: ['setErrorMessage'] }
+                REJECT_AUTH: { target: 'failure', actions: ['setErrorMessage'] },
             }
         },
         success: {
+            entry: ['resetRefreshAttempt'],
             on: {
                 FETCH_AUTH_USER: 'pending'
             }
         },
         refresh: {
+            entry: ['refreshToken'],
             on: {
-                RESOLVE_AUTH: 'success',
-                REJECT_AUTH: 'failure'
+                RESOLVE_AUTH: { target: 'success', actions: ['setUserAuthData'] },
+                REJECT_AUTH: { target: 'failure', actions: ['setErrorMessage'] },
             }
         },
         failure: {
@@ -50,11 +52,12 @@ const fetchAuthUserMachine = createMachine<AuthContext, AuthEvent, AuthTypestate
         })),
 
         setErrorMessage: assign((ctx, event: any) => ({
-            err: event.err
+            err: event.err,
+            refreshAttempted: event.attRef
         })),
 
-        setRetriesCounter: assign((ctx, event: any) => ({
-            retries: ctx.retries + 1
+        resetRefreshAttempt: assign((ctx, event: any) => ({
+            refreshAttempted: false
         }))
     },
 });

@@ -2,15 +2,15 @@ import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorRespons
 
 type AuthContext = {
     user: UserProps | null,
-    retries: number,
+    refreshAttempted: boolean,
     err: any | null
 }
 
 type AuthEvent =
-    {  type: 'FETCH_AUTH_USER'; payload: { email: string, password: string } }
+    {  type: 'FETCH_AUTH_USER'; payload: { email: string, password: string, checkToken?: boolean } }
     | { type: 'RESOLVE_AUTH'; user: UserProps, err: null }
-    | { type: 'REJECT_AUTH'; err: FetchServerErrorResponse }
-    | { type: 'RETRY', user: UserProps }
+    | { type: 'REJECT_AUTH'; err: FetchServerErrorResponse | null, attRef: boolean }
+    | { type: 'RETRY', payload: { refreshToken: string } }
 
 type AuthTypestate =
         {
