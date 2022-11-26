@@ -18,7 +18,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
@@ -27,12 +28,15 @@
     ]
   },
   "dependencies": {
-    "next": "12.3.1",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "leaflet": "^1.9.2",
+    "next": "^12.3.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-leaflet": "^4.1.0"
   },
   "devDependencies": {
     "@aacn_org/eslint-plugin-tailwind-classname-order": "^0.2.7",
+    "@types/leaflet": "^1.9.0",
     "@types/node": "18.11.0",
     "@types/react": "18.0.21",
     "@types/react-dom": "18.0.6",
