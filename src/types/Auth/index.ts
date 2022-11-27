@@ -11,6 +11,8 @@ type AuthEvent =
     | { type: 'RESOLVE_AUTH'; user: UserProps, err: null }
     | { type: 'REJECT_AUTH'; err: FetchServerErrorResponse | null, attRef: boolean }
     | { type: 'RETRY', payload: { refreshToken: string } }
+    | { type: 'LOGOUT' }
+    | { type: 'IDLE' }
 
 type AuthTypestate =
         {
@@ -48,6 +50,14 @@ type AuthTypestate =
                 err: any
             }
         }
+        | {
+            value: 'reset';
+            context: AuthContext & {
+                user: null,
+                err: null,
+                refreshAttempted: false
+            }
+}
 
 
 export type { AuthContext, AuthEvent, AuthTypestate };

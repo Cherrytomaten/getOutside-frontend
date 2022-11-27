@@ -1,4 +1,4 @@
-import { IUserRepo } from "@/types/Repo/IUserRepo";
+import { IUserAuthRepo } from "@/types/Repo/IUserAuthRepo";
 import axios from "axios";
 import { FetchUserDataResponseProps } from "@/types/Auth/FetchUserDataResponseProps";
 import { FetchUserDataErrorProps } from "@/types/Auth/FetchUserDataErrorProps";
@@ -6,7 +6,12 @@ import { deleteCookies, setCookies } from "@/util/cookieManager";
 import { AUTH_REFRESH_TOKEN, AUTH_TOKEN } from "@/types/constants";
 import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 
-class UserRepo implements IUserRepo {
+
+/**
+ * This class offers a general interface to access different functions from every file where this class
+ * got instantiated. The functions are related to user authentication.
+ */
+class UserAuthRepo implements IUserAuthRepo {
     /**
      * Repo function to log in an existing user and get their tokens. Also save the default & refresh token as cookies
      * @param email of the dedicated user account.
@@ -51,22 +56,11 @@ class UserRepo implements IUserRepo {
             })
     }
 
-    delete(t: UserProps): Promise<any> {
-        return Promise.resolve(undefined);
-    }
-
-    exists(t: UserProps): Promise<boolean> {
-        return Promise.resolve(false);
-    }
-
-    getAllUser(): Promise<UserProps[]> {
-        return Promise.resolve([]);
-    }
-
-    getUserById(userId: string): Promise<UserProps> {
-        return Promise.resolve({} as UserProps);
-    }
-
+    /**
+     * Repo function to refresh the existing token with its refresh token.
+     * @param refToken the refresh token queried from the user cookies
+     * @returns the new token payload with a new token, refreshToken & exp. time
+     */
     public async refreshToken(refToken: string): Promise<TokenPayload> {
         return await axios.get('/api/auth/refresh-token', {
             params: { refToken: refToken }
@@ -84,10 +78,12 @@ class UserRepo implements IUserRepo {
             })
     }
 
-    save(t: UserProps): Promise<any> {
-        return Promise.resolve(undefined);
+    /**
+     * Repo function to handle the deletion of the cookied tokens from a user
+     */
+    public logout() {
+        deleteCookies([AUTH_TOKEN, AUTH_REFRESH_TOKEN]);
     }
-
 }
 
-export { UserRepo };
+export { UserAuthRepo };

@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useContext } from "react";
 import { useMachine } from "@xstate/react";
 import { fetchAuthUserMachine } from "@/machines/authUser";
-import { UserRepo } from "@/repos/UserRepo";
+import { UserAuthRepo } from "@/repos/UserRepo";
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 import { BaseActionObject, ResolveTypegenMeta, ServiceMap, State, TypegenDisabled } from "xstate";
 import { AuthContext, AuthEvent, AuthTypestate } from "@/types/Auth";
@@ -17,19 +17,19 @@ type AuthStateMachine = State<AuthContext, AuthEvent, any, AuthTypestate, Resolv
 type AuthContextProps = {
     fetchUserAuthState: AuthStateMachine,
     sendToUserAuthMachine: (arg0: any) => any,
-    UserRepoClass: UserRepo,
+    UserRepoClass: UserAuthRepo,
 }
 
 const AuthContextDefault: AuthContextProps = {
     fetchUserAuthState: null as unknown as AuthStateMachine,
     sendToUserAuthMachine: () => {},
-    UserRepoClass: new UserRepo()
+    UserRepoClass: new UserAuthRepo()
 }
 
 const AuthContextInstance = createContext(AuthContextDefault);
 
 function AuthProvider({children}: LayoutProp) {
-    const UserRepoClass = new UserRepo();
+    const UserRepoClass = new UserAuthRepo();
     const [fetchUserAuthState, sendToUserAuthMachine] = useMachine(fetchAuthUserMachine, {
         actions: {
             fetchUserAuth: (ctx, event: { type: 'FETCH_AUTH_USER', payload: { email: string, password: string, token?: string } }) => {
@@ -76,6 +76,12 @@ function AuthProvider({children}: LayoutProp) {
                             sendToUserAuthMachine({ type: 'REJECT_AUTH', err: null, attRef: true });
                         }
                     )
+            },
+
+            deleteCookies: (ctx, event: { type: 'LOGOUT' }) => {
+                console.log("loging out...");
+                UserRepoClass.logout();
+                sendToUserAuthMachine({ type: 'IDLE' });
             }
         }
     });

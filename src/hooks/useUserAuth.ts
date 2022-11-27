@@ -3,7 +3,15 @@ import { AUTH_REFRESH_TOKEN, AUTH_TOKEN } from "@/types/constants";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 
-function usePageloadAuth() {
+
+/**
+ * User authentication hook that runs on page load to check if the current
+ * user is correctly validate. If not the useState variable will be set to false.
+ * The hook also checks if an attempted validation with an existing cookie failed and
+ * runs the refresh function for trying to get a refresh token.
+ * Also provides a logout function.
+ */
+function useUserAuth() {
     const [authStatus, setAuthStatus] = useState<boolean>(true);
     const { fetchUserAuthState, sendToUserAuthMachine, UserRepoClass } = useAuth();
 
@@ -20,6 +28,11 @@ function usePageloadAuth() {
         } else {
             setAuthStatus(false);
         }
+    }
+
+    function logout() {
+        sendToUserAuthMachine({ type: 'LOGOUT' });
+        setAuthStatus(false);
     }
 
     // on load auth check
@@ -41,7 +54,7 @@ function usePageloadAuth() {
         }
     }, [fetchUserAuthState, sendToUserAuthMachine])
 
-    return { authStatus, setAuthStatus };
+    return { authStatus, setAuthStatus, logout };
 }
 
-export { usePageloadAuth };
+export { useUserAuth };

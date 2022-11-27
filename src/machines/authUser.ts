@@ -26,7 +26,8 @@ const fetchAuthUserMachine = createMachine<AuthContext, AuthEvent, AuthTypestate
         success: {
             entry: ['resetRefreshAttempt'],
             on: {
-                FETCH_AUTH_USER: 'pending'
+                FETCH_AUTH_USER: 'pending',
+                LOGOUT: 'reset'
             }
         },
         refresh: {
@@ -39,7 +40,14 @@ const fetchAuthUserMachine = createMachine<AuthContext, AuthEvent, AuthTypestate
         failure: {
             on: {
                 RETRY: 'refresh',
-                FETCH_AUTH_USER: 'pending'
+                FETCH_AUTH_USER: 'pending',
+                LOGOUT: 'reset'
+            }
+        },
+        reset: {
+            entry: ['deleteCookies', 'resetMachine'],
+            on: {
+                IDLE: 'idle'
             }
         }
     },
@@ -57,6 +65,12 @@ const fetchAuthUserMachine = createMachine<AuthContext, AuthEvent, AuthTypestate
         })),
 
         resetRefreshAttempt: assign((ctx, event: any) => ({
+            refreshAttempted: false
+        })),
+
+        resetMachine: assign((ctx, event: any) => ({
+            user: null,
+            err: null,
             refreshAttempted: false
         }))
     },

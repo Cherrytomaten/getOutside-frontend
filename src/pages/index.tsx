@@ -1,14 +1,14 @@
 import { Loading } from "@/components/Loading";
 import { useRouter } from "next/router";
 import { useAuth } from "@/context/AuthContext";
-import { usePageloadAuth } from "@/hooks/usePageloadAuth";
+import { useUserAuth } from "@/hooks/useUserAuth";
 
 function Home() {
     const router = useRouter();
-    const pageloadAuthHook = usePageloadAuth();
-    const { fetchUserAuthState, sendToUserAuthMachine } = useAuth();
+    const AuthenticationHook = useUserAuth();
+    const { fetchUserAuthState } = useAuth();
 
-    if (!pageloadAuthHook.authStatus) {
+    if (!AuthenticationHook.authStatus) {
         router.push('/login');
     }
 
@@ -21,7 +21,7 @@ function Home() {
             <div className="flex flex-col">
                 <h2>Homepage</h2>
                 <p>Hello {fetchUserAuthState.context.user.firstname}</p>
-                <button onClick={() => console.log(fetchUserAuthState.context)}>Click</button>
+                <button onClick={() => AuthenticationHook.logout() }>Logout</button>
             </div>
 
         </main>
