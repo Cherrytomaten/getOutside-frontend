@@ -76,7 +76,7 @@ function Login() {
                            onClick={() => setFormErrors({...formErrors, email: ''})}
                            placeholder="Email"
                            id="login-mail" />
-                    { formErrors.email !== '' && <p className="text-red-600">{formErrors.email}</p> }
+                    { formErrors.email !== '' && <p className="input-error-text text-red-600">{formErrors.email}</p> }
                 </div>
                 <div>
                     <p>password123#</p>
@@ -88,10 +88,11 @@ function Login() {
                                placeholder="Passwort"
                                id="login-password"
                 />
-                { formErrors.password !== '' && <p className="text-red-600">{formErrors.password}</p> }
+                { formErrors.password !== '' && <p className="input-error-text text-red-600">{formErrors.password}</p> }
                 <div className="mt-10">
                     <input type="submit"
                            value="Login"
+                           id="login-btn-submit"
                            className="w-full p-2 text-dark-sea bg-bright-seaweed rounded-md transition-colors cursor-pointer hover:bg-hovered-seaweed"
                     />
                 </div>
@@ -99,7 +100,7 @@ function Login() {
                     <p className="text-3xl text-white">Loading..</p>
                 }
                 { (!fetchUserAuthState.matches("pending") && fetchUserAuthState.context.err !== null) &&
-                    <p>{fetchUserAuthState.context.err.errors.message}</p>
+                    <p className="server-fetch-error-text">{fetchUserAuthState.context.err.errors.message}</p>
                 }
             </form>
         </div>
