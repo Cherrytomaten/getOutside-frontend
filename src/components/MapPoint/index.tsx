@@ -119,7 +119,7 @@ function MapPoint({ ...props }: MapPointProps) {
                     ? calcDescElemHeight('desc-text-elem')
                     : '5.65rem',
                 }}
-                className="relative ease via-dark-seaweed to-dark-sea p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 hover:bg-pos-100 hover:shadow-shadow-dark-sea-hover hover:cursor-pointer"
+                className="ease via-dark-seaweed to-dark-sea relative p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 hover:bg-pos-100 hover:shadow-shadow-dark-sea-hover hover:cursor-pointer"
                 onClick={() => setExpandDesc(!expandDesc)}
               >
                 <p id="desc-text-elem">{props.desc}</p>
@@ -133,7 +133,7 @@ function MapPoint({ ...props }: MapPointProps) {
                       delay: 0,
                       stiffness: 70,
                     }}
-                    className="absolute z-10 right-[5px] bottom-[5px] rounded-full bg-dark-seaweed"
+                    className="z-10 absolute right-[5px] bottom-[5px] bg-dark-seaweed rounded-full"
                   >
                     <ExpandSvg width="30" height="30" />
                   </motion.button>

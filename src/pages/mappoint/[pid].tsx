@@ -12,6 +12,7 @@ const MapPointPage = () => {
   useEffect(() => {
     if (!router.isReady) return;
     apiRequest();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady]);
 
   async function apiRequest() {
