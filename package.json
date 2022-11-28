@@ -20,6 +20,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "cypress:open": "cypress open"
   },
   "lint-staged": {
@@ -36,9 +37,12 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "xstate": "^4.34.0"
+    "leaflet": "^1.9.2",
+    "react-leaflet": "^4.1.0"
   },
   "devDependencies": {
     "@aacn_org/eslint-plugin-tailwind-classname-order": "^0.2.7",
+    "@types/leaflet": "^1.9.0",
     "@types/node": "18.11.0",
     "@types/react": "18.0.21",
     "@types/react-dom": "18.0.6",
