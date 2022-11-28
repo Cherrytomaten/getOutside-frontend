@@ -3,23 +3,12 @@ import RenderStars from '@/components/MapPoint/StarRendering';
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
-
-type MapPointProps = {
-  uuid: string;
-  name: string;
-  desc: string;
-  address: string;
-  opening: OpeningProps;
-  rating: number;
-  comments: CommentProps[];
-  image: ImageProps;
-};
+import ExpandSvg from '@/resources/svg/Expand';
+import Link from 'next/link';
 
 function MapPoint({ ...props }: MapPointProps) {
   // Review
   const allStars: JSX.Element[] = RenderStars(props.rating, '34', '34');
-  const ratingAsString = props.rating.toString();
-  // Hooks
   const minimumComments: number = 2;
   const [counter, setCounter] = useState<number>(minimumComments); // Counter for number of shown comments
   const isMounted = useRef(false); // used to check if the component did mount for the first time
@@ -88,14 +77,16 @@ function MapPoint({ ...props }: MapPointProps) {
             height={props.image.height}
             width={props.image.width}
           />
-          <div
-            id="close-button"
-            className="absolute top-2 right-2 bg-default-font/50 rounded-full hover:cursor-pointer"
-            onClick={closePopUp}
-            title="Close"
-          >
-            <CloseSvg width="40" height="40" />
-          </div>
+          <Link href="/">
+            <button
+              id="close-button"
+              className="absolute top-2 right-2 bg-dark-sea/50 rounded-full hover:cursor-pointer"
+              onClick={closePopUp}
+              title="Close"
+            >
+              <CloseSvg width="40" height="40" />
+            </button>
+          </Link>
         </div>
         <div
           id="lower-wrapper"
@@ -105,7 +96,7 @@ function MapPoint({ ...props }: MapPointProps) {
             <h1>{props.name}</h1>
           </div>
           <div className="mb-[10%] text-center">
-            <ul title={`Average Rating: ${ratingAsString}`}>
+            <ul title={`Average Rating: ${props.rating.toString()}`}>
               {allStars.map((star, index) => (
                 <li key={index} className="inline">
                   {star}
@@ -126,12 +117,29 @@ function MapPoint({ ...props }: MapPointProps) {
                 style={{
                   maxHeight: expandDesc
                     ? calcDescElemHeight('desc-text-elem')
-                    : '5rem',
+                    : '5.65rem',
                 }}
-                className="ease via-dark-seaweed to-dark-sea p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 hover:bg-pos-100 hover:shadow-shadow-dark-sea-hover hover:cursor-pointer"
+                className="relative ease via-dark-seaweed to-dark-sea p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 hover:bg-pos-100 hover:shadow-shadow-dark-sea-hover hover:cursor-pointer"
                 onClick={() => setExpandDesc(!expandDesc)}
               >
                 <p id="desc-text-elem">{props.desc}</p>
+                {calcDescElemHeight('desc-text-elem') > '5.65rem' ? (
+                  <motion.button
+                    initial={{ rotate: 0 }}
+                    animate={expandDesc ? { rotate: 180 } : { rotate: 0 }}
+                    transition={{
+                      type: 'spring',
+                      duration: 0.35,
+                      delay: 0,
+                      stiffness: 70,
+                    }}
+                    className="absolute z-10 right-[5px] bottom-[5px] rounded-full bg-dark-seaweed"
+                  >
+                    <ExpandSvg width="30" height="30" />
+                  </motion.button>
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
             {/* Adresse */}
