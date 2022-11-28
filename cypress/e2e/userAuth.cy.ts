@@ -50,8 +50,10 @@ describe('check user authentication process', () => {
 
         // manipulate cookies first to simulate an expired token
         cy.getCookie(constants.AUTH_TOKEN).then(($cookie) => {
-            $cookie.value = "expired_token_value";
-            cy.setCookie($cookie.name, $cookie.value, { secure: true, sameSite: 'strict', expiry: $cookie.expiry });
+            if ($cookie !== null) {
+                $cookie.value = "expired_token_value";
+                cy.setCookie($cookie.name, $cookie.value, { secure: true, sameSite: 'strict', expiry: $cookie.expiry });
+            }
         })
 
         cy.reload();
@@ -71,13 +73,17 @@ describe('check user authentication process', () => {
 
         // manipulate cookies first to simulate an expired token
         cy.getCookie(constants.AUTH_TOKEN).then(($cookie) => {
-            $cookie.value = "expired_token_value_2";
-            cy.setCookie($cookie.name, $cookie.value, { secure: true, sameSite: 'strict', expiry: $cookie.expiry });
+            if ($cookie !== null) {
+                $cookie.value = "expired_token_value_2";
+                cy.setCookie($cookie.name, $cookie.value, { secure: true, sameSite: 'strict', expiry: $cookie.expiry });
+            }
         })
 
         cy.getCookie(constants.AUTH_REFRESH_TOKEN).then(($cookie) => {
-            $cookie.value = "expired_refresh_token_value";
-            cy.setCookie($cookie.name, $cookie.value, { secure: true, sameSite: 'strict', expiry: $cookie.expiry });
+            if ($cookie !== null) {
+                $cookie.value = "expired_refresh_token_value";
+                cy.setCookie($cookie.name, $cookie.value, { secure: true, sameSite: 'strict', expiry: $cookie.expiry });
+            }
         })
 
         cy.reload();
