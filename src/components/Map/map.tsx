@@ -42,7 +42,7 @@ const aActivities = [
 
 export const icon = new Icon({
   iconUrl: '/pin.png',
-  iconSize: [70, 70],
+  iconSize: [30, 45],
 });
 
 function Map() {
