@@ -6,24 +6,25 @@
   "start_url" : "/",
   "name" : "GetOutside",
   "short_name" : "GO",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "@/public/logos/Logo192.png",
+      "src": "/logos/Logo192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "@/public/logos/Logo256.png",
+      "src": "/logos/Logo256.png",
       "sizes": "256x256",
       "type": "image/png"
     },
     {
-      "src": "@/public/logos/Logo384.png",
+      "src": "/logos/Logo384.png",
       "sizes": "384x384",
       "type": "image/png"
     },
     {
-      "src": "@/public/logos/Logo512.png",
+      "src": "/logos/Logo512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
