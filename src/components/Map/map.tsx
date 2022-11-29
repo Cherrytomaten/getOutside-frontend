@@ -3,7 +3,7 @@ import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Icon, LatLngExpression } from 'leaflet';
 import * as pinsData from '../../data/pins.json';
-import { Select, Box } from 'theme-ui';
+import Link from 'next/link';
 
 type PinProps = {
   type: string;
@@ -43,7 +43,7 @@ const aActivities = [
 
 export const icon = new Icon({
   iconUrl: '/pin.png',
-  iconSize: [33, 45],
+  iconSize: [25, 35],
 });
 
 function Map() {
@@ -75,14 +75,7 @@ function Map() {
 
   return (
     <div>
-      <Select
-        defaultValue="select Activity"
-        onChange={(event) => checkboxFilter}
-      >
-        {aActivities.map((checkboxFilter, i) => {
-          return <option key={i}>{checkboxFilter}</option>;
-        })}
-      </Select>
+      {/* <Dropdown /> */}
       {aActivities.map(checkboxFilter)}
       <MapContainer
         className="w-screen h-[95vh] mx-auto mt-12"
@@ -102,17 +95,20 @@ function Map() {
                   <div>
                     {pinsData.mappoint.map((pin) => (
                       <Marker
-                        key={pin.properties.PARK_ID}
+                        key={data.properties.PARK_ID}
                         position={[
-                          pin.geometry.coordinates[0],
-                          pin.geometry.coordinates[1],
+                          data.geometry.coordinates[0],
+                          data.geometry.coordinates[1],
                         ]}
                         icon={icon}
                       >
                         <Popup>
                           <div>
-                            <h1>{pin.properties.NAME}</h1>
-                            <p>{pin.properties.DESCRIPTION}</p>
+                            <h1>{data.properties.NAME}</h1>
+                            <p>{data.properties.DESCRIPTION}</p>
+                            <Link href="/mappoint/1">
+                              {data.properties.FACILITYID}
+                            </Link>
                           </div>
                         </Popup>
                       </Marker>
@@ -134,6 +130,9 @@ function Map() {
                         <div>
                           <h1>{data.properties.NAME}</h1>
                           <p>{data.properties.DESCRIPTION}</p>
+                          <Link href="/mappoint/1">
+                            {data.properties.FACILITYID}
+                          </Link>
                         </div>
                       </Popup>
                     </Marker>
