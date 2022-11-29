@@ -2,7 +2,7 @@ import 'leaflet/dist/leaflet.css';
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Icon, LatLngExpression } from 'leaflet';
-import * as pinsData from '../../data/pins.json';
+import pins from '@/data/pins.json';
 
 type PinProps = {
   type: string;
@@ -37,7 +37,7 @@ type ActivityType =
 const position: LatLngExpression = [52.520008, 13.404954];
 
 const aActivities = [
-  ...new Set(pinsData.mappoint.map((activity) => activity.properties.TYPE)),
+  ...new Set(pins.mappoint.map((activity) => activity.properties.TYPE)),
 ];
 
 export const icon = new Icon({
@@ -88,11 +88,11 @@ function Map() {
         />
         <div>
           <div>
-            {pinsData.mappoint.map((data: PinProps) => {
+            {pins.mappoint.map((data: PinProps) => {
               if (locationFilter.length === 0)
                 return (
                   <div>
-                    {pinsData.mappoint.map((pin) => (
+                    {pins.mappoint.map((pin) => (
                       <Marker
                         key={pin.properties.PARK_ID}
                         position={[
