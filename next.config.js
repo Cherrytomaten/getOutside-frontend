@@ -1,12 +1,13 @@
 /** @type {import('next').NextConfig} */
 const withPWA = require('next-pwa')({
+  //disable: process.env.NODE_ENV === 'development',
   dest: 'public',
   register: true,
   skipWaiting: true,
   fallbacks: {
     document: '/pages/_offline.tsx',
   },
-  disable: process.env.NODE_ENV === 'development',
+  buildExcludes: [/middleware-manifest.json$/]
 })
 
 module.exports = withPWA({
