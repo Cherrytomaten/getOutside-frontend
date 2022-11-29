@@ -4,4 +4,4 @@ function Offline() {
     );
 }
 
-export { Offline };
+export default Offline;
