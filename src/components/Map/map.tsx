@@ -76,15 +76,14 @@ function Map() {
 
   return (
     <div>
-      {MultipleSelectCheckmarks(aActivities)}
+      {MultipleSelectCheckmarks(aActivities.map(checkboxFilter))}
       <div
         style={{
           color: 'white',
-          // fontWeight: 'bold',
           marginLeft: '5px',
         }}
       >
-        {aActivities.map(checkboxFilter)}
+        {/* {aActivities.map(checkboxFilter)} */}
       </div>
       <MapContainer
         className="w-screen h-[95vh] mx-auto mt-12"

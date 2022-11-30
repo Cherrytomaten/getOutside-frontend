@@ -7,8 +7,19 @@ import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 
+type ActivityType =
+  | 'basketball'
+  | 'skatePark'
+  | 'volleyball'
+  | 'spa'
+  | 'parkour'
+  | 'handball'
+  | 'tennis'
+  | 'speedball'
+  | string;
+
 const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
+const ITEM_PADDING_TOP = 2;
 const MenuProps = {
   PaperProps: {
     style: {
@@ -18,36 +29,28 @@ const MenuProps = {
   },
 };
 
-export default function MultipleSelectCheckmarks(checkboxes: any) {
-  const [personName, setPersonName] = React.useState<string[]>([]);
-
-  const handleChange = (event: SelectChangeEvent<typeof personName>) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value
-    );
-  };
+export default function MultipleSelectCheckmarks(
+  checkboxes: Array<any>
+  //   checkboxes: Array<[ActivityType]>
+) {
+  const [CategoryName, setCatecgoryName] = React.useState<string[]>([]);
 
   return (
     <div>
       <FormControl sx={{ m: 1, width: 300 }}>
         <InputLabel id="demo-multiple-checkbox-label">Categories</InputLabel>
         <Select
+          style={{ backgroundColor: 'white' }}
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple
-          value={personName}
-          onChange={handleChange}
+          value={CategoryName}
           input={<OutlinedInput label="Categories" />}
           renderValue={(selected) => selected.join(', ')}
           MenuProps={MenuProps}
         >
           {checkboxes.map((checkbox: any) => (
             <MenuItem key={checkbox} value={checkbox}>
-              <Checkbox checked={personName.indexOf(checkbox) > -1} />
               <ListItemText primary={checkbox} />
             </MenuItem>
           ))}
