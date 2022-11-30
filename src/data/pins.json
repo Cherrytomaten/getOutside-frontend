@@ -45,7 +45,7 @@
     {
       "type": "Feature",
       "properties": {
-        "PARK_ID": 9,
+        "PARK_ID": 9157,
         "FACILITYID": 28006,
         "NAME": "Roving Baskteball Park Location",
         "TYPE": "basketball",
@@ -70,7 +70,7 @@
         "ADDRESS": "10 Warner Colpitts Lane",
         "OPEN": null,
         "NOTES": "Indoor - Summer",
-        "DESCRIPTION": "Flat surface, 5 components",
+        "DESCRIPTION": "Flat surface, 9 components",
         "PICTURE": null
       },
       "geometry": {
@@ -124,7 +124,7 @@
         "ADDRESS": "65 Stonehaven Drive",
         "OPEN": null,
         "NOTES": "Outdoor",
-        "DESCRIPTION": "Flat asphalt surface, 5 components",
+        "DESCRIPTION": "Flat asphalt surface, no components",
         "PICTURE": null
       },
       "geometry": {
@@ -142,7 +142,7 @@
         "ADDRESS": "100 Clifford Campbell Street",
         "OPEN": null,
         "NOTES": "Outdoor",
-        "DESCRIPTION": "Flat surface, 5 components",
+        "DESCRIPTION": "Flat surface, infinity components",
         "PICTURE": null
       },
       "geometry": {
@@ -160,7 +160,7 @@
         "ADDRESS": "110 Malvern Drive",
         "OPEN": null,
         "NOTES": "Outdoor",
-        "DESCRIPTION": "Flat surface, 5 components",
+        "DESCRIPTION": "smooth surface, 25 components",
         "PICTURE": null
       },
       "geometry": {
@@ -178,7 +178,7 @@
         "ADDRESS": "5660 Osgoode Main Street",
         "OPEN": null,
         "NOTES": "Outdoor - Mobile",
-        "DESCRIPTION": "Flat surface, 5 components",
+        "DESCRIPTION": "Rough surface, 66 components",
         "PICTURE": null
       },
       "geometry": {
@@ -232,7 +232,7 @@
         "ADDRESS": "190 Glen Park Drive",
         "OPEN": null,
         "NOTES": "Outdoor",
-        "DESCRIPTION": "Flat asphalt surface, 5 components",
+        "DESCRIPTION": "Flat asphalt surface, 5 components, City run skateboard camps in summer",
         "PICTURE": null
       },
       "geometry": {
@@ -250,7 +250,7 @@
         "ADDRESS": "1500 Shea Road",
         "OPEN": null,
         "NOTES": "Outdoor",
-        "DESCRIPTION": "Flat asphalt surface, 6 components",
+        "DESCRIPTION": "1000 surface, 60000 components",
         "PICTURE": null
       },
       "geometry": {
@@ -286,7 +286,7 @@
         "ADDRESS": "1448 Meadow Drive",
         "OPEN": null,
         "NOTES": "Outdoor - Mobile",
-        "DESCRIPTION": "Flat surface, 5 components",
+        "DESCRIPTION": "Flat surface, 5555555555555 components",
         "PICTURE": null
       },
       "geometry": {
@@ -317,12 +317,12 @@
       "properties": {
         "PARK_ID": 2599,
         "FACILITYID": 49251,
-        "NAME": "EugÃ¨ne Martineau tennis Park",
+        "NAME": "EugÃne Martineau tennis Park",
         "TYPE": "tennis",
         "ADDRESS": "710 Mikinak Road",
         "OPEN": null,
         "NOTES": "Outdoor",
-        "DESCRIPTION": "Flat surface, 5 components",
+        "DESCRIPTION": "1 component",
         "PICTURE": null
       },
       "geometry": {
@@ -340,7 +340,7 @@
         "ADDRESS": "720 Vistapark Drive",
         "OPEN": null,
         "NOTES": "Outdoor",
-        "DESCRIPTION": "Flat surface, 5 components",
+        "DESCRIPTION": "Flat surface, 5 components, Flat surface, 5 components, Flat surface, 5 components",
         "PICTURE": null
       },
       "geometry": {

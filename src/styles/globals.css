@@ -77,4 +77,8 @@
         scroll-behavior: smooth;
         @apply bg-dark-sea;
     }
+
+    .leaflet-popup-content-wrapper, .leaflet-popup.tip {
+        background-color: #000
+      }
 }

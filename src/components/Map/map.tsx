@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Icon, LatLngExpression } from 'leaflet';
 import * as pinsData from '../../data/pins.json';
 import Link from 'next/link';
+import MultipleSelectCheckmarks from '../Filter/dropDown';
 
 type PinProps = {
   type: string;
@@ -75,8 +76,16 @@ function Map() {
 
   return (
     <div>
-      {/* <Dropdown /> */}
-      {aActivities.map(checkboxFilter)}
+      {MultipleSelectCheckmarks(aActivities)}
+      <div
+        style={{
+          color: 'white',
+          // fontWeight: 'bold',
+          marginLeft: '5px',
+        }}
+      >
+        {aActivities.map(checkboxFilter)}
+      </div>
       <MapContainer
         className="w-screen h-[95vh] mx-auto mt-12"
         center={position}
@@ -103,11 +112,17 @@ function Map() {
                         icon={icon}
                       >
                         <Popup>
-                          <div>
+                          <div
+                            style={{
+                              backgroundColor: '#30444E',
+                              color: 'white',
+                              fontWeight: 'bold',
+                            }}
+                          >
                             <h1>{data.properties.NAME}</h1>
                             <p>{data.properties.DESCRIPTION}</p>
-                            <Link href="/mappoint/1">
-                              {data.properties.FACILITYID}
+                            <Link href={`/mappoint/${data.properties.PARK_ID}`}>
+                              click here
                             </Link>
                           </div>
                         </Popup>
@@ -130,8 +145,8 @@ function Map() {
                         <div>
                           <h1>{data.properties.NAME}</h1>
                           <p>{data.properties.DESCRIPTION}</p>
-                          <Link href="/mappoint/1">
-                            {data.properties.FACILITYID}
+                          <Link href={`/mappoint/${data.properties.PARK_ID}`}>
+                            click here
                           </Link>
                         </div>
                       </Popup>
