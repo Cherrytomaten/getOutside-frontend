@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { PasswordInput } from '@/components/PasswordInput';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import LogoNew from '@/resources/svg/Logo_new';
+import Link from 'next/link';
 
 type LoginFormProps = {
   email: string;
@@ -83,21 +84,23 @@ function Login() {
   }, []);
 
   return (
-    <div>
-      <div className="w-full h-64 flex justify-center">
+    <main className="w-full h-screen flex flex-col justify-start items-center overflow-x-hidden">
+      <div className="w-full h-2/5 max-h-64 flex justify-center my-[6vh]">
         <LogoNew width="auto" height="100%" />
       </div>
-      <form className="px-5 py-10" onSubmit={(e) => handleSubmit(e)}>
-        <div>
-          <p>max@mail.de</p>
-          <label htmlFor="login-mail" className="mr-3">
+      <form
+        className="flex-auto w-4/5 max-w-md flex flex-col justify-center items-center px-5 py-10"
+        onSubmit={(e) => handleSubmit(e)}
+      >
+        <div className="w-full max-w-xs min-w-[220px] py-4 flex justify-center items-center">
+          <label htmlFor="login-mail" className="mr-3 text-default-font">
             Email
           </label>
           <input
             type="email"
             className={`${
               formErrors.email !== '' ? 'border-2 border-red-600' : ''
-            }`}
+            } bg-dark-sea text-default-font border-b-2 border-solid w-full`}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, email: e.target.value })
             }
@@ -110,34 +113,48 @@ function Login() {
             <p className="input-error-text text-red-600">{formErrors.email}</p>
           )}
         </div>
-        <div>
-          <p>password123#</p>
-          <label htmlFor="login-password" className="mr-3">
+        <div className="w-full max-w-xs min-w-[220px] py-4 flex justify-center items-center">
+          <label
+            htmlFor="login-password"
+            className="mr-3 text-default-font flex-auto"
+          >
             Passwort
           </label>
+
+          <PasswordInput
+            className={`${
+              formErrors.password !== '' ? 'border-2 border-red-600' : ''
+            } bg-dark-sea text-default-font `}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
+            onClick={() => setFormErrors({ ...formErrors, password: '' })}
+            placeholder="Passwort"
+            id="login-password"
+            defaultValue="password123#"
+          />
+          {formErrors.password !== '' && (
+            <p className="input-error-text text-red-600">
+              {formErrors.password}
+            </p>
+          )}
         </div>
-        <PasswordInput
-          className={`${
-            formErrors.password !== '' ? 'border-2 border-red-600' : ''
-          }`}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setFormData({ ...formData, password: e.target.value })
-          }
-          onClick={() => setFormErrors({ ...formErrors, password: '' })}
-          placeholder="Passwort"
-          id="login-password"
-          defaultValue="password123#"
-        />
-        {formErrors.password !== '' && (
-          <p className="input-error-text text-red-600">{formErrors.password}</p>
-        )}
-        <div className="mt-10">
+        <div className="w-full max-w-xs min-w-[220px] flex flex-col justify-center items-center mt-10">
           <input
             type="submit"
             value="Login"
             id="login-btn-submit"
-            className="w-full p-2 text-dark-sea bg-bright-seaweed rounded-md transition-colors cursor-pointer hover:bg-hovered-seaweed"
+            className="w-full max-w-xs p-2 mb-4 text-dark-sea bg-bright-seaweed rounded-md transition-colors cursor-pointer hover:bg-hovered-seaweed"
           />
+          <Link href="/">
+            <button
+              type="button"
+              id="signup-btn"
+              className="w-full max-w-xs p-2 text-default-font border-solid border rounded-md border-bright-seaweed transition-all cursor-pointer hover:border-hovered-seaweed hover:ring-1 hover:ring-inset hover:ring-bright-seaweed"
+            >
+              SignUp
+            </button>
+          </Link>
         </div>
         {fetchUserAuthState.matches('pending') && <LoadingSpinner />}
         {!fetchUserAuthState.matches('pending') &&
@@ -147,7 +164,7 @@ function Login() {
             </p>
           )}
       </form>
-    </div>
+    </main>
   );
 }
 
