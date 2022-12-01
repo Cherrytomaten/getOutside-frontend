@@ -76,10 +76,7 @@ function Map() {
 
   return (
     <div>
-      <div>
-        {MultipleSelectCheckmarks(aActivities.map(checkboxFilter))}
-        {/* {aActivities.map(checkboxFilter)} */}
-      </div>
+      <div>{MultipleSelectCheckmarks(aActivities.map(checkboxFilter))}</div>
       <MapContainer
         className="w-screen h-[95vh] mx-auto mt-12"
         center={position}
@@ -107,9 +104,12 @@ function Map() {
                       >
                         <Popup>
                           <div className="font-bold text-white-100">
-                            <p>{data.properties.NAME}</p>
+                            <p className="font-extrabold ">
+                              {data.properties.NAME}
+                            </p>
+                            <p>Address: {data.properties.ADDRESS}</p>
                             <Link href={`/mappoint/${data.properties.PARK_ID}`}>
-                              click here
+                              Activity page
                             </Link>
                           </div>
                         </Popup>
@@ -130,9 +130,12 @@ function Map() {
                     >
                       <Popup>
                         <div className="font-bold text-white-100">
-                          <p>{data.properties.NAME}</p>
+                          <p className="font-extrabold ">
+                            {data.properties.NAME}
+                          </p>
+                          <p>Address: {data.properties.ADDRESS}</p>
                           <Link href={`/mappoint/${data.properties.PARK_ID}`}>
-                            click here
+                            Activity page
                           </Link>
                         </div>
                       </Popup>
