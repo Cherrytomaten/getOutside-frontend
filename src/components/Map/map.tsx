@@ -76,13 +76,8 @@ function Map() {
 
   return (
     <div>
-      {MultipleSelectCheckmarks(aActivities.map(checkboxFilter))}
-      <div
-        style={{
-          color: 'white',
-          marginLeft: '5px',
-        }}
-      >
+      <div>
+        {MultipleSelectCheckmarks(aActivities.map(checkboxFilter))}
         {/* {aActivities.map(checkboxFilter)} */}
       </div>
       <MapContainer
@@ -101,7 +96,7 @@ function Map() {
               if (locationFilter.length === 0)
                 return (
                   <div>
-                    {pinsData.mappoint.map((pin) => (
+                    {pinsData.mappoint.map((data) => (
                       <Marker
                         key={data.properties.PARK_ID}
                         position={[

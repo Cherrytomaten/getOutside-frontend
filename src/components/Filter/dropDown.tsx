@@ -45,12 +45,12 @@ export default function MultipleSelectCheckmarks(
           id="demo-multiple-checkbox"
           multiple
           value={CategoryName}
-          input={<OutlinedInput label="Categories" />}
-          renderValue={(selected) => selected.join(', ')}
-          MenuProps={MenuProps}
+          // input={<OutlinedInput label="Categories" />}
+          // renderValue={(selected) => selected.join(', ')}
+          // MenuProps={MenuProps}
         >
           {checkboxes.map((checkbox: any) => (
-            <MenuItem key={checkbox} value={checkbox}>
+            <MenuItem key={Math.random()} value={checkbox}>
               <ListItemText primary={checkbox} />
             </MenuItem>
           ))}
