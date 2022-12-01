@@ -2,7 +2,7 @@ import 'leaflet/dist/leaflet.css';
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Icon, LatLngExpression } from 'leaflet';
-import * as pinsData from '../../data/pins.json';
+import * as pinsData from '../../simulation/pins.json';
 import Link from 'next/link';
 import MultipleSelectCheckmarks from '../Filter/dropDown';
 
@@ -106,15 +106,8 @@ function Map() {
                         icon={icon}
                       >
                         <Popup>
-                          <div
-                            style={{
-                              backgroundColor: '#30444E',
-                              color: 'white',
-                              fontWeight: 'bold',
-                            }}
-                          >
-                            <h1>{data.properties.NAME}</h1>
-                            <p>{data.properties.DESCRIPTION}</p>
+                          <div className="font-bold text-white-100">
+                            <p>{data.properties.NAME}</p>
                             <Link href={`/mappoint/${data.properties.PARK_ID}`}>
                               click here
                             </Link>
@@ -136,9 +129,8 @@ function Map() {
                       icon={icon}
                     >
                       <Popup>
-                        <div>
-                          <h1>{data.properties.NAME}</h1>
-                          <p>{data.properties.DESCRIPTION}</p>
+                        <div className="font-bold text-white-100">
+                          <p>{data.properties.NAME}</p>
                           <Link href={`/mappoint/${data.properties.PARK_ID}`}>
                             click here
                           </Link>

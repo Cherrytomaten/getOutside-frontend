@@ -37,10 +37,10 @@ export default function MultipleSelectCheckmarks(
 
   return (
     <div>
-      <FormControl sx={{ m: 1, width: 300 }}>
+      <FormControl sx={{ m: 0.5, width: 350 }}>
         <InputLabel id="demo-multiple-checkbox-label">Categories</InputLabel>
         <Select
-          style={{ backgroundColor: 'white' }}
+          className="bg-white"
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple
