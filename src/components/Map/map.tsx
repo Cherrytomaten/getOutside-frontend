@@ -50,7 +50,7 @@ function Map() {
     <div>
       <div>{MultipleSelectCheckmarks(aActivities.map(checkboxFilter))}</div>
       <MapContainer
-        className="w-screen h-[80vh] mx-auto mt-12"
+        className="w-screen h-[80vh] mx-auto mt-5"
         center={position}
         zoom={12}
         scrollWheelZoom={true}
