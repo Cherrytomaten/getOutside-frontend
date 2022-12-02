@@ -45,14 +45,12 @@ const MapPointPage = () => {
   if (mapPointData === undefined) {
     return (
       <>
-        {console.log('Loading Spinner')}
         <LoadingSpinner />
       </>
     );
   } else if (mapPointData.uuid === undefined) {
     return (
       <>
-        {console.log('Empty MapPoint')}
         <MapPoint
           uuid="000"
           name="Empty"
@@ -68,7 +66,6 @@ const MapPointPage = () => {
   } else {
     return (
       <>
-        {console.log('MapPoint')}
         <MapPoint
           uuid={mapPointData.uuid}
           name={mapPointData.name}

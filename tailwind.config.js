@@ -14,7 +14,7 @@ module.exports = {
       colors: {
         'dark-sea': '#22343C',
         'dark-sea-hover': '#1d2c33',
-        'dark-sea-semi-transparent': '#22343Cbb',
+        'dark-sea-semi-transparent': '#22343Cdd',
         'bright-seaweed': '#3ED598',
         'hovered-seaweed': '#82e7bd',
         'dark-seaweed': '#005C53',
