@@ -5,19 +5,6 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
-// type ActivityType =
-//   | 'basketball'
-//   | 'skatePark'
-//   | 'volleyball'
-//   | 'spa'
-//   | 'parkour'
-//   | 'handball'
-//   | 'tennis'
-//   | 'speedball'
-//   | string;
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 2;
 
 export default function MultipleSelectCheckmarks(
   // checkboxes: Array<any>
@@ -37,7 +24,7 @@ export default function MultipleSelectCheckmarks(
           value={CategoryName}
         >
           {checkboxes.map((checkbox: any) => (
-            <MenuItem key={Math.random()} value={checkbox}>
+            <MenuItem key={checkbox.PARK_ID} value={checkbox}>
               <ListItemText primary={checkbox} />
             </MenuItem>
           ))}

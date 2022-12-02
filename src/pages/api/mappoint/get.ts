@@ -1,5 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { spaImg, volleyBallImg, skateparkImg, basketBallImg, tennisImg } from './images';
+import {
+  spaImg,
+  volleyBallImg,
+  skateparkImg,
+  basketBallImg,
+  tennisImg,
+} from '@/simulation/images';
 
 type MapPointApiRequest = NextApiRequest & {
   query: {
@@ -298,7 +304,13 @@ export default function handler(
     (elem) => elem.uuid === _req.query.uuid
   );
 
-  setTimeout(async () => {
-    return res.status(200).json(mapPointObj);
-  }, 200);
+  try {
+    setTimeout(async () => {
+      return res.status(200).json(mapPointObj);
+    }, 200);
+  } catch (error) {
+    setTimeout(async () => {
+      return res.status(404).json(error);
+    }, 404);
+  }
 }

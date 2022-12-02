@@ -5,36 +5,8 @@ import { Icon, LatLngExpression } from 'leaflet';
 import pins from '@/simulation/pins.json';
 import Link from 'next/link';
 import MultipleSelectCheckmarks from '@/components/Filter/dropDown';
-
-type PinProps = {
-  type: string;
-  properties: {
-    PARK_ID: number;
-    FACILITYID: number;
-    NAME: string;
-    TYPE: string;
-    ADDRESS: string;
-    OPEN: null;
-    NOTES: string;
-    DESCRIPTION: string;
-    PICTURE: null;
-  };
-  geometry: {
-    type: string;
-    coordinates: number[];
-  };
-};
-
-type ActivityType =
-  | 'basketball'
-  | 'skatePark'
-  | 'volleyball'
-  | 'spa'
-  | 'parkour'
-  | 'handball'
-  | 'tennis'
-  | 'speedball'
-  | string;
+import { PinProps } from '@/types/pinProps';
+import { ActivityType } from '@/types/ActivityType';
 
 const position: LatLngExpression = [52.520008, 13.404954];
 
@@ -78,7 +50,7 @@ function Map() {
     <div>
       <div>{MultipleSelectCheckmarks(aActivities.map(checkboxFilter))}</div>
       <MapContainer
-        className="w-screen h-[95vh] mx-auto mt-12"
+        className="w-screen h-[80vh] mx-auto mt-12"
         center={position}
         zoom={12}
         scrollWheelZoom={true}
