@@ -1,11 +1,9 @@
 import * as React from 'react';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import Checkbox from '@mui/material/Checkbox';
 
 // type ActivityType =
 //   | 'basketball'
@@ -22,8 +20,8 @@ const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 2;
 
 export default function MultipleSelectCheckmarks(
-  checkboxes: Array<any>
-  //   checkboxes: Array<[ActivityType]>
+  // checkboxes: Array<any>
+  checkboxes: Array<{}>
 ) {
   const [CategoryName, setCatecgoryName] = React.useState<string[]>([]);
 
