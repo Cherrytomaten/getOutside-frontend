@@ -42,6 +42,8 @@ function Map() {
           });
         }}
       />
+      &nbsp;
+      {/* how to style this component ?? */}
       {activity}
     </div>
   );
