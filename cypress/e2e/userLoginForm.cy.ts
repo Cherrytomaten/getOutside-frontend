@@ -1,10 +1,9 @@
-import * as constants from '../../src/types/constants';
-
 describe('check user login form processes', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000');
-    cy.log("refesh");
     cy.clearCookies();
+    cy.visit('http://localhost:3000/login');
+    cy.get('#login-mail').should('be.visible').clear().type('max@mail.de');
+    cy.get('#login-password').should('be.visible').clear().type('password123#');
   })
 
   it('should redirect to the login page', () => {

@@ -4,8 +4,8 @@ describe('check user authentication process', () => {
     beforeEach(() => {
         cy.clearCookies();
         cy.visit('http://localhost:3000/login');
-        cy.get('#login-mail').type('max@mail.de');
-        cy.get('#login-password').type('password123#');
+        cy.get('#login-mail').clear().type('max@mail.de');
+        cy.get('#login-password').clear().type('password123#');
         cy.get('#login-btn-submit').click();
         cy.url().should('eq', 'http://localhost:3000/');
     });
