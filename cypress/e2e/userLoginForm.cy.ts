@@ -2,8 +2,8 @@ describe('check user login form processes', () => {
   beforeEach(() => {
     cy.clearCookies();
     cy.visit('http://localhost:3000/login');
-    cy.get('#login-mail').should('be.visible').clear().type('max@mail.de');
-    cy.get('#login-password').should('be.visible').clear().type('password123#');
+    cy.get('#login-mail').should('be.visible').clear();
+    cy.get('#login-password').should('be.visible').clear();
   })
 
   it('should redirect to the login page', () => {
