@@ -32,3 +32,5 @@ describe('check user login form processes', () => {
     cy.get('.server-fetch-error-text').should('exist').and('have.text', 'No matching data found for given email & password.')
   })
 })
+
+export {};
