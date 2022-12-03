@@ -15,10 +15,13 @@
     "safari 11"
   ],
   "scripts": {
+    "install:frozen": "yarn install --frozen-lockfile",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "cypress:open": "cypress open"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
@@ -27,16 +30,29 @@
     ]
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/material": "^5.10.16",
+    "@xstate/react": "^3.0.1",
+    "axios": "^1.2.0",
+    "bcrypt": "^5.1.0",
+    "framer-motion": "^7.6.7",
+    "leaflet": "^1.9.2",
     "next": "12.3.1",
+    "next-pwa": "^5.6.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-leaflet": "^4.1.0",
+    "xstate": "^4.34.0"
   },
   "devDependencies": {
     "@aacn_org/eslint-plugin-tailwind-classname-order": "^0.2.7",
+    "@types/leaflet": "^1.9.0",
     "@types/node": "18.11.0",
     "@types/react": "18.0.21",
     "@types/react-dom": "18.0.6",
     "autoprefixer": "^10.4.12",
+    "cypress": "^11.2.0",
     "eslint": "^8.25.0",
     "eslint-config-next": "12.3.1",
     "eslint-config-prettier": "^8.5.0",

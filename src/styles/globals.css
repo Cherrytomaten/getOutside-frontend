@@ -77,4 +77,8 @@
         scroll-behavior: smooth;
         @apply bg-dark-sea;
     }
+
+    .request-popup .leaflet-popup-content-wrapper {
+        @apply bg-dark-sea;
+      }
 }
