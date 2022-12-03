@@ -3,34 +3,40 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 
-
-export default function MultipleSelectCheckmarks(
-  // checkboxes: Array<any>
-  checkboxes: Array<{}>
-) {
+export default function MultipleSelectCheckmarks(checkboxes: Array<{}>) {
   const [CategoryName, setCatecgoryName] = React.useState<string[]>([]);
 
   return (
     <div>
-      <FormControl sx={{ m: 0.5 }} className="w-screen mx-auto">
+      <FormControl
+        color="secondary"
+        sx={{ m: 0.5 }}
+        className="w-screen mx-auto "
+      >
         <InputLabel
-          className="w-screen mx-auto"
+          className="w-screen mx-auto "
           style={{ color: 'dimgrey' }}
           id="demo-multiple-checkbox-label"
         >
           Categories
         </InputLabel>
         <Select
-          className="bg-bright-seaweed"
+          className="bg-bright-seaweed "
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple
           value={CategoryName}
         >
           {checkboxes.map((checkbox: any) => (
-            <MenuItem key={checkbox.PARK_ID} value={checkbox}>
+            <MenuItem
+              sx={{
+                color: 'darkgreen',
+              }}
+              key={checkbox.PARK_ID}
+              value={checkbox}
+            >
               <ListItemText primary={checkbox} />
             </MenuItem>
           ))}

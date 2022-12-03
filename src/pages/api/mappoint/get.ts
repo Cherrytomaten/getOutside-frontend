@@ -294,6 +294,16 @@ const mockMapPoints: MapPointProps[] = [
     comments: comments2,
     image: volleyBallImg,
   },
+  {
+    uuid: '2211',
+    name: 'Schäfersee Lake & Park',
+    desc: 'Flat surface, 5 components, Flat surface, 5 components, Flat surface, 5 components',
+    address: 'Schäfersee 13407',
+    opening: opening2,
+    rating: 5,
+    comments: comments2,
+    image: spaImg,
+  },
 ];
 
 export default function handler(

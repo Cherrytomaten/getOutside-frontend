@@ -5,7 +5,7 @@ import { Icon, LatLngExpression } from 'leaflet';
 import pins from '@/simulation/pins.json';
 import Link from 'next/link';
 import MultipleSelectCheckmarks from '@/components/Filter/dropDown';
-import { PinProps } from '@/types/pinProps';
+import { PinProps } from '@/types/PinProps';
 import { ActivityType } from '@/types/ActivityType';
 
 const position: LatLngExpression = [52.520008, 13.404954];
@@ -52,7 +52,7 @@ function Map() {
     <div>
       <div>{MultipleSelectCheckmarks(aActivities.map(checkboxFilter))}</div>
       <MapContainer
-        className="w-screen h-[80vh] mx-auto mt-5"
+        className="w-screen h-[85vh] mx-auto mt-5"
         center={position}
         zoom={12}
         scrollWheelZoom={true}
@@ -76,16 +76,18 @@ function Map() {
                         ]}
                         icon={icon}
                       >
-                        <Popup>
-                          <div className="font-bold text-white-100">
-                            <p className="font-extrabold ">
-                              {data.properties.NAME}
-                            </p>
-                            <p>Address: {data.properties.ADDRESS}</p>
-                            <Link href={`/mappoint/${data.properties.PARK_ID}`}>
-                              Activity page
-                            </Link>
-                          </div>
+                        <Popup className="request-popup">
+                          {/* <div className="font-bold text-white-100"> */}
+                          <p className="font-extrabold text-bright-seaweed">
+                            {data.properties.NAME}
+                          </p>
+                          <p className="font-bold text-bright-seaweed">
+                            Address: {data.properties.ADDRESS}
+                          </p>
+                          <Link href={`/mappoint/${data.properties.PARK_ID}`}>
+                            Activity page
+                          </Link>
+                          {/* </div> */}
                         </Popup>
                       </Marker>
                     ))}
@@ -102,16 +104,16 @@ function Map() {
                       ]}
                       icon={icon}
                     >
-                      <Popup>
-                        <div className="font-bold text-white-100">
-                          <p className="font-extrabold ">
-                            {data.properties.NAME}
-                          </p>
-                          <p>Address: {data.properties.ADDRESS}</p>
-                          <Link href={`/mappoint/${data.properties.PARK_ID}`}>
-                            Activity page
-                          </Link>
-                        </div>
+                      <Popup className="request-popup">
+                        <p className="font-extrabold text-bright-seaweed">
+                          {data.properties.NAME}
+                        </p>
+                        <p className="font-bold text-bright-seaweed">
+                          Address: {data.properties.ADDRESS}
+                        </p>
+                        <Link href={`/mappoint/${data.properties.PARK_ID}`}>
+                          Activity page
+                        </Link>
                       </Popup>
                     </Marker>
                   </div>

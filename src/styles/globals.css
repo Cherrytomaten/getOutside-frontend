@@ -78,7 +78,7 @@
         @apply bg-dark-sea;
     }
 
-    .leaflet-popup-content-wrapper, .leaflet-popup.tip {
-        background-color: #000
+    .request-popup .leaflet-popup-content-wrapper {
+        @apply bg-dark-sea;
       }
 }

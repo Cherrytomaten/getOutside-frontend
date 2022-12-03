@@ -347,6 +347,24 @@
         "type": "Point",
         "coordinates": [52.555263, 13.443703]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "PARK_ID": 2211,
+        "FACILITYID": 49211,
+        "NAME": "Schäfersee Lake & Park",
+        "TYPE": "Swimming",
+        "ADDRESS": "Schäfersee 13407",
+        "OPEN": null,
+        "NOTES": "Outdoor",
+        "DESCRIPTION": "Schäfersee warm lake",
+        "PICTURE": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [52.564507, 13.360863]
+      }
     }
   ]
 }
