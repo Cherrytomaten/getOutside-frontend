@@ -1,10 +1,9 @@
-import * as constants from '../../src/types/constants';
-
 describe('check user login form processes', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000');
-    cy.log("refesh");
     cy.clearCookies();
+    cy.visit('http://localhost:3000/login');
+    cy.get('#login-mail').should('be.visible').clear();
+    cy.get('#login-password').should('be.visible').clear();
   })
 
   it('should redirect to the login page', () => {
@@ -33,3 +32,5 @@ describe('check user login form processes', () => {
     cy.get('.server-fetch-error-text').should('exist').and('have.text', 'No matching data found for given email & password.')
   })
 })
+
+export {};
