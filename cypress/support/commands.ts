@@ -11,7 +11,7 @@
 //
 //
 // -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
+// Cypress.Commands.add('login', (username, password) => { ... })
 //
 //
 // -- This is a child command --
@@ -28,7 +28,7 @@
 // declare global {
 //   namespace Cypress {
 //     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
+//       login(username: string, password: string): Chainable<void>
 //       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
 //       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
 //       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>

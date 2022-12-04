@@ -7,7 +7,7 @@ import LogoNew from '@/resources/svg/Logo_new';
 import Link from 'next/link';
 
 type LoginFormProps = {
-  email: string;
+  username: string;
   password: string;
 };
 
@@ -15,11 +15,11 @@ function Login() {
   const { fetchUserAuthState, sendToUserAuthMachine } = useAuth();
   const router = useRouter();
   const [formData, setFormData] = useState<LoginFormProps>({
-    email: '',
+    username: '',
     password: '',
   });
   const [formErrors, setFormErrors] = useState<LoginFormProps>({
-    email: '',
+    username: '',
     password: '',
   });
 
@@ -27,15 +27,15 @@ function Login() {
     let validator: boolean = true;
     let data = formData;
 
-    if (formData.email === '') {
-      data = { ...data, email: 'Bitte Email angeben' };
+    if (formData.username === '') {
+      data = { ...data, username: 'Please enter username' };
       validator = false;
     } else {
-      data = { ...data, email: '' };
+      data = { ...data, username: '' };
     }
 
     if (formData.password === '') {
-      data = { ...data, password: 'Bitte Passwort ausfüllen' };
+      data = { ...data, password: 'Please enter password' };
       validator = false;
     } else {
       data = { ...data, password: '' };
@@ -50,7 +50,7 @@ function Login() {
     if (validateForm()) {
       sendToUserAuthMachine({
         type: 'FETCH_AUTH_USER',
-        payload: { email: formData.email, password: formData.password },
+        payload: { username: formData.username, password: formData.password },
       });
     }
   }
@@ -64,7 +64,7 @@ function Login() {
     }
   }, [fetchUserAuthState, fetchUserAuthState.context, router]);
 
-  // password manager can autofill password & email fields.
+  // password manager can autofill password & username fields.
   useEffect(() => {
     if (document) {
       const preFilledPassword = (
@@ -74,11 +74,11 @@ function Login() {
         setFormData((f) => ({ ...f, password: preFilledPassword }));
       }
 
-      const preFilledEmail = (
-        document.getElementById('login-mail') as HTMLInputElement
+      const preFilledUsername = (
+        document.getElementById('login-username') as HTMLInputElement
       )?.value;
-      if (preFilledEmail !== '') {
-        setFormData((f) => ({ ...f, email: preFilledEmail }));
+      if (preFilledUsername !== '') {
+        setFormData((f) => ({ ...f, username: preFilledUsername }));
       }
     }
   }, []);
@@ -89,57 +89,65 @@ function Login() {
         <LogoNew width="auto" height="100%" />
       </div>
       <form
-        className="flex-auto w-4/5 max-w-md flex flex-col justify-center items-center px-5 py-10"
+        className="flex-auto w-4/5 max-w-md flex flex-col justify-start items-center px-5 pb-10"
         onSubmit={(e) => handleSubmit(e)}
       >
-        <div className="w-full max-w-xs min-w-[220px] py-4 flex justify-center items-center">
-          <label htmlFor="login-mail" className="mr-3 text-default-font">
-            Email
+        <div
+          className={`${
+            formErrors.username !== '' ? 'mb-3' : ''
+          } w-full max-w-xs min-w-[220px] py-3 flex justify-start items-center flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}
+        >
+          <label htmlFor="login-username" className="invisible h-0 w-0">
+            Username
           </label>
           <input
-            type="email"
+            type="text"
             className={`${
-              formErrors.email !== '' ? 'border-2 border-red-600' : ''
-            } bg-dark-sea text-default-font border-b-2 border-solid w-full`}
+              formErrors.username !== ''
+                ? 'border-red-600'
+                : 'border-bright-seaweed hover:border-hovered-seaweed'
+            } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1`}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setFormData({ ...formData, email: e.target.value })
+              setFormData({ ...formData, username: e.target.value })
             }
-            onClick={() => setFormErrors({ ...formErrors, email: '' })}
-            placeholder="Email"
-            id="login-mail"
-            defaultValue="max@mail.de"
+            onClick={() => setFormErrors({ ...formErrors, username: '' })}
+            placeholder="Username"
+            id="login-username"
           />
-          {formErrors.email !== '' && (
-            <p className="input-error-text text-red-600">{formErrors.email}</p>
+          {formErrors.username !== '' && (
+            <p className="input-error-text absolute bottom-[-15px] left-0 text-red-600">
+              {formErrors.username}
+            </p>
           )}
         </div>
-        <div className="w-full max-w-xs min-w-[220px] py-4 flex justify-center items-center">
-          <label
-            htmlFor="login-password"
-            className="mr-3 text-default-font flex-auto"
-          >
+        <div
+          className={`${
+            formErrors.username !== '' ? 'mb-3' : ''
+          } w-full max-w-xs min-w-[220px] py-3 flex justify-start items-center flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}
+        >
+          <label htmlFor="login-password" className="invisible h-0 w-0">
             Passwort
           </label>
-
           <PasswordInput
             className={`${
-              formErrors.password !== '' ? 'border-2 border-red-600' : ''
-            } bg-dark-sea text-default-font `}
+              formErrors.password !== ''
+                ? 'border-red-600'
+                : 'border-bright-seaweed hover:border-hovered-seaweed'
+            } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1`}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, password: e.target.value })
             }
             onClick={() => setFormErrors({ ...formErrors, password: '' })}
-            placeholder="Passwort"
+            placeholder="Password"
             id="login-password"
-            defaultValue="password123#"
           />
           {formErrors.password !== '' && (
-            <p className="input-error-text text-red-600">
+            <p className="input-error-text absolute bottom-[-15px] left-0 text-red-600">
               {formErrors.password}
             </p>
           )}
         </div>
-        <div className="w-full max-w-xs min-w-[220px] flex flex-col justify-center items-center mt-10">
+        <div className="w-full min-w-[220px] max-w-xs flex flex-col justify-center items-center mt-10">
           <input
             type="submit"
             value="Login"
@@ -155,14 +163,16 @@ function Login() {
               SignUp
             </button>
           </Link>
+          {!fetchUserAuthState.matches('pending') &&
+            fetchUserAuthState.context.err !== null &&
+            formErrors.username === '' &&
+            formErrors.password === '' && (
+              <p className="server-fetch-error-text text-red-600 mt-4 text-center">
+                {fetchUserAuthState.context.err.errors.message}
+              </p>
+            )}
         </div>
         {fetchUserAuthState.matches('pending') && <LoadingSpinner />}
-        {!fetchUserAuthState.matches('pending') &&
-          fetchUserAuthState.context.err !== null && (
-            <p className="server-fetch-error-text">
-              {fetchUserAuthState.context.err.errors.message}
-            </p>
-          )}
       </form>
     </main>
   );

@@ -10,6 +10,9 @@ module.exports = {
     fontFamily: {
       lato: ['Lato', 'sans-serif'],
     },
+    screens: {
+      xs: '380px',
+    },
     extend: {
       colors: {
         'dark-sea': '#22343C',

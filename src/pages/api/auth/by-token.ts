@@ -2,11 +2,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { mockUser } from "@/simulation/userdataSim";
 
 type LoginServerRequest = NextApiRequest & {
-    body: {
-        email: string,
-        password: string,
-    }
-}
+  body: {
+    username: string;
+    password: string;
+  };
+};
 
 export default function handler(_req: LoginServerRequest, res: NextApiResponse) {
     const userObj = mockUser.find(elem => elem.token === _req.query.token);
