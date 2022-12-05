@@ -3,16 +3,13 @@ import { useMachine } from "@xstate/react";
 import { fetchAuthUserMachine } from "@/machines/authUser";
 import { UserAuthRepo } from "@/repos/UserRepo";
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
-import { BaseActionObject, ResolveTypegenMeta, ServiceMap, State, TypegenDisabled } from "xstate";
-import { AuthContext, AuthEvent, AuthTypestate } from "@/types/Auth";
+import { AuthStateMachine } from "@/types/Auth";
 import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 import { mockUser } from "@/simulation/userdataSim";
 
 type LayoutProp = {
     children: ReactNode,
 }
-
-type AuthStateMachine = State<AuthContext, AuthEvent, any, AuthTypestate, ResolveTypegenMeta<TypegenDisabled, AuthEvent, BaseActionObject, ServiceMap>>;
 
 type AuthContextProps = {
     fetchUserAuthState: AuthStateMachine,

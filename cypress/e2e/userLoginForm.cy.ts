@@ -8,7 +8,7 @@ describe('check user login form processes', () => {
 
   it('should redirect to the login page', () => {
     cy.clearCookies();
-    cy.visit('http://localhost:3000');
+    cy.visit('http://localhost:3000/home');
     cy.url().should('include', '/login');
   })
 
@@ -22,7 +22,8 @@ describe('check user login form processes', () => {
     cy.get('#login-btn-submit').click();
     cy.get('.input-error-text').its('length').should('eq', 2);
     cy.get('#login-username').click();
-    cy.get('.input-error-text').its('length').should('eq', 1);
+    cy.wait(400);
+    cy.get('.input-error-text').should('be.visible').its('length').should('eq', 1);
   })
 
   it('should yield an error as login attempted failed', () => {

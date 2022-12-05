@@ -13,7 +13,7 @@ import { useAuth } from "@/context/AuthContext";
  */
 function useUserAuth() {
     const [authStatus, setAuthStatus] = useState<boolean>(true);
-    const { fetchUserAuthState, sendToUserAuthMachine, UserRepoClass } = useAuth();
+    const { fetchUserAuthState, sendToUserAuthMachine } = useAuth();
 
     // check if a token was cookied. If not redirect to login page, otherwise try to fetch userdata by token
     function validateUser() {
