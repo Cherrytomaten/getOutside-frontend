@@ -97,7 +97,7 @@ function Login() {
             formErrors.username !== '' ? 'mb-3' : ''
           } w-full max-w-xs min-w-[220px] py-3 flex justify-start items-center flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}
         >
-          <label htmlFor="login-username" className="invisible h-0 w-0">
+          <label htmlFor="login-username" className="invisible w-0 h-0">
             Username
           </label>
           <input
@@ -125,7 +125,7 @@ function Login() {
             formErrors.username !== '' ? 'mb-3' : ''
           } w-full max-w-xs min-w-[220px] py-3 flex justify-start items-center flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}
         >
-          <label htmlFor="login-password" className="invisible h-0 w-0">
+          <label htmlFor="login-password" className="invisible w-0 h-0">
             Passwort
           </label>
           <PasswordInput
@@ -167,7 +167,7 @@ function Login() {
             fetchUserAuthState.context.err !== null &&
             formErrors.username === '' &&
             formErrors.password === '' && (
-              <p className="server-fetch-error-text text-red-600 mt-4 text-center">
+              <p className="server-fetch-error-text mt-4 text-center text-red-600">
                 {fetchUserAuthState.context.err.errors.message}
               </p>
             )}
