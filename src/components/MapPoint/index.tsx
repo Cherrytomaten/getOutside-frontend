@@ -59,15 +59,10 @@ function MapPoint({ ...props }: MapPointProps) {
     }
   }
 
-  // TODO: add functionality
-  function closePopUp() {
-    console.log('PopUp wird geschlossen.');
-  }
-
   return (
     <section
       id={props.uuid}
-      className="relative w-full h-screen flex justify-center p-5 text-default-font"
+      className="relative w-full h-full min-h-screen flex justify-center p-5 text-default-font"
     >
       <div id="card-wrapper" className="min-w-0 max-w-sm">
         <div className="relative w-full mb-8 overflow-hidden rounded-t-3xl">
@@ -81,7 +76,6 @@ function MapPoint({ ...props }: MapPointProps) {
             <button
               id="close-button"
               className="absolute top-2 right-2 bg-dark-sea/50 rounded-full hover:cursor-pointer"
-              onClick={closePopUp}
               title="Close"
             >
               <CloseSvg width="40" height="40" />

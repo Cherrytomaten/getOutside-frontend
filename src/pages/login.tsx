@@ -79,9 +79,9 @@ function Login() {
   }
 
   return (
-    <main className="w-full h-screen flex flex-col justify-start items-center overflow-x-hidden">
-      <div className="w-full h-2/5 max-h-64 flex justify-center my-[6vh]">
-        <LogoNew width="auto" height="100%" />
+    <main className="w-full h-full min-h-screen flex flex-col justify-start items-center overflow-x-hidden">
+      <div className="w-full h-auto max-h-64 flex justify-center my-14">
+        <LogoNew width="220px" height="auto" />
       </div>
       <form
         className="flex-auto w-4/5 max-w-md flex flex-col justify-start items-center px-5 pb-10"
