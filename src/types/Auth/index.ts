@@ -1,4 +1,5 @@
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
+import { BaseActionObject, ResolveTypegenMeta, ServiceMap, State, TypegenDisabled } from "xstate";
 
 type AuthContext = {
     user: UserProps | null,
@@ -66,5 +67,8 @@ type AuthTypestate =
             }
 }
 
+type AuthStateMachine = State<AuthContext, AuthEvent, any, AuthTypestate, ResolveTypegenMeta<TypegenDisabled, AuthEvent, BaseActionObject, ServiceMap>>;
 
-export type { AuthContext, AuthEvent, AuthTypestate };
+
+
+export type { AuthContext, AuthEvent, AuthTypestate, AuthStateMachine };

@@ -7,11 +7,11 @@ describe('check user authentication process', () => {
         cy.get('#login-username').should('be.visible').clear().type('max1');
         cy.get('#login-password').should('be.visible').clear().type('password123#');
         cy.get('#login-btn-submit').should('be.visible').click();
-        cy.url().should('eq', 'http://localhost:3000/');
+        cy.url().should('eq', 'http://localhost:3000/home');
     });
 
     it('user should be logged in', () => {
-        cy.url().should('eq', 'http://localhost:3000/');
+        cy.url().should('eq', 'http://localhost:3000/home');
     })
 
     it('should query existing cookies and log in automatically', () => {
