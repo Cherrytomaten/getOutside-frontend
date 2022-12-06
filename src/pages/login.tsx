@@ -80,7 +80,6 @@ function Login() {
 
   return (
     <main className="w-full h-screen flex flex-col justify-start items-center overflow-x-hidden">
-      <button onClick={() => {console.log(validateForm())}}>Click</button>
       <div className="w-full h-2/5 max-h-64 flex justify-center my-[6vh]">
         <LogoNew width="auto" height="100%" />
       </div>
