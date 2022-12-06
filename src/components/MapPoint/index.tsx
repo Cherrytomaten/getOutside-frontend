@@ -77,7 +77,7 @@ function MapPoint({ ...props }: MapPointProps) {
             height={props.image.height}
             width={props.image.width}
           />
-          <Link href="/map">
+          <Link href="/home">
             <button
               id="close-button"
               className="absolute top-2 right-2 bg-dark-sea/50 rounded-full hover:cursor-pointer"

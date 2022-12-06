@@ -3,17 +3,31 @@ import { MapPoint } from '@/components/MapPoint';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useUserAuth } from "@/hooks/useUserAuth";
+import { useAuth } from "@/context/AuthContext";
 
 const MapPointPage = () => {
   const router = useRouter();
   const { pid } = router.query;
   const [mapPointData, setMapPointData] = useState<MapPointProps>();
+  const authenticationHook = useUserAuth();
+  const { fetchUserAuthState } = useAuth();
 
   useEffect(() => {
     if (!router.isReady) return;
     apiRequest();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady]);
+
+  useEffect(() => {
+    if (!authenticationHook.authStatus) {
+      router.push('/login');
+    }
+  }, [authenticationHook.authStatus, router]);
+
+  if (fetchUserAuthState.context.user === null) {
+    return <LoadingSpinner />;
+  }
 
   async function apiRequest() {
     const backendData = await axios.get('/api/mappoint/get', {

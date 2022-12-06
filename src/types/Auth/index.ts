@@ -1,4 +1,5 @@
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
+import { BaseActionObject, ResolveTypegenMeta, ServiceMap, State, TypegenDisabled } from "xstate";
 
 type AuthContext = {
     user: UserProps | null,
@@ -7,12 +8,19 @@ type AuthContext = {
 }
 
 type AuthEvent =
-    {  type: 'FETCH_AUTH_USER'; payload: { email: string, password: string, checkToken?: boolean } }
-    | { type: 'RESOLVE_AUTH'; user: UserProps, err: null }
-    | { type: 'REJECT_AUTH'; err: FetchServerErrorResponse | null, attRef: boolean }
-    | { type: 'RETRY', payload: { refreshToken: string } }
-    | { type: 'LOGOUT' }
-    | { type: 'IDLE' }
+  | {
+      type: 'FETCH_AUTH_USER';
+      payload: { username: string; password: string; checkToken?: boolean };
+    }
+  | { type: 'RESOLVE_AUTH'; user: UserProps; err: null }
+  | {
+      type: 'REJECT_AUTH';
+      err: FetchServerErrorResponse | null;
+      attRef: boolean;
+    }
+  | { type: 'RETRY'; payload: { refreshToken: string } }
+  | { type: 'LOGOUT' }
+  | { type: 'IDLE' };
 
 type AuthTypestate =
         {
@@ -59,6 +67,8 @@ type AuthTypestate =
             }
 }
 
+type AuthStateMachine = State<AuthContext, AuthEvent, any, AuthTypestate, ResolveTypegenMeta<TypegenDisabled, AuthEvent, BaseActionObject, ServiceMap>>;
 
-export type { AuthContext, AuthEvent, AuthTypestate };
 
+
+export type { AuthContext, AuthEvent, AuthTypestate, AuthStateMachine };
