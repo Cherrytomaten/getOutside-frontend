@@ -127,7 +127,7 @@ function MapPoint({ ...props }: MapPointProps) {
                       delay: 0,
                       stiffness: 70,
                     }}
-                    className="z-10 absolute right-[5px] bottom-[5px] bg-dark-seaweed rounded-full"
+                    className="z-10 absolute right-[5px] bottom-[5px] rounded-full"
                   >
                     <ExpandSvg width="30" height="30" />
                   </motion.button>
