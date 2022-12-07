@@ -13,6 +13,7 @@ function MapPoint({ ...props }: MapPointProps) {
   const [counter, setCounter] = useState<number>(minimumComments); // Counter for number of shown comments
   const isMounted = useRef(false); // used to check if the component did mount for the first time
   const [expandDesc, setExpandDesc] = useState<boolean>(false); // boolean to open the description
+  const [descSize, setDescSize] = useState<number>(0)
 
   // automatically scroll down if a new comment appears
   // neglect this behavior on first mounting of component
@@ -21,6 +22,7 @@ function MapPoint({ ...props }: MapPointProps) {
       window.scrollTo(0, document.body.scrollHeight);
     } else {
       isMounted.current = true;
+      calcDescElemHeight("desc-text-elem")
     }
   }, [counter]);
 
@@ -30,15 +32,25 @@ function MapPoint({ ...props }: MapPointProps) {
   }
 
   // calculates height of elem considering parents
-  function calcDescElemHeight(id: string): string {
+  function calcDescElemHeight(id: string): number {
     const elemHeight = document.getElementById(id)?.offsetHeight;
-    console.log('height: ', elemHeight);
     if (elemHeight !== null && elemHeight) {
       // returns height of elem calculated with the parents padding
-      return elemHeight + 2 * 12 + 'px';
+      if(descSize != elemHeight + 2 * 12) {
+        setDescSize(elemHeight + 2 * 12)
+      }
+      return elemHeight + 2 * 12;
     }
 
-    return 'auto';
+    return 0;
+  }
+
+  function calcDescElemHeightToString(height: number): string {
+    if(height === 0) {
+      return "auto"
+    } else {
+      return height + "px"
+    }
   }
 
   // increment counter
@@ -107,17 +119,16 @@ function MapPoint({ ...props }: MapPointProps) {
             <div className="mb-5">
               <h3 className="mb-1 text-lg">Description:</h3>
               <div
-                // using style because it's faster to render than tailwind
                 style={{
                   maxHeight: expandDesc
-                    ? calcDescElemHeight('desc-text-elem')
+                    ? calcDescElemHeightToString(calcDescElemHeight('desc-text-elem'))
                     : '5.65rem',
                 }}
-                className="ease via-dark-seaweed to-dark-sea mq-hover:hover:bg-pos-100 mq-hover:hover:shadow-dark-sea-hover relative p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 hover:cursor-pointer"
+                className={`ease via-dark-seaweed to-dark-sea mq-hover:hover:bg-pos-100 mq-hover:hover:shadow-dark-sea-hover relative p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 hover:cursor-pointer`}
                 onClick={() => setExpandDesc(!expandDesc)}
               >
                 <p id="desc-text-elem">{props.desc}</p>
-                {calcDescElemHeight('desc-text-elem') > '5.65rem' ? (
+                {descSize > 90.4 ? (
                   <motion.button
                     initial={{ rotate: 0 }}
                     animate={expandDesc ? { rotate: 180 } : { rotate: 0 }}
