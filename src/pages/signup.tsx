@@ -137,7 +137,7 @@ function Signup() {
                             formErrors.username !== ''
                                 ? 'border-red-600'
                                 : 'border-bright-seaweed hover:border-hovered-seaweed'
-                        } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1`}
+                        } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
                         onChange={(e: ChangeEvent<HTMLInputElement>) =>
                             setFormData({ ...formData, username: e.target.value })
                         }
@@ -175,7 +175,7 @@ function Signup() {
                             formErrors.fname !== ''
                                 ? 'border-red-600'
                                 : 'border-bright-seaweed hover:border-hovered-seaweed'
-                        } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1`}
+                        } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
                         onChange={(e: ChangeEvent<HTMLInputElement>) =>
                             setFormData({ ...formData, fname: e.target.value })
                         }
@@ -214,7 +214,7 @@ function Signup() {
                             formErrors.lname !== ''
                                 ? 'border-red-600'
                                 : 'border-bright-seaweed hover:border-hovered-seaweed'
-                        } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1`}
+                        } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
                         onChange={(e: ChangeEvent<HTMLInputElement>) =>
                             setFormData({ ...formData, lname: e.target.value })
                         }
@@ -253,7 +253,7 @@ function Signup() {
                             formErrors.email !== ''
                                 ? 'border-red-600'
                                 : 'border-bright-seaweed hover:border-hovered-seaweed'
-                        } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1`}
+                        } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
                         onChange={(e: ChangeEvent<HTMLInputElement>) =>
                             setFormData({ ...formData, email: e.target.value })
                         }
@@ -291,7 +291,7 @@ function Signup() {
                             formErrors.password !== ''
                                 ? 'border-red-600'
                                 : 'border-bright-seaweed hover:border-hovered-seaweed'
-                        } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1`}
+                        } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
                         onChange={(e: ChangeEvent<HTMLInputElement>) =>
                             setFormData({ ...formData, password: e.target.value })
                         }
@@ -329,7 +329,7 @@ function Signup() {
                             formErrors.cpassword !== ''
                                 ? 'border-red-600'
                                 : 'border-bright-seaweed hover:border-hovered-seaweed'
-                        } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1`}
+                        } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
                         onChange={(e: ChangeEvent<HTMLInputElement>) =>
                             setFormData({ ...formData, cpassword: e.target.value })
                         }

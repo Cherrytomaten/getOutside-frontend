@@ -101,7 +101,7 @@ function Login() {
               formErrors.username !== ''
                 ? 'border-red-600'
                 : 'border-bright-seaweed hover:border-hovered-seaweed'
-            } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1`}
+            } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, username: e.target.value })
             }
@@ -138,7 +138,7 @@ function Login() {
               formErrors.password !== ''
                 ? 'border-red-600'
                 : 'border-bright-seaweed hover:border-hovered-seaweed'
-            } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1`}
+            } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, password: e.target.value })
             }
