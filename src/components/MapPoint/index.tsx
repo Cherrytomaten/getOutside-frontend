@@ -113,7 +113,7 @@ function MapPoint({ ...props }: MapPointProps) {
                     ? calcDescElemHeight('desc-text-elem')
                     : '5.65rem',
                 }}
-                className="ease via-dark-seaweed to-dark-sea relative p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 mq-hover:hover:bg-pos-100 mq-hover:hover:shadow-dark-sea-hover hover:cursor-pointer"
+                className="ease via-dark-seaweed to-dark-sea mq-hover:hover:bg-pos-100 mq-hover:hover:shadow-dark-sea-hover relative p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 hover:cursor-pointer"
                 onClick={() => setExpandDesc(!expandDesc)}
               >
                 <p id="desc-text-elem">{props.desc}</p>
