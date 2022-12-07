@@ -13,7 +13,8 @@ function MapPoint({ ...props }: MapPointProps) {
   const [counter, setCounter] = useState<number>(minimumComments); // Counter for number of shown comments
   const isMounted = useRef(false); // used to check if the component did mount for the first time
   const [expandDesc, setExpandDesc] = useState<boolean>(false); // boolean to open the description
-  const [descSize, setDescSize] = useState<number>(0)
+  const [descSize, setDescSize] = useState<number>(0); // description size - workaround for the arrow to show right
+  const [showRating, setShowRating] = useState<boolean>(false);
 
   // automatically scroll down if a new comment appears
   // neglect this behavior on first mounting of component
@@ -22,7 +23,7 @@ function MapPoint({ ...props }: MapPointProps) {
       window.scrollTo(0, document.body.scrollHeight);
     } else {
       isMounted.current = true;
-      calcDescElemHeight("desc-text-elem")
+      calcDescElemHeight('desc-text-elem');
     }
   }, [counter]);
 
@@ -36,8 +37,8 @@ function MapPoint({ ...props }: MapPointProps) {
     const elemHeight = document.getElementById(id)?.offsetHeight;
     if (elemHeight !== null && elemHeight) {
       // returns height of elem calculated with the parents padding
-      if(descSize != elemHeight + 2 * 12) {
-        setDescSize(elemHeight + 2 * 12)
+      if (descSize != elemHeight + 2 * 12) {
+        setDescSize(elemHeight + 2 * 12);
       }
       return elemHeight + 2 * 12;
     }
@@ -46,10 +47,10 @@ function MapPoint({ ...props }: MapPointProps) {
   }
 
   function calcDescElemHeightToString(height: number): string {
-    if(height === 0) {
-      return "auto"
+    if (height === 0) {
+      return 'auto';
     } else {
-      return height + "px"
+      return height + 'px';
     }
   }
 
@@ -109,10 +110,35 @@ function MapPoint({ ...props }: MapPointProps) {
                 </li>
               ))}
             </ul>
-            <p>
-              {/* TODO: add functionality */}
-              <a href="#">See Reviews</a>
-            </p>
+            <div className="relative w-full h-9 mt-4">
+              <motion.button
+                initial={{ opacity: 1 }}
+                animate={showRating ? { opacity: 0 } : { opacity: 1 }}
+                transition={{
+                  ease: 'easeOut',
+                  duration: 0.2,
+                }}
+                type="button"
+                className="absolute top-0 right-[50%] left-[50%] w-[7.75rem] h-9 translate-x-[-50%] text-default-font border-solid border-2 rounded-md border-dark-seaweed"
+                onClick={() => setShowRating(!showRating)}
+              >
+                Average Rating
+              </motion.button>
+              {showRating && (
+                <motion.button
+                  initial={{ opacity: 0 }}
+                  animate={showRating ? { opacity: 1 } : { opacity: 0 }}
+                  transition={{
+                    ease: 'easeOut',
+                    duration: 0.2,
+                  }}
+                  exit={{ opacity: 0 }}
+                  type="button"
+                  className="absolute top-0 right-[50%] left-[50%] w-[7.75rem] h-9 translate-x-[-50%] text-default-font bg-dark-seaweed rounded-md"
+                  onClick={() => setShowRating(!showRating)}
+                >{`${props.rating} Stars`}</motion.button>
+              )}
+            </div>
           </div>
           <div className="flex-1">
             {/* Beschreibung */}
@@ -121,7 +147,9 @@ function MapPoint({ ...props }: MapPointProps) {
               <div
                 style={{
                   maxHeight: expandDesc
-                    ? calcDescElemHeightToString(calcDescElemHeight('desc-text-elem'))
+                    ? calcDescElemHeightToString(
+                        calcDescElemHeight('desc-text-elem')
+                      )
                     : '5.65rem',
                 }}
                 className={`ease via-dark-seaweed to-dark-sea mq-hover:hover:bg-pos-100 mq-hover:hover:shadow-dark-sea-hover relative p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 hover:cursor-pointer`}
