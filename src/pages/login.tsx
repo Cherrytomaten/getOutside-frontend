@@ -167,7 +167,7 @@ function Login() {
             type="submit"
             value="Login"
             id="login-btn-submit"
-            className="w-full max-w-xs p-2 mb-4 text-dark-sea bg-bright-seaweed rounded-md transition-colors cursor-pointer hover:bg-hovered-seaweed"
+            className="w-full max-w-xs p-2 mb-4 text-dark-sea bg-bright-seaweed rounded-md transition-colors cursor-pointer mq-hover:hover:bg-hovered-seaweed"
           />
           <Link href="/signup">
             <button

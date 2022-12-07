@@ -113,7 +113,7 @@ function MapPoint({ ...props }: MapPointProps) {
                     ? calcDescElemHeight('desc-text-elem')
                     : '5.65rem',
                 }}
-                className="ease via-dark-seaweed to-dark-sea relative p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 hover:bg-pos-100 hover:shadow-shadow-dark-sea-hover hover:cursor-pointer"
+                className="ease via-dark-seaweed to-dark-sea relative p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 mq-hover:hover:bg-pos-100 mq-hover:hover:shadow-dark-sea-hover hover:cursor-pointer"
                 onClick={() => setExpandDesc(!expandDesc)}
               >
                 <p id="desc-text-elem">{props.desc}</p>
@@ -216,7 +216,7 @@ function MapPoint({ ...props }: MapPointProps) {
                         id="show-more-comments-btn"
                         className={` ${
                           counter < props.comments.length ? '' : 'hidden'
-                        } flex-auto w-full h-full border-solid border rounded-full border-bright-seaweed transition-all hover:text-dark-sea hover:bg-bright-seaweed`}
+                        } flex-auto w-full h-full border-solid border rounded-full border-bright-seaweed transition-all mq-hover:hover:text-dark-sea mq-hover:hover:bg-bright-seaweed`}
                         onClick={showMoreComments}
                       >
                         Show More
@@ -233,7 +233,7 @@ function MapPoint({ ...props }: MapPointProps) {
                         id="show-less-comments-btn"
                         className={` ${
                           counter > minimumComments ? '' : 'hidden'
-                        } flex-auto w-full h-full border-solid border rounded-full border-bright-seaweed transition-all hover:text-dark-sea hover:bg-bright-seaweed`}
+                        } flex-auto w-full h-full border-solid border rounded-full border-bright-seaweed transition-all mq-hover:hover:text-dark-sea mq-hover:hover:bg-bright-seaweed`}
                         onClick={showLessComments}
                       >
                         Show Less
