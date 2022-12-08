@@ -13,6 +13,8 @@ function MapPoint({ ...props }: MapPointProps) {
   const [counter, setCounter] = useState<number>(minimumComments); // Counter for number of shown comments
   const isMounted = useRef(false); // used to check if the component did mount for the first time
   const [expandDesc, setExpandDesc] = useState<boolean>(false); // boolean to open the description
+  const [descSize, setDescSize] = useState<number>(0); // description size - workaround for the arrow to show right
+  const [showRating, setShowRating] = useState<boolean>(false);
 
   // automatically scroll down if a new comment appears
   // neglect this behavior on first mounting of component
@@ -21,6 +23,7 @@ function MapPoint({ ...props }: MapPointProps) {
       window.scrollTo(0, document.body.scrollHeight);
     } else {
       isMounted.current = true;
+      calcDescElemHeight('desc-text-elem');
     }
   }, [counter]);
 
@@ -30,15 +33,25 @@ function MapPoint({ ...props }: MapPointProps) {
   }
 
   // calculates height of elem considering parents
-  function calcDescElemHeight(id: string): string {
+  function calcDescElemHeight(id: string): number {
     const elemHeight = document.getElementById(id)?.offsetHeight;
-    console.log('height: ', elemHeight);
     if (elemHeight !== null && elemHeight) {
       // returns height of elem calculated with the parents padding
-      return elemHeight + 2 * 12 + 'px';
+      if (descSize != elemHeight + 2 * 12) {
+        setDescSize(elemHeight + 2 * 12);
+      }
+      return elemHeight + 2 * 12;
     }
 
-    return 'auto';
+    return 0;
+  }
+
+  function calcDescElemHeightToString(height: number): string {
+    if (height === 0) {
+      return 'auto';
+    } else {
+      return height + 'px';
+    }
   }
 
   // increment counter
@@ -97,27 +110,53 @@ function MapPoint({ ...props }: MapPointProps) {
                 </li>
               ))}
             </ul>
-            <p>
-              {/* TODO: add functionality */}
-              <a href="#">See Reviews</a>
-            </p>
+            <div className="relative w-full h-9 mt-4">
+              <motion.button
+                initial={{ opacity: 1 }}
+                animate={showRating ? { opacity: 0 } : { opacity: 1 }}
+                transition={{
+                  ease: 'easeOut',
+                  duration: 0.2,
+                }}
+                type="button"
+                className="absolute top-0 right-[50%] left-[50%] w-[7.75rem] h-9 translate-x-[-50%] text-default-font border-solid border-2 rounded-md border-dark-seaweed"
+                onClick={() => setShowRating(!showRating)}
+              >
+                Average Rating
+              </motion.button>
+              {showRating && (
+                <motion.button
+                  initial={{ opacity: 0 }}
+                  animate={showRating ? { opacity: 1 } : { opacity: 0 }}
+                  transition={{
+                    ease: 'easeOut',
+                    duration: 0.2,
+                  }}
+                  exit={{ opacity: 0 }}
+                  type="button"
+                  className="absolute top-0 right-[50%] left-[50%] w-[7.75rem] h-9 translate-x-[-50%] text-default-font bg-dark-seaweed rounded-md"
+                  onClick={() => setShowRating(!showRating)}
+                >{`${props.rating} Stars`}</motion.button>
+              )}
+            </div>
           </div>
           <div className="flex-1">
             {/* Beschreibung */}
             <div className="mb-5">
               <h3 className="mb-1 text-lg">Description:</h3>
               <div
-                // using style because it's faster to render than tailwind
                 style={{
                   maxHeight: expandDesc
-                    ? calcDescElemHeight('desc-text-elem')
+                    ? calcDescElemHeightToString(
+                        calcDescElemHeight('desc-text-elem')
+                      )
                     : '5.65rem',
                 }}
-                className="ease via-dark-seaweed to-dark-sea relative p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 hover:bg-pos-100 hover:shadow-shadow-dark-sea-hover hover:cursor-pointer"
+                className={`ease via-dark-seaweed to-dark-sea mq-hover:hover:bg-pos-100 mq-hover:hover:shadow-dark-sea-hover relative p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 hover:cursor-pointer`}
                 onClick={() => setExpandDesc(!expandDesc)}
               >
                 <p id="desc-text-elem">{props.desc}</p>
-                {calcDescElemHeight('desc-text-elem') > '5.65rem' ? (
+                {descSize > 90.4 ? (
                   <motion.button
                     initial={{ rotate: 0 }}
                     animate={expandDesc ? { rotate: 180 } : { rotate: 0 }}
@@ -127,7 +166,7 @@ function MapPoint({ ...props }: MapPointProps) {
                       delay: 0,
                       stiffness: 70,
                     }}
-                    className="z-10 absolute right-[5px] bottom-[5px] bg-dark-seaweed rounded-full"
+                    className="z-10 absolute right-[5px] bottom-[5px] rounded-full"
                   >
                     <ExpandSvg width="30" height="30" />
                   </motion.button>
@@ -216,7 +255,7 @@ function MapPoint({ ...props }: MapPointProps) {
                         id="show-more-comments-btn"
                         className={` ${
                           counter < props.comments.length ? '' : 'hidden'
-                        } flex-auto w-full h-full border-solid border rounded-full border-bright-seaweed transition-all hover:text-dark-sea hover:bg-bright-seaweed`}
+                        } flex-auto w-full h-full border-solid border rounded-full border-bright-seaweed transition-all mq-hover:hover:text-dark-sea mq-hover:hover:bg-bright-seaweed`}
                         onClick={showMoreComments}
                       >
                         Show More
@@ -233,7 +272,7 @@ function MapPoint({ ...props }: MapPointProps) {
                         id="show-less-comments-btn"
                         className={` ${
                           counter > minimumComments ? '' : 'hidden'
-                        } flex-auto w-full h-full border-solid border rounded-full border-bright-seaweed transition-all hover:text-dark-sea hover:bg-bright-seaweed`}
+                        } flex-auto w-full h-full border-solid border rounded-full border-bright-seaweed transition-all mq-hover:hover:text-dark-sea mq-hover:hover:bg-bright-seaweed`}
                         onClick={showLessComments}
                       >
                         Show Less

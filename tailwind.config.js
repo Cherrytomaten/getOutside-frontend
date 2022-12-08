@@ -14,6 +14,7 @@ module.exports = {
     },
     screens: {
       xs: '380px',
+      'mq-hover': {'raw': '(hover: hover)'},
       ...defaultTheme.screens,
     },
     extend: {
@@ -56,6 +57,9 @@ module.exports = {
           },
         },
       },
+    },
+    future: {
+      hoverOnlyWhenSupported: true,
     },
   },
   plugins: [],
