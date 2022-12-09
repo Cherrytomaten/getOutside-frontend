@@ -1,6 +1,6 @@
 import { getCookie } from "@/util/cookieManager";
 import { AUTH_REFRESH_TOKEN, AUTH_TOKEN } from "@/types/constants";
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 
 
@@ -14,6 +14,7 @@ import { useAuth } from "@/context/AuthContext";
 function useUserAuth() {
     const [authStatus, setAuthStatus] = useState<boolean>(true);
     const { fetchUserAuthState, sendToUserAuthMachine } = useAuth();
+    const watcher: React.MutableRefObject<NodeJS.Timeout | null> = useRef(null);
 
     // check if a token was cookied. If not redirect to login page, otherwise try to fetch userdata by token
     function validateUser() {
@@ -30,6 +31,8 @@ function useUserAuth() {
         }
     }
 
+
+
     function logout() {
         sendToUserAuthMachine({ type: 'LOGOUT' });
         setAuthStatus(false);
@@ -43,13 +46,31 @@ function useUserAuth() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // if token exists as cookie, but auth still failed, redirect to log in aswell
     useEffect(() => {
+        // if token exists as cookie, but auth still failed, redirect to log in aswell
         if (fetchUserAuthState.matches('failure')) {
             if (!fetchUserAuthState.context.refreshAttempted) {
                 sendToUserAuthMachine({ type: 'RETRY', payload: { refreshToken: getCookie(AUTH_REFRESH_TOKEN) } });
             } else {
                 setAuthStatus(false);
+            }
+        }
+
+        // start expiration watcher
+        if (fetchUserAuthState.matches('success')) {
+            // TODO: get exp from token here
+            const refToken = getCookie(AUTH_REFRESH_TOKEN);
+            if (refToken !== null) {
+                watchExpiration(100000, refToken);
+            }
+
+            function watchExpiration(exp: number, refToken: string) {
+                if (watcher.current !== null) {
+                    clearTimeout(watcher.current);
+                }
+                watcher.current = setTimeout(() => {
+                    sendToUserAuthMachine({ type: 'RETRY', payload: { refreshToken: refToken } });
+                }, exp);
             }
         }
     }, [fetchUserAuthState, sendToUserAuthMachine])

@@ -27,6 +27,7 @@ const fetchAuthUserMachine = createMachine<AuthContext, AuthEvent, AuthTypestate
             entry: ['resetRefreshAttempt'],
             on: {
                 FETCH_AUTH_USER: 'pending',
+                RETRY: 'refresh',
                 LOGOUT: 'reset'
             }
         },
@@ -54,21 +55,21 @@ const fetchAuthUserMachine = createMachine<AuthContext, AuthEvent, AuthTypestate
 }, {
     // retry counter probably not necessary
     actions: {
-        setUserAuthData: assign((ctx, event: any) => ({
+        setUserAuthData: assign((_ctx, event: any) => ({
             user: event.user,
             err: null
         })),
 
-        setErrorMessage: assign((ctx, event: any) => ({
+        setErrorMessage: assign((_ctx, event: any) => ({
             err: event.err,
             refreshAttempted: event.attRef
         })),
 
-        resetRefreshAttempt: assign((ctx, event: any) => ({
+        resetRefreshAttempt: assign((_ctx, _event: any) => ({
             refreshAttempted: false
         })),
 
-        resetMachine: assign((ctx, event: any) => ({
+        resetMachine: assign((_ctx, _event: any) => ({
             user: null,
             err: null,
             refreshAttempted: false
