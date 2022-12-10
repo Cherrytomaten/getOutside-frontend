@@ -17,7 +17,7 @@ const getCookie = (name: string): string | null => {
 const setCookie = ({ name, value, expHrs }: CookieProps) => {
     let date = new Date();
     date = new Date(date.getTime() + 1000*60*60*expHrs);
-    document.cookie = `${name}=${value}; expires=${date.toUTCString()}; SameSite=strict; Secure`
+    document.cookie = `${name}=${value}; expires=${date.toUTCString()}; SameSite=strict; Path=/; Secure`
 }
 
 const setCookies = (cookies: CookieProps[]) => {
