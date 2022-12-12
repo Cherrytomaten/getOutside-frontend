@@ -22,7 +22,7 @@ export default async function handler(_req: RegisterServerRequest, res: NextApiR
         "email": _req.body.user.email
     })
         .then((_res: FetchRegisterDataResponse) => {
-            return res.status(200).json(_res.data);
+            return res.status(201).json(_res.data);
         })
         .catch((err: BackendErrorResponse) => {
             if (err.response.data.detail === undefined) {
