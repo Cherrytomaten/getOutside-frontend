@@ -5,7 +5,7 @@ const withPWA = require('next-pwa')({
   register: true,
   skipWaiting: true,
   fallbacks: {
-    document: '/pages/_offline.tsx',
+    document: '/pages/_offline.tsx'
   },
   buildExcludes: [/middleware-manifest.json$/]
 })

@@ -6,6 +6,7 @@ import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorRespons
 import { AuthStateMachine } from "@/types/Auth";
 import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 import { mockUser } from "@/simulation/userdataSim";
+import { logger } from "@/util/logger";
 
 type LayoutProp = {
     children: ReactNode,
@@ -40,7 +41,7 @@ function AuthProvider({children}: LayoutProp) {
           ) => {
             // check if code should query for existing token first and if found, use token to get userdata.
             if (event.payload.token) {
-              console.log('query userdata with token.');
+              logger('query userdata with token.');
               UserRepoClass.getUserByToken(event.payload.token).then(
                 (res: UserProps) => {
                   console.log('User found with existing token.');
@@ -116,7 +117,7 @@ function AuthProvider({children}: LayoutProp) {
             );
           },
 
-          deleteCookies: (ctx, event: { type: 'LOGOUT' }) => {
+          deleteCookies: (_ctx, _event: { type: 'LOGOUT' }) => {
             console.log('loging out...');
             UserRepoClass.logout();
             sendToUserAuthMachine({ type: 'IDLE' });
