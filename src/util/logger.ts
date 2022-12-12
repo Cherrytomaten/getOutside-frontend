@@ -1,7 +1,13 @@
-function logger(text: string) {
-    if (window === undefined || window === null || window.location.href.includes('localhost')) {
-        console.log(text);
+class Logger {
+    static log(text: string, data?: any): void {
+        if (window === undefined || window === null || window.location.href.includes('localhost')) {
+            if (!data) {
+                console.log(text);
+                return;
+            }
+            console.log(text, data);
+        }
     }
 }
 
-export { logger };
+export { Logger };

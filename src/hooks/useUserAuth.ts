@@ -2,6 +2,7 @@ import { getCookie } from "@/util/cookieManager";
 import { AUTH_REFRESH_TOKEN, AUTH_TOKEN } from "@/types/constants";
 import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { Logger } from "@/util/logger";
 
 
 /**
@@ -22,7 +23,7 @@ function useUserAuth() {
             return;
         }
 
-        console.log("trying to validate user...");
+        Logger.log("trying to validate user...");
         const tokenCookie = getCookie(AUTH_TOKEN);
         if (tokenCookie !== null) {
             sendToUserAuthMachine({ type: 'FETCH_AUTH_USER', payload: { token: tokenCookie } });

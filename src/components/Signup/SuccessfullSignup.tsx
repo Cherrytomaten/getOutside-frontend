@@ -15,7 +15,7 @@ function SuccessfullSignup({username}: SuccessfullSignupProps) {
                 className="text-bright-seaweed">{username}</span>!</h2>
             <h3 className="px-3 pb-10 text-2xl text-center text-white xs:text-3xl">You&apos;ve been signed up
                 successfully!</h3>
-            <Link href="/">
+            <Link href="/login">
                 <button
                     type="button"
                     id="already-signedup-btn"

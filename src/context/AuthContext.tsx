@@ -6,7 +6,7 @@ import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorRespons
 import { AuthStateMachine } from "@/types/Auth";
 import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 import { mockUser } from "@/simulation/userdataSim";
-import { logger } from "@/util/logger";
+import { Logger } from "@/util/logger";
 
 type LayoutProp = {
     children: ReactNode,
@@ -41,10 +41,10 @@ function AuthProvider({children}: LayoutProp) {
           ) => {
             // check if code should query for existing token first and if found, use token to get userdata.
             if (event.payload.token) {
-              logger('query userdata with token.');
+              Logger.log('query userdata with token.');
               UserRepoClass.getUserByToken(event.payload.token).then(
                 (res: UserProps) => {
-                  console.log('User found with existing token.');
+                  Logger.log('User found with existing token.');
                   sendToUserAuthMachine({
                     type: 'RESOLVE_AUTH',
                     user: res,
@@ -52,7 +52,7 @@ function AuthProvider({children}: LayoutProp) {
                   });
                 },
                 (err: FetchServerErrorResponse) => {
-                  console.log(
+                  Logger.log(
                     'User auth with token failed:',
                     err.errors.message
                   );
@@ -71,7 +71,7 @@ function AuthProvider({children}: LayoutProp) {
               event.payload.password
             ).then(
               (res: UserProps) => {
-                console.log('User got authenticated successfully!');
+                Logger.log('User got authenticated successfully!');
                 sendToUserAuthMachine({
                   type: 'RESOLVE_AUTH',
                   user: res,
@@ -79,7 +79,7 @@ function AuthProvider({children}: LayoutProp) {
                 });
               },
               (err: FetchServerErrorResponse) => {
-                console.log('User auth failed:', err);
+                Logger.log('User auth failed:', err);
                 sendToUserAuthMachine({
                   type: 'REJECT_AUTH',
                   err: err,
@@ -93,10 +93,10 @@ function AuthProvider({children}: LayoutProp) {
             ctx,
             event: { type: 'RETRY'; payload: { refreshToken: string } }
           ) => {
-            console.log('trying to refresh token...');
+            Logger.log('trying to refresh token...');
             UserRepoClass.refreshToken(event.payload.refreshToken).then(
               (res: TokenPayload) => {
-                console.log('token was refreshed successfully!', res.token);
+                Logger.log('token was refreshed successfully!', res.token);
                 sendToUserAuthMachine({
                   type: 'RESOLVE_AUTH',
                   user: mockUser[0],
@@ -104,7 +104,7 @@ function AuthProvider({children}: LayoutProp) {
                 });
               },
               (err: FetchServerErrorResponse) => {
-                console.log(
+                Logger.log(
                   'err while trying to refresh token:',
                   err.errors.message
                 );
@@ -118,7 +118,7 @@ function AuthProvider({children}: LayoutProp) {
           },
 
           deleteCookies: (_ctx, _event: { type: 'LOGOUT' }) => {
-            console.log('loging out...');
+            Logger.log('loging out...');
             UserRepoClass.logout();
             sendToUserAuthMachine({ type: 'IDLE' });
           },
