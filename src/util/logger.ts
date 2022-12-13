@@ -1,6 +1,15 @@
 class Logger {
     static log(text: string, data?: any): void {
-        if (window === undefined || window === null || window.location.href.includes('localhost')) {
+        // catch error for undefined window -> logger was executed on server side
+        try {
+            if (window.location.href.includes('localhost')) {
+                if (!data) {
+                    console.log(text);
+                    return;
+                }
+                console.log(text, data);
+            }
+        } catch (error: any) {
             if (!data) {
                 console.log(text);
                 return;

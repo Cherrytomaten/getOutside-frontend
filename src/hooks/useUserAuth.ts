@@ -14,7 +14,7 @@ import { Logger } from "@/util/logger";
  */
 function useUserAuth() {
     const [authStatus, setAuthStatus] = useState<boolean>(true);
-    const { fetchUserAuthState, sendToUserAuthMachine } = useAuth();
+    const {fetchUserAuthState, sendToUserAuthMachine} = useAuth();
     const watcher: React.MutableRefObject<NodeJS.Timeout | null> = useRef(null);
 
     // check if a token was cookied. If not redirect to login page, otherwise try to fetch userdata by token
@@ -26,16 +26,15 @@ function useUserAuth() {
         Logger.log("trying to validate user...");
         const tokenCookie = getCookie(AUTH_TOKEN);
         if (tokenCookie !== null) {
-            sendToUserAuthMachine({ type: 'FETCH_AUTH_USER', payload: { token: tokenCookie } });
+            sendToUserAuthMachine({type: 'FETCH_AUTH_USER', payload: {byToken: true}});
         } else {
             setAuthStatus(false);
         }
     }
 
 
-
     function logout() {
-        sendToUserAuthMachine({ type: 'LOGOUT' });
+        sendToUserAuthMachine({type: 'LOGOUT'});
         setAuthStatus(false);
     }
 
@@ -51,7 +50,7 @@ function useUserAuth() {
         // if token exists as cookie, but auth still failed, redirect to log in aswell
         if (fetchUserAuthState.matches('failure')) {
             if (!fetchUserAuthState.context.refreshAttempted) {
-                sendToUserAuthMachine({ type: 'RETRY', payload: { refreshToken: getCookie(AUTH_REFRESH_TOKEN) } });
+                sendToUserAuthMachine({type: 'RETRY', payload: {refreshToken: getCookie(AUTH_REFRESH_TOKEN)}});
             } else {
                 setAuthStatus(false);
             }
@@ -70,13 +69,13 @@ function useUserAuth() {
                     clearTimeout(watcher.current);
                 }
                 watcher.current = setTimeout(() => {
-                    sendToUserAuthMachine({ type: 'RETRY', payload: { refreshToken: refToken } });
+                    sendToUserAuthMachine({type: 'RETRY', payload: {refreshToken: refToken}});
                 }, exp);
             }
         }
     }, [fetchUserAuthState, sendToUserAuthMachine])
 
-    return { authStatus, setAuthStatus, logout };
+    return {authStatus, setAuthStatus, logout};
 }
 
 export { useUserAuth };

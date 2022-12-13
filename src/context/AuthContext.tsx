@@ -7,6 +7,7 @@ import { AuthStateMachine } from "@/types/Auth";
 import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 import { mockUser } from "@/simulation/userdataSim";
 import { Logger } from "@/util/logger";
+import { UserAuthProps } from "@/types/User";
 
 type LayoutProp = {
     children: ReactNode,
@@ -36,14 +37,14 @@ function AuthProvider({children}: LayoutProp) {
             ctx,
             event: {
               type: 'FETCH_AUTH_USER';
-              payload: { username: string; password: string; token?: string };
+              payload: { username: string; password: string; byToken?: boolean };
             }
           ) => {
             // check if code should query for existing token first and if found, use token to get userdata.
-            if (event.payload.token) {
+            if (event.payload.byToken) {
               Logger.log('query userdata with token.');
-              UserRepoClass.getUserByToken(event.payload.token).then(
-                (res: UserProps) => {
+              UserRepoClass.getUserByToken().then(
+                (res: UserAuthProps) => {
                   Logger.log('User found with existing token.');
                   sendToUserAuthMachine({
                     type: 'RESOLVE_AUTH',
@@ -66,11 +67,12 @@ function AuthProvider({children}: LayoutProp) {
               return;
             }
 
+            Logger.log('Try log in with userdata...');
             UserRepoClass.authUser(
               event.payload.username,
               event.payload.password
             ).then(
-              (res: UserProps) => {
+              (res: UserAuthProps) => {
                 Logger.log('User got authenticated successfully!');
                 sendToUserAuthMachine({
                   type: 'RESOLVE_AUTH',

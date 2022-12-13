@@ -1,19 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { RegisterUserProps } from "@/types/User/RegisterUserProps";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { FetchRegisterDataResponse } from "@/types/User/FetchRegisterDataResponse";
+import { BackendErrorResponse } from "@/types/Backend/BackendErrorResponse";
 
 type RegisterServerRequest = NextApiRequest & {
     body: { user: RegisterUserProps };
 };
-
-type BackendErrorProps = {
-    detail: string;
-}
-
-type BackendErrorResponse = {
-    response: AxiosResponse<BackendErrorProps>;
-}
 
 export default async function handler(_req: RegisterServerRequest, res: NextApiResponse) {
     return await axios.post('https://cherrytomaten.herokuapp.com/authentication/user/create/', {

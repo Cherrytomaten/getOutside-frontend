@@ -1,7 +1,8 @@
 type TokenPayload = {
-    token: string,
-    refreshToken: string
-    expiration: number
+    type: string;
+    userId: string;
+    token: string;
+    expiration: number;
 }
 
 export type { TokenPayload };

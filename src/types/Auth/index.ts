@@ -1,8 +1,9 @@
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 import { BaseActionObject, ResolveTypegenMeta, ServiceMap, State, TypegenDisabled } from "xstate";
+import { UserAuthProps } from "@/types/User";
 
 type AuthContext = {
-    user: UserProps | null,
+    user: UserAuthProps | null,
     refreshAttempted: boolean,
     err: any | null
 }
@@ -10,9 +11,9 @@ type AuthContext = {
 type AuthEvent =
   | {
       type: 'FETCH_AUTH_USER';
-      payload: { username: string; password: string; checkToken?: boolean };
+      payload: { username: string; password: string; byToken?: boolean };
     }
-  | { type: 'RESOLVE_AUTH'; user: UserProps; err: null }
+  | { type: 'RESOLVE_AUTH'; user: UserAuthProps; err: null }
   | {
       type: 'REJECT_AUTH';
       err: FetchServerErrorResponse | null;
@@ -27,9 +28,6 @@ type AuthTypestate =
             value: 'idle';
             context: AuthContext & {
                 user: null,
-                token: null,
-                refreshToken: null,
-                expiration: null,
                 err: null
             };
         }
@@ -43,7 +41,7 @@ type AuthTypestate =
         | {
             value: 'success';
             context: AuthContext & {
-                user: UserProps,
+                user: UserAuthProps,
                 err: null
             }
         }

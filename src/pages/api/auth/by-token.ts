@@ -1,25 +1,29 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { mockUser } from "@/simulation/userdataSim";
+import { AUTH_TOKEN } from "@/types/constants";
+import axios from "axios";
+import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 
-type LoginServerRequest = NextApiRequest & {
-  body: {
-    username: string;
-    password: string;
-  };
-};
+export default async function handler(_req: NextApiRequest, res: NextApiResponse) {
+    let authTokenString = _req.cookies[AUTH_TOKEN];
+    if (authTokenString === undefined) {
+        return res.status(400).json({errors: {message: 'Wrong token format.'}});
+    }
 
-export default function handler(_req: LoginServerRequest, res: NextApiResponse) {
-    const userObj = mockUser.find(elem => elem.token === _req.query.token);
+    const authToken: TokenPayload = JSON.parse(authTokenString);
 
-    setTimeout(async () => {
-        // wrong request method
-        if (_req.method !== 'GET') {
-            return res.status(405).json({errors: { message: 'Given request method is not allowed here.' } });
+    return await axios.get('https://cherrytomaten.herokuapp.com/authentication/token', {
+        headers: {
+            "jwt": authToken.token
         }
-        if (!userObj) {
-            return res.status(400).json({errors: { message: 'Can\'t identify token.' } });
-        } else {
-            return res.status(200).json(userObj);
-        }
-    }, 200)
+    })
+        .then((_res: any) => {
+            return res.status(_res.response.status).json();
+        })
+        .catch((err: any) => {
+            console.log("ERR",err);
+            if (err.response.data.detail === undefined) {
+                return res.status(err.response.status).json({ errors: { message: "A server error occured." } });
+            }
+            return res.status(err.response.status).json({ errors: { message: err.response.data.detail } });
+        })
 }
