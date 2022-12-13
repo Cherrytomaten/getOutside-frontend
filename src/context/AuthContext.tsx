@@ -93,7 +93,7 @@ function AuthProvider({children}: LayoutProp) {
 
           refreshToken: (
             ctx,
-            event: { type: 'RETRY'; payload: { refreshToken: string } }
+            event: { type: 'RETRY'; payload: { refreshToken: TokenPayload } }
           ) => {
             Logger.log('trying to refresh token...');
             UserRepoClass.refreshToken(event.payload.refreshToken).then(

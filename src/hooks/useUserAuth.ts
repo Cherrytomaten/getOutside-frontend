@@ -3,6 +3,7 @@ import { AUTH_REFRESH_TOKEN, AUTH_TOKEN } from "@/types/constants";
 import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Logger } from "@/util/logger";
+import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 
 
 /**
@@ -58,13 +59,13 @@ function useUserAuth() {
 
         // start expiration watcher
         if (fetchUserAuthState.matches('success')) {
-            // TODO: get exp from token here
-            const refToken = getCookie(AUTH_REFRESH_TOKEN);
-            if (refToken !== null) {
-                watchExpiration(100000, refToken);
+            const refTokenString = getCookie(AUTH_REFRESH_TOKEN);
+            if (refTokenString !== undefined && refTokenString !== null) {
+                const refToken: TokenPayload = JSON.parse(refTokenString);
+                watchExpiration(refToken.expiration, refToken);
             }
 
-            function watchExpiration(exp: number, refToken: string) {
+            function watchExpiration(exp: number, refToken: TokenPayload) {
                 if (watcher.current !== null) {
                     clearTimeout(watcher.current);
                 }
