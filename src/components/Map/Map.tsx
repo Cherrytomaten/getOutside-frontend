@@ -63,13 +63,14 @@ function Map() {
             <MapContainer
                 className="w-screen h-screen"
                 center={userLocation}
-                zoom={12}
+                zoom={13}
+                maxZoom={20}
                 scrollWheelZoom={true}
                 preferCanvas={true}
             >
                 <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org">OpenMapTiles</a>, &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+                    url='https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png'
                 />
 
                 <LocationTracker setUserLocation={setUserLocation} />
