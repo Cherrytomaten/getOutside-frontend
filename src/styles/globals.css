@@ -89,6 +89,7 @@
     }
 }
 
+/* Map zoom control button styling */
 .leaflet-control-zoom.leaflet-bar.leaflet-control {
     @apply border-none mt-4;
 }
@@ -107,4 +108,25 @@
 
 .request-popup .leaflet-popup-content-wrapper {
     @apply bg-dark-sea;
+}
+
+/* Map native leaflet popup styling */
+.leaflet-popup-tip-container {
+    @apply hidden;
+}
+
+.leaflet-popup .leaflet-popup-content-wrapper {
+    @apply bg-dark-sea;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+    @apply !w-7 !h-7 -mt-2 -mr-2 flex justify-center items-center !rounded-full !text-white !bg-bright-seaweed transition-colors xs:hover:!bg-hovered-seaweed;
+}
+
+.leaflet-container a.leaflet-popup-close-button span {
+    @apply -mt-0.5;
+}
+
+#map-popup-container a {
+    @apply text-dark-sea;
 }

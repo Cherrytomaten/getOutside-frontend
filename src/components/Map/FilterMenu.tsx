@@ -50,12 +50,12 @@ function FilterMenu({ allCategories, categoryFilter, setCatFilter, showMenuFunc 
             <h3 className="mb-6 text-4xl text-white">Categories</h3>
             <div className="w-full flex flex-row justify-center items-center py-3 mb-7 bg-dark-seaweed">
                 <button
-                    className="px-4 py-1 mr-2 bg-bright-seaweed border-none rounded-full transition-colors disabled:bg-dark-sea disabled:hover:bg-dark-sea md:hover:bg-hovered-seaweed"
+                    className="px-4 py-1 mr-2 bg-bright-seaweed border-none rounded-full transition-colors disabled:bg-dark-sea disabled:hover:bg-dark-sea xs:hover:bg-hovered-seaweed"
                     onClick={selectAll}
                     disabled={allCategories.length === categoryFilter.length}
                 >Select all</button>
                 <button
-                    className="px-4 py-1 bg-bright-seaweed border-none rounded-full transition-colors disabled:bg-dark-sea disabled:hover:bg-dark-sea md:hover:bg-hovered-seaweed"
+                    className="px-4 py-1 bg-bright-seaweed border-none rounded-full transition-colors disabled:bg-dark-sea disabled:hover:bg-dark-sea xs:hover:bg-hovered-seaweed"
                     onClick={unselectAll}
                     disabled={categoryFilter.length === 0}
                 >Unselect all</button>

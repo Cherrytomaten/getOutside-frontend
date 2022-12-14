@@ -1,8 +1,7 @@
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import { Icon, LatLngExpression } from 'leaflet';
 import pins from '@/simulation/pins.json';
-import Link from 'next/link';
 import { FilterMenu } from '@/components/Map/FilterMenu';
 import { PinProps } from '@/types/Pins';
 import { ActivityType } from '@/types/Pins/ActivityType';
@@ -11,6 +10,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { RadiusMenu } from "@/components/Map/RadiusMenu";
 import { Filter } from "@/resources/svg/Filter";
 import { useCategoryCookieManager } from "@/hooks/useCategoryCookieManager";
+import { MapPopup } from "@/components/Map/MapPopup";
 
 const position: LatLngExpression = [52.520008, 13.404954];
 
@@ -83,17 +83,7 @@ function Map() {
                                                 pinElemData.geometry.coordinates[1],
                                             ]}
                                             icon={icon}>
-                                            <Popup>
-                                                <div className="font-bold text-white-100">
-                                                    <p className="font-extrabold ">
-                                                        {pinElemData.properties.NAME}
-                                                    </p>
-                                                    <p>Address: {pinElemData.properties.ADDRESS}</p>
-                                                    <Link href={`/mappoint/${pinElemData.properties.PARK_ID}`}>
-                                                        Activity page
-                                                    </Link>
-                                                </div>
-                                            </Popup>
+                                            <MapPopup pin={pinElemData} />
                                         </Marker>
                                     </div>
                                 )
