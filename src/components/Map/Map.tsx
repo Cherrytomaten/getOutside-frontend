@@ -11,16 +11,16 @@ import { RadiusMenu } from "@/components/Map/RadiusMenu";
 import { Filter } from "@/resources/svg/Filter";
 import { useCategoryCookieManager } from "@/hooks/useCategoryCookieManager";
 import { MapPopup } from "@/components/Map/MapPopup";
+import { LocationTracker } from "@/components/Map/LocationTracker";
 
-const position: LatLngExpression = [52.520008, 13.404954];
-
-// creates a list with all existing activity values
-const activityOptions: string[] = [...new Set(pins.mappoint.map((activity) => activity.properties.TYPE.toLowerCase()))];
-
-export const icon = new Icon({
+export const activityIcon = new Icon({
     iconUrl: '/pin.png',
     iconSize: [25, 35],
 });
+
+// creates a list with all existing activity values
+const activityOptions: string[] = [...new Set(pins.mappoint.map((activity) => activity.properties.TYPE.toLowerCase()))];
+const defaultPosition: LatLngExpression = [52.520008, 13.404954];
 
 function Map() {
     const [categoryFilter, setCategoryFilter] = useState<ActivityType[]>([]);
@@ -62,34 +62,36 @@ function Map() {
 
             <MapContainer
                 className="w-screen h-screen"
-                center={position}
+                center={defaultPosition}
                 zoom={12}
                 scrollWheelZoom={true}
+                preferCanvas={true}
             >
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
+
+                <LocationTracker />
                 <div>
-                    <div>
-                        {pins.mappoint.map((pinElemData: PinProps) => {
-                            return (
-                                categoryFilter.includes(pinElemData.properties.TYPE) && (
-                                    <div>
-                                        <Marker
-                                            key={pinElemData.properties.PARK_ID}
-                                            position={[
-                                                pinElemData.geometry.coordinates[0],
-                                                pinElemData.geometry.coordinates[1],
-                                            ]}
-                                            icon={icon}>
-                                            <MapPopup pin={pinElemData} />
-                                        </Marker>
-                                    </div>
-                                )
-                            );
-                        })}
-                    </div>
+                    {pins.mappoint.map((pinElemData: PinProps) => {
+                        if (!categoryFilter.includes(pinElemData.properties.TYPE)) {
+                            return null;
+                        }
+                        return (
+                                <div key={pinElemData.properties.PARK_ID + "-marker-id"}>
+                                    <Marker
+                                        alt=""
+                                        position={[
+                                            pinElemData.geometry.coordinates[0],
+                                            pinElemData.geometry.coordinates[1],
+                                        ]}
+                                        icon={activityIcon}>
+                                        <MapPopup pin={pinElemData} />
+                                    </Marker>
+                                </div>
+                        );
+                    })}
                 </div>
             </MapContainer>
         </motion.div>
