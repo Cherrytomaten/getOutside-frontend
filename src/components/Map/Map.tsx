@@ -1,5 +1,5 @@
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Circle } from 'react-leaflet';
 import { Icon, LatLngExpression } from 'leaflet';
 import pins from '@/simulation/pins.json';
 import { FilterMenu } from '@/components/Map/FilterMenu';
@@ -20,12 +20,12 @@ export const activityIcon = new Icon({
 
 // creates a list with all existing activity values
 const activityOptions: string[] = [...new Set(pins.mappoint.map((activity) => activity.properties.TYPE.toLowerCase()))];
-const defaultPosition: LatLngExpression = [52.520008, 13.404954];
 
 function Map() {
     const [categoryFilter, setCategoryFilter] = useState<ActivityType[]>([]);
     const [showCatFilter, setShowCatFilter] = useState<boolean>(false);
     const [showRadiusFilter, setShowRadiusFilter] = useState<boolean>(false);
+    const [userLocation, setUserLocation] = useState<LatLngExpression>([52.520008, 13.404954]);
     useCategoryCookieManager({ allCategories: activityOptions, categoryFilter: categoryFilter, setCatFilter: setCategoryFilter });
 
     return (
@@ -62,7 +62,7 @@ function Map() {
 
             <MapContainer
                 className="w-screen h-screen"
-                center={defaultPosition}
+                center={userLocation}
                 zoom={12}
                 scrollWheelZoom={true}
                 preferCanvas={true}
@@ -72,7 +72,10 @@ function Map() {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
-                <LocationTracker />
+                <LocationTracker setUserLocation={setUserLocation} />
+
+                <Circle center={userLocation} radius={2000} pathOptions={{ color: 'blue' }} />
+
                 <div>
                     {pins.mappoint.map((pinElemData: PinProps) => {
                         if (!categoryFilter.includes(pinElemData.properties.TYPE)) {

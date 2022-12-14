@@ -1,6 +1,6 @@
 import { Marker, useMapEvents } from "react-leaflet";
-import { Icon } from "leaflet";
-import { useEffect, useState } from "react";
+import { Icon, LatLngExpression } from "leaflet";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { InfoPopup } from "@/components/InfoPopup";
 
 export const locationIcon = new Icon({
@@ -8,19 +8,19 @@ export const locationIcon = new Icon({
     iconSize: [30, 30],
 });
 
-type Coords = {
-    lat: number | undefined;
-    long: number | undefined;
+type LocationTrackerProps = {
+    setUserLocation: Dispatch<SetStateAction<LatLngExpression>>
 }
 
-function LocationTracker() {
-    const [userPos, setUserPos] = useState<Coords>({ lat: undefined, long: undefined });
+function LocationTracker({ setUserLocation }: LocationTrackerProps) {
+    const [userPos, setUserPos] = useState<LatLngExpression | undefined>(undefined);
     const [geoError, setGeoError] = useState<boolean>(false);
 
     const map = useMapEvents({
         locationfound(e) {
-            setUserPos({ lat: e.latlng.lat, long: e.latlng.lng });
+            setUserPos([e.latlng.lat, e.latlng.lng]);
             map.flyTo(e.latlng, map.getZoom());
+            setUserLocation([e.latlng.lat, e.latlng.lng]);
         },
         locationerror() {
             setGeoError(true);
@@ -36,8 +36,8 @@ function LocationTracker() {
         return (<InfoPopup text="GetOutside could't locate your position." exp={3000} />);
     }
 
-    if (userPos.long && userPos.lat) {
-        return (<Marker position={[userPos.lat, userPos.long]} icon={locationIcon}></Marker>);
+    if (userPos !== undefined) {
+        return (<Marker position={userPos} icon={locationIcon}></Marker>);
     } else {
         return null;
     }
