@@ -77,8 +77,34 @@
         scroll-behavior: smooth;
         @apply bg-dark-sea;
     }
+}
 
-    .request-popup .leaflet-popup-content-wrapper {
-        @apply bg-dark-sea;
-      }
+@layer components {
+    input:checked + label {
+        @apply text-bright-seaweed;
+    }
+
+    input:checked + label .checkbox-custom-input {
+        @apply bg-bright-seaweed;
+    }
+}
+
+.leaflet-control-zoom.leaflet-bar.leaflet-control {
+    @apply border-none mt-4;
+}
+
+.leaflet-control-zoom.leaflet-bar.leaflet-control .leaflet-control-zoom-in {
+    @apply bg-bright-seaweed rounded-full flex flex-col justify-center items-center mb-1 text-center shadow-md border-none transition-colors xs:hover:bg-hovered-seaweed;
+}
+
+.leaflet-control-zoom.leaflet-bar.leaflet-control .leaflet-control-zoom-out {
+    @apply bg-bright-seaweed rounded-full flex flex-col justify-center items-center text-center shadow-md border-none transition-colors xs:hover:bg-hovered-seaweed;
+}
+
+.leaflet-control-zoom.leaflet-bar.leaflet-control .leaflet-control-zoom-in span, .leaflet-control-zoom.leaflet-bar.leaflet-control .leaflet-control-zoom-out span {
+    @apply text-white text-base font-lato;
+}
+
+.request-popup .leaflet-popup-content-wrapper {
+    @apply bg-dark-sea;
 }

@@ -3,7 +3,7 @@ import axios from "axios";
 import { FetchUserDataResponseProps } from "@/types/Auth/FetchUserDataResponseProps";
 import { FetchUserDataErrorProps } from "@/types/Auth/FetchUserDataErrorProps";
 import { deleteCookies, setCookies } from "@/util/cookieManager";
-import { AUTH_REFRESH_TOKEN, AUTH_TOKEN } from "@/types/constants";
+import { ACTIVE_CATEGORIES, AUTH_REFRESH_TOKEN, AUTH_TOKEN } from "@/types/constants";
 import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 
 
@@ -32,12 +32,12 @@ class UserAuthRepo implements IUserAuthRepo {
           {
             name: AUTH_TOKEN,
             value: res.data.token,
-            expHrs: res.data.expiration,
+            exp: res.data.expiration,
           },
           {
             name: AUTH_REFRESH_TOKEN,
             value: res.data.refreshToken,
-            expHrs: 24,
+            exp: 86400000,
           },
         ]);
         return Promise.resolve(res.data);
@@ -62,12 +62,12 @@ class UserAuthRepo implements IUserAuthRepo {
           {
             name: AUTH_TOKEN,
             value: res.data.token,
-            expHrs: res.data.expiration,
+            exp: res.data.expiration,
           },
           {
             name: AUTH_REFRESH_TOKEN,
             value: res.data.refreshToken,
-            expHrs: 24,
+            exp: 86400000,
           },
         ]);
         return Promise.resolve(res.data);
@@ -92,12 +92,12 @@ class UserAuthRepo implements IUserAuthRepo {
           {
             name: AUTH_TOKEN,
             value: res.data.token,
-            expHrs: res.data.expiration,
+            exp: res.data.expiration,
           },
           {
             name: AUTH_REFRESH_TOKEN,
             value: res.data.refreshToken,
-            expHrs: 24,
+            exp: 86400000,
           },
         ]);
         return Promise.resolve(res.data);
@@ -112,7 +112,7 @@ class UserAuthRepo implements IUserAuthRepo {
    * Repo function to handle the deletion of the cookied tokens from a user
    */
   public logout() {
-    deleteCookies([AUTH_TOKEN, AUTH_REFRESH_TOKEN]);
+    deleteCookies([AUTH_TOKEN, AUTH_REFRESH_TOKEN, ACTIVE_CATEGORIES]);
   }
 }
 

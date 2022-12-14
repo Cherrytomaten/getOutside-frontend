@@ -21,10 +21,10 @@ function Home() {
     }
 
     return (
-        <>
+        <main className="w-full h-full min-h-screen max-h-screen overflow-hidden">
             <Map />
-            <button onClick={() => authenticationHook.logout()}>Logout</button>
-        </>
+            {/*<button onClick={() => authenticationHook.logout()}>Logout</button>*/}
+        </main>
     );
 }
 

@@ -13,7 +13,7 @@ const mockUser: MockData[] = [
     email: 'max@mail.de',
     token: 'Bearer ABCD1234',
     refreshToken: 'Bearer EFGH5678',
-    expiration: 1,
+    expiration: 3600000,
   },
 ];
 

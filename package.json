@@ -30,9 +30,6 @@
     ]
   },
   "dependencies": {
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
-    "@mui/material": "^5.10.16",
     "@xstate/react": "^3.0.1",
     "axios": "^1.2.0",
     "bcrypt": "^5.1.0",

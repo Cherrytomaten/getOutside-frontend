@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 
 
-const Map = dynamic(() => import('./map'), {
+const Map = dynamic(() => import('./Map'), {
   ssr: false,
 });
 
