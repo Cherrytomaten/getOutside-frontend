@@ -110,7 +110,7 @@ function Signup() {
               id="signup-select-title"
               defaultValue="preselect"
               className={`cursor-pointer ${
-                formErrors.title !== '' ? 'border-2 border-red-600' : ''
+                formErrors.title !== '' ? 'border-2 border-danger' : ''
               }`}
               onChange={(e) =>
                 setFormData({ ...formData, title: e.target.value })
@@ -125,7 +125,7 @@ function Signup() {
               <option value="Divers">Divers</option>
             </select>
             {formErrors.title !== '' && (
-              <p className="text-red-600">{formErrors.title}</p>
+              <p className="text-danger">{formErrors.title}</p>
             )}
           </div>
           <div>
@@ -135,7 +135,7 @@ function Signup() {
             <input
               type="text"
               className={`${
-                formErrors.fname !== '' ? 'border-2 border-red-600' : ''
+                formErrors.fname !== '' ? 'border-2 border-danger' : ''
               }`}
               onChange={(e) =>
                 setFormData({ ...formData, fname: e.target.value })
@@ -145,7 +145,7 @@ function Signup() {
               id="signup-fname"
             />
             {formErrors.fname !== '' && (
-              <p className="text-red-600">{formErrors.fname}</p>
+              <p className="text-danger">{formErrors.fname}</p>
             )}
           </div>
           <div>
@@ -155,7 +155,7 @@ function Signup() {
             <input
               type="text"
               className={`${
-                formErrors.lname !== '' ? 'border-2 border-red-600' : ''
+                formErrors.lname !== '' ? 'border-2 border-danger' : ''
               }`}
               onChange={(e) =>
                 setFormData({ ...formData, lname: e.target.value })
@@ -165,7 +165,7 @@ function Signup() {
               id="signup-lname"
             />
             {formErrors.lname !== '' && (
-              <p className="text-red-600">{formErrors.lname}</p>
+              <p className="text-danger">{formErrors.lname}</p>
             )}
           </div>
           <div>
@@ -175,7 +175,7 @@ function Signup() {
             <input
               type="email"
               className={`${
-                formErrors.email !== '' ? 'border-2 border-red-600' : ''
+                formErrors.email !== '' ? 'border-2 border-danger' : ''
               }`}
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
@@ -185,7 +185,7 @@ function Signup() {
               id="signup-mail"
             />
             {formErrors.email !== '' && (
-              <p className="text-red-600">{formErrors.email}</p>
+              <p className="text-danger">{formErrors.email}</p>
             )}
           </div>
           <div>
@@ -195,7 +195,7 @@ function Signup() {
             <input
               type="password"
               className={`${
-                formErrors.password !== '' ? 'border-2 border-red-600' : ''
+                formErrors.password !== '' ? 'border-2 border-danger' : ''
               }`}
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
@@ -205,7 +205,7 @@ function Signup() {
               id="signup-password"
             />
             {formErrors.password !== '' && (
-              <p className="text-red-600">{formErrors.password}</p>
+              <p className="text-danger">{formErrors.password}</p>
             )}
           </div>
           <div>
@@ -215,7 +215,7 @@ function Signup() {
             <input
               type="password"
               className={`${
-                formErrors.cpassword !== '' ? 'border-2 border-red-600' : ''
+                formErrors.cpassword !== '' ? 'border-2 border-danger' : ''
               }`}
               onChange={(e) =>
                 setFormData({ ...formData, cpassword: e.target.value })
@@ -225,7 +225,7 @@ function Signup() {
               id="signup-password-confirm"
             />
             {formErrors.cpassword !== '' && (
-              <p className="text-red-600">{formErrors.cpassword}</p>
+              <p className="text-danger">{formErrors.cpassword}</p>
             )}
           </div>
           <div className="mt-10">

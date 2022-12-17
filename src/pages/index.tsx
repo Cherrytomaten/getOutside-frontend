@@ -5,7 +5,7 @@ import Link from "next/link";
 
 function Home() {
   return (
-    <main className="to-dark-sea-hover w-full h-full min-h-screen flex flex-col justify-start items-center overflow-x-hidden bg-gradient-to-b from-dark-seaweed lg:flex-row lg:justify-center">
+    <main className="to-darker-sea w-full h-full min-h-screen flex flex-col justify-start items-center overflow-x-hidden bg-gradient-to-b from-dark-seaweed lg:flex-row lg:justify-center">
       <div className="relative max-w-full pt-6 -ml-24 lg:flex-1 lg:max-w-[410px] lg:ml:0">
         <motion.div
             initial={{ y: -50, opacity: 0 }}

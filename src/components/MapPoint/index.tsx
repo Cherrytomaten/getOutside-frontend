@@ -25,6 +25,7 @@ function MapPoint({ ...props }: MapPointProps) {
       isMounted.current = true;
       calcDescElemHeight('desc-text-elem');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [counter]);
 
   // display a number of comments depending on the counter (Hook)
@@ -152,7 +153,7 @@ function MapPoint({ ...props }: MapPointProps) {
                       )
                     : '5.65rem',
                 }}
-                className={`ease via-dark-seaweed to-dark-sea mq-hover:hover:bg-pos-100 mq-hover:hover:shadow-dark-sea-hover relative p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 hover:cursor-pointer`}
+                className={`ease via-dark-seaweed to-dark-sea mq-hover:hover:bg-pos-100 mq-hover:hover:shadow-darker-sea relative p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 hover:cursor-pointer group`}
                 onClick={() => setExpandDesc(!expandDesc)}
               >
                 <p id="desc-text-elem">{props.desc}</p>
@@ -166,7 +167,7 @@ function MapPoint({ ...props }: MapPointProps) {
                       delay: 0,
                       stiffness: 70,
                     }}
-                    className="z-10 absolute right-[5px] bottom-[5px] rounded-full"
+                    className="z-10 mq-hover:group-hover:bg-dark-sea-semi-transparent absolute right-[5px] bottom-[5px] bg-dark-seaweed rounded-full"
                   >
                     <ExpandSvg width="30" height="30" />
                   </motion.button>
@@ -235,7 +236,7 @@ function MapPoint({ ...props }: MapPointProps) {
                           className="min-h-[65px] flex flex-col justify-around p-3 mb-3 bg-dark-seaweed rounded-xl"
                           initial={{ y: -100, opacity: 0 }}
                           animate={{ y: 0, opacity: 1 }}
-                          exit={{ x: -300, opacity: 0 }}
+                          exit={{ y: -100, opacity: 0, position: 'absolute' }}
                         >
                           <li className="flex-auto">
                             <span className="text-bright-seaweed">Author:</span>{' '}
