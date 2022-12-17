@@ -68,7 +68,7 @@ function ProfilePage({ ...props }: any) {
   return (
     <main
       id={props.user.userId}
-      className="w-full h-full min-h-screen flex justify-center items-center text-white"
+      className="w-full h-full min-h-screen flex justify-center items-center mb-8 text-white"
     >
       <div
         id="profile-wrapper"
