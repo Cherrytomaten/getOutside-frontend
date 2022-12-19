@@ -10,7 +10,11 @@ const getCookie = (name: string): any | null => {
     const cookies: string[] = document.cookie.split(';');
     for(let i=0; i < cookies.length; i++) {
         if (cookies[i].indexOf(name) !== -1) {
-            return JSON.parse(cookies[i].split("=")[1]);
+            try {
+                return JSON.parse(cookies[i].split("=")[1]);
+            } catch(_err) {
+                return cookies[i].split("=")[1];
+            }
         }
     }
     return null;
