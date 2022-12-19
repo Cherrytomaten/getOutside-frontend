@@ -1,15 +1,13 @@
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { ActivityType } from "@/types/Pins/ActivityType";
-import CloseSvg from "@/resources/svg/Close";
 
 type FilterMenuProps = {
     allCategories: string[];
     categoryFilter: ActivityType[];
     setCatFilter: Dispatch<SetStateAction<string[]>>;
-    showMenuFunc: Dispatch<SetStateAction<boolean>>;
 }
 
-function FilterMenu({ allCategories, categoryFilter, setCatFilter, showMenuFunc }: FilterMenuProps) {
+function FilterMenu({ allCategories, categoryFilter, setCatFilter }: FilterMenuProps) {
     function capitalizeFirstLetter(text: string) {
         if (text.length === 0) { return ""; }
         return text.charAt(0).toUpperCase() + text.slice(1);
@@ -39,23 +37,15 @@ function FilterMenu({ allCategories, categoryFilter, setCatFilter, showMenuFunc 
 
     return (
         <div className="w-full h-full flex flex-col justify-start items-center pt-20 overflow-y-scroll bg-dark-sea/95">
-            <div
-                role="button"
-                aria-label="Close menu"
-                className="absolute top-4 right-4 w-14 h-14 flex flex-col justify-center items-center px-3 bg-bright-seaweed rounded-full transition-colors cursor-pointer xs:hover:bg-hovered-seaweed md:right-8"
-                onClick={() => showMenuFunc(false)}
-            >
-                <CloseSvg width="100%" height="auto" fill="#fff" />
-            </div>
-            <h3 className="mb-6 text-4xl text-white">Categories</h3>
-            <div className="w-full flex flex-row justify-center items-center py-3 mb-7 bg-dark-seaweed">
+            <h3 className="mb-6 text-5xl text-white">Categories</h3>
+            <div className="w-full flex flex-row justify-center items-center py-3 mb-7">
                 <button
-                    className="px-4 py-1 mr-2 bg-bright-seaweed border-none rounded-full transition-colors disabled:bg-dark-sea disabled:hover:bg-dark-sea xs:hover:bg-hovered-seaweed"
+                    className="w-full max-w-[200px] px-6 py-1.5 mr-2 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-dark-sea-hover disabled:hover:bg-dark-sea-hover xs:hover:bg-hovered-seaweed"
                     onClick={selectAll}
                     disabled={allCategories.length === categoryFilter.length}
                 >Select all</button>
                 <button
-                    className="px-4 py-1 bg-bright-seaweed border-none rounded-full transition-colors disabled:bg-dark-sea disabled:hover:bg-dark-sea xs:hover:bg-hovered-seaweed"
+                    className="w-full max-w-[200px] px-6 py-1.5 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-dark-sea-hover disabled:hover:bg-dark-sea-hover xs:hover:bg-hovered-seaweed"
                     onClick={unselectAll}
                     disabled={categoryFilter.length === 0}
                 >Unselect all</button>

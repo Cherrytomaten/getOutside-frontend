@@ -3,7 +3,7 @@ import axios from "axios";
 import { FetchUserDataResponseProps } from "@/types/Auth/FetchUserDataResponseProps";
 import { FetchUserDataErrorProps } from "@/types/Auth/FetchUserDataErrorProps";
 import { deleteCookies, setCookies } from "@/util/cookieManager";
-import { ACTIVE_CATEGORIES, AUTH_REFRESH_TOKEN, AUTH_TOKEN } from "@/types/constants";
+import { ACTIVE_CATEGORIES, AUTH_REFRESH_TOKEN, AUTH_TOKEN, RADIUS_FILTER } from "@/types/constants";
 import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 
 
@@ -112,7 +112,7 @@ class UserAuthRepo implements IUserAuthRepo {
    * Repo function to handle the deletion of the cookied tokens from a user
    */
   public logout() {
-    deleteCookies([AUTH_TOKEN, AUTH_REFRESH_TOKEN, ACTIVE_CATEGORIES]);
+    deleteCookies([AUTH_TOKEN, AUTH_REFRESH_TOKEN, ACTIVE_CATEGORIES, RADIUS_FILTER]);
   }
 }
 

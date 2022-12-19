@@ -130,3 +130,7 @@
 #map-popup-container a {
     @apply text-dark-sea;
 }
+
+.leaflet-control-attribution a {
+    @apply !text-bright-seaweed;
+}

@@ -5,25 +5,27 @@ import { InfoPopup } from "@/components/InfoPopup";
 
 export const locationIcon = new Icon({
     iconUrl: '/locationPin.png',
-    iconSize: [30, 30],
+    iconSize: [27, 27],
 });
 
 type LocationTrackerProps = {
     setUserLocation: Dispatch<SetStateAction<LatLngExpression>>
+    locationPref: boolean | null;
+    setLocationPref:  Dispatch<SetStateAction<boolean | null>>;
 }
 
-function LocationTracker({ setUserLocation }: LocationTrackerProps) {
+function LocationTracker({ setUserLocation, setLocationPref, locationPref }: LocationTrackerProps) {
     const [userPos, setUserPos] = useState<LatLngExpression | undefined>(undefined);
-    const [geoError, setGeoError] = useState<boolean>(false);
 
     const map = useMapEvents({
         locationfound(e) {
             setUserPos([e.latlng.lat, e.latlng.lng]);
             map.flyTo(e.latlng, map.getZoom());
             setUserLocation([e.latlng.lat, e.latlng.lng]);
+            setLocationPref(true);
         },
         locationerror() {
-            setGeoError(true);
+            setLocationPref(false);
         }
     });
 
@@ -32,7 +34,7 @@ function LocationTracker({ setUserLocation }: LocationTrackerProps) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (geoError) {
+    if (locationPref !== null && !locationPref) {
         return (<InfoPopup text="GetOutside could't locate your position." exp={3000} />);
     }
 

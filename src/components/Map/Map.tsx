@@ -1,32 +1,77 @@
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, Marker, Circle } from 'react-leaflet';
-import { Icon, LatLngExpression } from 'leaflet';
-import pins from '@/simulation/pins.json';
+import { LatLngExpression } from 'leaflet';
 import { FilterMenu } from '@/components/Map/FilterMenu';
 import { PinProps } from '@/types/Pins';
 import { ActivityType } from '@/types/Pins/ActivityType';
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { RadiusMenu } from "@/components/Map/RadiusMenu";
 import { Filter } from "@/resources/svg/Filter";
-import { useCategoryCookieManager } from "@/hooks/useCategoryCookieManager";
 import { MapPopup } from "@/components/Map/MapPopup";
 import { LocationTracker } from "@/components/Map/LocationTracker";
+import { ContentPopup } from "@/components/ContentPopup";
+import { Radius } from "@/resources/svg/Radius";
+import { DEFAULT_POSITION } from "@/types/constants";
+import { useManageMapData } from "@/hooks/useManageMapData";
+import { ActivityIcon } from "@/resources/leafletIcons/ActivityIcon";
 
-export const activityIcon = new Icon({
-    iconUrl: '/pin.png',
-    iconSize: [25, 35],
-});
+type MapProps = {
+    cookiedCategories: string[];
+    cookiedRadius: number;
+}
 
-// creates a list with all existing activity values
-const activityOptions: string[] = [...new Set(pins.mappoint.map((activity) => activity.properties.TYPE.toLowerCase()))];
-
-function Map() {
-    const [categoryFilter, setCategoryFilter] = useState<ActivityType[]>([]);
+function Map({ cookiedCategories, cookiedRadius }: MapProps) {
     const [showCatFilter, setShowCatFilter] = useState<boolean>(false);
     const [showRadiusFilter, setShowRadiusFilter] = useState<boolean>(false);
-    const [userLocation, setUserLocation] = useState<LatLngExpression>([52.520008, 13.404954]);
-    useCategoryCookieManager({ allCategories: activityOptions, categoryFilter: categoryFilter, setCatFilter: setCategoryFilter });
+
+    const [allCategories, setAllCategories] = useState<string[]>([]);
+    const [categoryFilter, setCategoryFilter] = useState<ActivityType[]>(cookiedCategories);
+    const [radius, setRadius] = useState<number>(cookiedRadius);
+    const [locationPreference, setLocationPreference] = useState<boolean | null>(null);
+    const [userLocation, setUserLocation] = useState<LatLngExpression>(DEFAULT_POSITION);
+    const { fetchPinDataQueryState } = useManageMapData({ radius: radius, location: userLocation, categoryFilter: categoryFilter, setAllCats: setAllCategories, locationPreference: locationPreference });
+
+    const mapElem = useMemo(() => (
+        <MapContainer
+            className="w-screen h-screen"
+            center={userLocation}
+            zoom={13}
+            minZoom={7}
+            maxZoom={20}
+            scrollWheelZoom={true}
+            preferCanvas={true}
+        >
+            <TileLayer
+                attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org">OpenMapTiles</a>, &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+                url='https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png'
+            />
+
+            <LocationTracker setUserLocation={setUserLocation} locationPref={locationPreference} setLocationPref={setLocationPreference} />
+            <Circle center={userLocation} radius={radius} pathOptions={{ color: '#3ED598', weight: 2, opacity: 0.8, fillColor: '#82e7bd', fillOpacity: 0.05 }} />
+
+            <div>
+                {fetchPinDataQueryState.context.pins.map((pinElemData: PinProps) => {
+                    if (!categoryFilter.includes(pinElemData.properties.TYPE)) {
+                        return null;
+                    }
+                    return (
+                        <div key={pinElemData.properties.PARK_ID + "-marker-id"}>
+                            <Marker
+                                alt=""
+                                position={[
+                                    pinElemData.geometry.coordinates[0],
+                                    pinElemData.geometry.coordinates[1],
+                                ]}
+                                icon={ActivityIcon}>
+                                <MapPopup pin={pinElemData} />
+                            </Marker>
+                        </div>
+                    );
+                })}
+            </div>
+        </MapContainer>
+), [categoryFilter, fetchPinDataQueryState.context.pins, locationPreference, radius, userLocation]);
 
     return (
         <motion.div
@@ -35,6 +80,11 @@ function Map() {
             transition={{ ease: 'easeOut', duration: .6 }}
             className="relative w-full h-full"
         >
+            {fetchPinDataQueryState.matches('pending') &&
+                <h2 className="z-[99999] absolute text-xl">LOADING</h2>
+            }
+
+
             <div className="z-[999] absolute top-4 right-4 md:right-8">
                 <div
                     className="w-14 h-14 flex flex-col justify-center items-center px-3 bg-bright-seaweed rounded-full shadow-md transition-colors cursor-pointer xs:hover:bg-hovered-seaweed"
@@ -44,60 +94,27 @@ function Map() {
                 >
                     <Filter width="100%" height="auto" fill="#fff"></Filter>
                 </div>
-            </div>
-            <AnimatePresence>
-                {showCatFilter &&
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ ease: 'easeOut', duration: .2 }}
-                        className="z-[1010] absolute top-0 left-0 w-full h-full">
-                        <FilterMenu allCategories={activityOptions} categoryFilter={categoryFilter} setCatFilter={setCategoryFilter} showMenuFunc={setShowCatFilter} />
-                    </motion.div>
-                }
-            </AnimatePresence>
 
-            <RadiusMenu />
-
-            <MapContainer
-                className="w-screen h-screen"
-                center={userLocation}
-                zoom={13}
-                maxZoom={20}
-                scrollWheelZoom={true}
-                preferCanvas={true}
-            >
-                <TileLayer
-                    attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org">OpenMapTiles</a>, &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-                    url='https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png'
-                />
-
-                <LocationTracker setUserLocation={setUserLocation} />
-
-                <Circle center={userLocation} radius={2000} pathOptions={{ color: 'blue' }} />
-
-                <div>
-                    {pins.mappoint.map((pinElemData: PinProps) => {
-                        if (!categoryFilter.includes(pinElemData.properties.TYPE)) {
-                            return null;
-                        }
-                        return (
-                                <div key={pinElemData.properties.PARK_ID + "-marker-id"}>
-                                    <Marker
-                                        alt=""
-                                        position={[
-                                            pinElemData.geometry.coordinates[0],
-                                            pinElemData.geometry.coordinates[1],
-                                        ]}
-                                        icon={activityIcon}>
-                                        <MapPopup pin={pinElemData} />
-                                    </Marker>
-                                </div>
-                        );
-                    })}
+                <div
+                    className="relative w-14 h-14 flex flex-col justify-center items-center px-3 mt-3 bg-bright-seaweed rounded-full shadow-md transition-colors cursor-pointer xs:hover:bg-hovered-seaweed"
+                    role="button"
+                    aria-label="Radius filter"
+                    onClick={() => setShowRadiusFilter(true)}
+                >
+                    <Radius width="100%" height="auto" fill="#fff"></Radius>
+                    <div className="z-10 absolute -right-2 -bottom-2 w-7 h-7 flex flex-col justify-center items-center bg-white rounded-full"><span className="text-xs">{radius/1000}</span></div>
                 </div>
-            </MapContainer>
+            </div>
+
+            <ContentPopup trigger={showCatFilter} setTrigger={setShowCatFilter}>
+                <FilterMenu allCategories={allCategories} categoryFilter={categoryFilter} setCatFilter={setCategoryFilter} />
+            </ContentPopup>
+
+            <ContentPopup trigger={showRadiusFilter} setTrigger={setShowRadiusFilter}>
+                <RadiusMenu radius={radius} updateRadius={setRadius} mapDataFetchState={fetchPinDataQueryState} />
+            </ContentPopup>
+
+            {mapElem}
         </motion.div>
     );
 }
