@@ -5,7 +5,7 @@ import { FilterMenu } from '@/components/Map/FilterMenu';
 import { PinProps } from '@/types/Pins';
 import { ActivityType } from '@/types/Pins/ActivityType';
 import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { RadiusMenu } from "@/components/Map/RadiusMenu";
 import { Filter } from "@/resources/svg/Filter";
 import { MapPopup } from "@/components/Map/MapPopup";
@@ -15,6 +15,7 @@ import { Radius } from "@/resources/svg/Radius";
 import { DEFAULT_POSITION } from "@/types/constants";
 import { useManageMapData } from "@/hooks/useManageMapData";
 import { ActivityIcon } from "@/resources/leafletIcons/ActivityIcon";
+import { SmallSpinner } from "@/components/SmallSpinner";
 
 type MapProps = {
     cookiedCategories: string[];
@@ -80,10 +81,12 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
             transition={{ ease: 'easeOut', duration: .6 }}
             className="relative w-full h-full"
         >
-            {fetchPinDataQueryState.matches('pending') &&
-                <h2 className="z-[99999] absolute text-xl">LOADING</h2>
-            }
 
+            <AnimatePresence>
+                {fetchPinDataQueryState.matches('pending') &&
+                    <SmallSpinner />
+                }
+            </AnimatePresence>
 
             <div className="z-[999] absolute top-4 right-4 md:right-8">
                 <div

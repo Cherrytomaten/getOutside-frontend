@@ -30,7 +30,7 @@ function RadiusMenu({ radius, updateRadius, mapDataFetchState }: RadiusMenuProps
                     <Listbox.Button
                         name="select-radius"
                         id="select-radius-id"
-                        className="relative w-full p-4 text-left bg-no-repeat bg-clip-padding bg-gray-200 border-none rounded-xl cursor-pointer focus:border-acid-green focus:outline-none">
+                        className={`relative w-full p-4 text-left bg-no-repeat bg-clip-padding border-none rounded-xl cursor-pointer transition-colors focus:border-acid-green focus:outline-none ${mapDataFetchState.value === 'pending' ? 'bg-gray-500' : ' bg-gray-200'}`}>
                         <span className="block truncate">Selected range : <span className="ml-3 font-bold text-bright-seaweed">{radius/1000} km</span></span>
                         <span className="absolute inset-y-0 right-0 flex items-center pr-6 pointer-events-none">
                         <ChevronUpDown width="25px" height="25px" fill='#a2a2a2' />

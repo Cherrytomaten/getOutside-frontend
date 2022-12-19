@@ -28,5 +28,5 @@ export default function handler(_req: PinsApiRequest, res: NextApiResponse) {
 
     setTimeout(async () => {
         return res.status(200).json(pinsInRange);
-    }, 2000);
+    }, 300);
 }
