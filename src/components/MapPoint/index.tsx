@@ -25,6 +25,7 @@ function MapPoint({ ...props }: MapPointProps) {
       isMounted.current = true;
       calcDescElemHeight('desc-text-elem');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [counter]);
 
   // display a number of comments depending on the counter (Hook)
