@@ -1,23 +1,29 @@
+import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
+
 type CookieProps = {
     name: string,
-    value: string,
-    expHrs: number
+    value: TokenPayload | any,
+    exp: number
 }
 
-const getCookie = (name: string): string | null => {
+const getCookie = (name: string): any | null => {
     const cookies: string[] = document.cookie.split(';');
     for(let i=0; i < cookies.length; i++) {
         if (cookies[i].indexOf(name) !== -1) {
-            return cookies[i].split("=")[1];
+            try {
+                return JSON.parse(cookies[i].split("=")[1]);
+            } catch(_err) {
+                return cookies[i].split("=")[1];
+            }
         }
     }
     return null;
 }
 
-const setCookie = ({ name, value, expHrs }: CookieProps) => {
+const setCookie = ({ name, value, exp }: CookieProps) => {
     let date = new Date();
-    date = new Date(date.getTime() + 1000*60*60*expHrs);
-    document.cookie = `${name}=${value}; expires=${date.toUTCString()}; SameSite=strict; Path=/; Secure`
+    date = new Date(date.getTime() + exp);
+    document.cookie = `${name}=${JSON.stringify(value)}; expires=${date.toUTCString()}; SameSite=strict; Path=/; Secure`
 }
 
 const setCookies = (cookies: CookieProps[]) => {
