@@ -2,7 +2,7 @@ import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 
 type CookieProps = {
     name: string,
-    value: TokenPayload,
+    value: TokenPayload | Object,
     exp: number
 }
 
