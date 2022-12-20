@@ -7,15 +7,17 @@ type RadiusMenuProps = {
     radius: number;
     updateRadius: Dispatch<SetStateAction<number>>;
     mapDataFetchState: PinQueryStateMachine;
+    toggleMenu: Dispatch<SetStateAction<boolean>>;
 }
 
 const rangeOptionList: number[] = [1, 3, 5, 10, 15, 20, 30, 50, 100, 200];
 
-function RadiusMenu({ radius, updateRadius, mapDataFetchState }: RadiusMenuProps) {
+function RadiusMenu({ radius, updateRadius, mapDataFetchState, toggleMenu }: RadiusMenuProps) {
     function changeHandler(valueMeter: number) {
         const valueKm = valueMeter * 1000;
         if (valueKm !== radius) {
             updateRadius(valueKm);
+            toggleMenu(false);
         }
     }
 

@@ -114,7 +114,7 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
             </ContentPopup>
 
             <ContentPopup trigger={showRadiusFilter} setTrigger={setShowRadiusFilter}>
-                <RadiusMenu radius={radius} updateRadius={setRadius} mapDataFetchState={fetchPinDataQueryState} />
+                <RadiusMenu radius={radius} updateRadius={setRadius} mapDataFetchState={fetchPinDataQueryState} toggleMenu={setShowRadiusFilter} />
             </ContentPopup>
 
             {mapElem}
