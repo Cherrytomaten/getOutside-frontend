@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { BackendErrorResponse } from "@/types/Backend/BackendErrorResponse";
 import { tokenDecompiler } from "@/util/tokenDecompiler";
 import { UserAuthProps } from "@/types/User";
@@ -15,11 +15,11 @@ type LoginRequest = NextApiRequest & {
 type LoginResponse = NextApiResponse<UserAuthProps | FetchServerErrorResponse>;
 
 type LoginServerResponseData = {
-    data: {
-        access: string;
-        refresh: string;
-    }
+    access: string;
+    refresh: string;
 }
+
+type LoginServerResponse = AxiosResponse<LoginServerResponseData>;
 
 /**
  * Get access & refresh token based on provided login credentials.
@@ -31,14 +31,14 @@ export default async function handler(_req: LoginRequest, res: LoginResponse) {
         "username": _req.body.username,
         "password": _req.body.password
     })
-        .then((_res: LoginServerResponseData) => {
+        .then((_res: LoginServerResponse) => {
             const accessToken = tokenDecompiler(_res.data.access);
             const refreshToken = tokenDecompiler(_res.data.refresh);
 
             if (accessToken === null || refreshToken === null) {
-                return res.status(400).json({ errors: { message: "A server error occured." } });
+                return res.status(500).json({ errors: { message: "A server error occured." } });
             } else {
-                return res.status(200).json({ userId: accessToken.userId, access: accessToken, refresh: refreshToken });
+                return res.status(_res.status).json({ userId: accessToken.userId, access: accessToken, refresh: refreshToken });
             }
         })
         .catch((err: BackendErrorResponse) => {

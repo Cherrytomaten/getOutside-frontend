@@ -48,7 +48,7 @@ function useUserAuth() {
     }, []);
 
     useEffect(() => {
-        // if token exists as cookie, but auth still failed, redirect to log in aswell
+        // if token exists as cookie, but auth still failed, redirects to log in as well.
         if (fetchUserAuthState.matches('failure')) {
             if (!fetchUserAuthState.context.refreshAttempted) {
                 sendToUserAuthMachine({type: 'RETRY', payload: {refreshToken: getCookie(AUTH_REFRESH_TOKEN)}});
@@ -62,7 +62,7 @@ function useUserAuth() {
             const refTokenString = getCookie(AUTH_REFRESH_TOKEN);
             if (refTokenString !== undefined && refTokenString !== null) {
                 const refToken: TokenPayload = JSON.parse(refTokenString);
-                console.log(refToken);
+                Logger.log("Starting token watchExpiration. Days until exp:", Math.floor(refToken.expiration / (24 * 60 * 60 * 1000)));
                 watchExpiration(refToken.expiration, refToken);
             }
 
@@ -72,7 +72,8 @@ function useUserAuth() {
                 }
                 watcher.current = setTimeout(() => {
                     sendToUserAuthMachine({type: 'RETRY', payload: {refreshToken: refToken}});
-                }, exp);
+                    // 10s buffer before actual expiration.
+                }, exp - 10000);
             }
         }
     }, [fetchUserAuthState, sendToUserAuthMachine])

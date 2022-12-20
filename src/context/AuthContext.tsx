@@ -5,7 +5,6 @@ import { UserAuthRepo } from "@/repos/UserRepo";
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 import { AuthStateMachine } from "@/types/Auth";
 import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
-import { mockUser } from "@/simulation/userdataSim";
 import { Logger } from "@/util/logger";
 import { UserAuthProps } from "@/types/User";
 
@@ -97,11 +96,11 @@ function AuthProvider({children}: LayoutProp) {
           ) => {
             Logger.log('trying to refresh token...');
             UserRepoClass.refreshToken(event.payload.refreshToken).then(
-              (res: TokenPayload) => {
-                Logger.log('token was refreshed successfully!', res.token);
+              (res: UserAuthProps) => {
+                Logger.log('token was refreshed successfully!');
                 sendToUserAuthMachine({
                   type: 'RESOLVE_AUTH',
-                  user: mockUser[0],
+                  user: res,
                   err: null,
                 });
               },
