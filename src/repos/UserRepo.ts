@@ -29,6 +29,36 @@ class UserAuthRepo implements IUserAuthRepo {
         password: password,
       })
       .then((res: FetchUserAuthResponseProps) => {
+        const _res = res;
+        _res.data.refresh.expiration = 3000;
+        console.log(_res.data)
+        setCookies([
+          {
+            name: AUTH_TOKEN,
+            value: res.data.access,
+            //exp: res.data.access.expiration,
+            exp: 3000
+          },
+          {
+            name: AUTH_REFRESH_TOKEN,
+            value: res.data.refresh,
+            exp: res.data.refresh.expiration,
+          },
+        ]);
+        return Promise.resolve(_res.data);
+      })
+      .catch((err: FetchUserAuthErrorResponseProps) => {
+        return Promise.reject(err.response.data);
+      });
+  }
+
+  /**
+   * Repo function to log in an existing user based on the cookie token that was found
+   * @returns the complete userdata with username etc. aswell as a JWT, refresh token & expiration date
+   */
+  public async getUserByToken(): Promise<UserAuthProps> {
+    return await axios.get('/api/auth/by-token')
+      .then((res: FetchUserAuthResponseProps) => {
         setCookies([
           {
             name: AUTH_TOKEN,
@@ -49,41 +79,14 @@ class UserAuthRepo implements IUserAuthRepo {
   }
 
   /**
-   * Repo function to log in an existing user based on the cookie token that was found
-   * @returns the complete userdata with username etc. aswell as a JWT, refresh token & expiration date
-   */
-  public async getUserByToken(): Promise<UserAuthProps> {
-    return await axios
-      .get('/api/auth/by-token')
-      .then((res: FetchUserAuthResponseProps) => {
-        setCookies([
-          {
-            name: AUTH_TOKEN,
-            value: res.data.token,
-            exp: res.data.expiration,
-          },
-          {
-            name: AUTH_REFRESH_TOKEN,
-            value: res.data.refreshToken,
-            exp: 24,
-          },
-        ]);
-        return Promise.resolve(res.data);
-      })
-      .catch((err: FetchUserAuthErrorResponseProps) => {
-        return Promise.reject(err.response.data);
-      });
-  }
-
-  /**
    * Repo function to refresh the existing token with its refresh token.
    * @param refToken the refresh token queried from the user cookies
    * @returns the new token payload with a new token, refreshToken & exp. time
    */
-  public async refreshToken(refToken: string): Promise<TokenPayload> {
+  public async refreshToken(refToken: TokenPayload): Promise<TokenPayload> {
     return await axios
-      .get('/api/auth/refresh-token', {
-        params: { refToken: refToken },
+      .post('/api/auth/refresh-token', {
+        refToken: refToken
       })
       .then((res: { data: TokenPayload }) => {
         setCookies([

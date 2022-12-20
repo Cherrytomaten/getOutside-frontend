@@ -21,7 +21,7 @@ function tokenDecompiler(token: string): TokenPayload | null {
     const tokenData: RawTokenPayload = JSON.parse(buffer.toString('ascii'));
 
     Logger.log("decompiled token:", tokenData);
-    return { type: tokenData.token_type, token: tokenData.jti, expiration: Number(tokenData.exp), userId: tokenData.user_id };
+    return { type: tokenData.token_type, token: token, expiration: Number(tokenData.exp), userId: tokenData.user_id };
 }
 
 export { tokenDecompiler }

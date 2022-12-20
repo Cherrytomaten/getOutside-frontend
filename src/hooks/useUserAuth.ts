@@ -62,6 +62,7 @@ function useUserAuth() {
             const refTokenString = getCookie(AUTH_REFRESH_TOKEN);
             if (refTokenString !== undefined && refTokenString !== null) {
                 const refToken: TokenPayload = JSON.parse(refTokenString);
+                console.log(refToken);
                 watchExpiration(refToken.expiration, refToken);
             }
 

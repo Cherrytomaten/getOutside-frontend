@@ -1,6 +1,7 @@
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 import { BaseActionObject, ResolveTypegenMeta, ServiceMap, State, TypegenDisabled } from "xstate";
 import { UserAuthProps } from "@/types/User";
+import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 
 type AuthContext = {
     user: UserAuthProps | null,
@@ -19,7 +20,7 @@ type AuthEvent =
       err: FetchServerErrorResponse | null;
       attRef: boolean;
     }
-  | { type: 'RETRY'; payload: { refreshToken: string } }
+  | { type: 'RETRY'; payload: { refreshToken: TokenPayload } }
   | { type: 'LOGOUT' }
   | { type: 'IDLE' };
 

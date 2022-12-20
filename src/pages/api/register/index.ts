@@ -3,12 +3,15 @@ import { RegisterUserProps } from "@/types/User/RegisterUserProps";
 import axios from "axios";
 import { FetchRegisterDataResponse } from "@/types/User/FetchRegisterDataResponse";
 import { BackendErrorResponse } from "@/types/Backend/BackendErrorResponse";
+import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 
-type RegisterServerRequest = NextApiRequest & {
+type RegisterRequest = NextApiRequest & {
     body: { user: RegisterUserProps };
 };
 
-export default async function handler(_req: RegisterServerRequest, res: NextApiResponse) {
+type RegisterResponse = NextApiResponse<{username: string, email: string} | FetchServerErrorResponse>;
+
+export default async function handler(_req: RegisterRequest, res: RegisterResponse) {
     return await axios.post('https://cherrytomaten.herokuapp.com/authentication/user/create/', {
         "username": _req.body.user.username,
         "password": _req.body.user.password,
