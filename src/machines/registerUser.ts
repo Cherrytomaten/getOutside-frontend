@@ -1,10 +1,6 @@
 import { createMachine, assign } from 'xstate';
 import { RegisterUserContext, RegisterUserEvent, RegisterUserTypestate } from "@/types/User/RegisterMachine";
 
-interface Context {
-    err: string | null;
-}
-
 const fetchRegisterMachine = createMachine<RegisterUserContext, RegisterUserEvent, RegisterUserTypestate>({
     id: 'registerUser',
     initial: 'idle',

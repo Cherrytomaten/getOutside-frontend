@@ -3,7 +3,7 @@ import axios from "axios";
 import { FetchUserAuthResponseProps } from "@/types/Auth/FetchUserAuthResponseProps";
 import { FetchUserAuthErrorResponseProps } from "@/types/Auth/FetchUserAuthErrorResponseProps";
 import { deleteCookies, getCookie, setCookies } from "@/util/cookieManager";
-import { AUTH_REFRESH_TOKEN, AUTH_TOKEN } from "@/types/constants";
+import { ACTIVE_CATEGORIES, AUTH_REFRESH_TOKEN, AUTH_TOKEN, RADIUS_FILTER } from "@/types/constants";
 import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 import { UserAuthProps } from "@/types/User";
 import { Logger } from "@/util/logger";
@@ -111,7 +111,7 @@ class UserAuthRepo implements IUserAuthRepo {
    */
   public logout() {
     const refToken = getCookie(AUTH_REFRESH_TOKEN);
-    deleteCookies([AUTH_TOKEN, AUTH_REFRESH_TOKEN]);
+    deleteCookies([AUTH_TOKEN, AUTH_REFRESH_TOKEN, ACTIVE_CATEGORIES, RADIUS_FILTER]);
 
     axios.post('/api/auth/revoke', {
       refreshToken: refToken

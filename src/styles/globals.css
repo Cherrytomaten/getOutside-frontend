@@ -77,8 +77,60 @@
         scroll-behavior: smooth;
         @apply bg-dark-sea;
     }
+}
 
-    .request-popup .leaflet-popup-content-wrapper {
-        @apply bg-dark-sea;
-      }
+@layer components {
+    input:checked + label {
+        @apply text-bright-seaweed;
+    }
+
+    input:checked + label .checkbox-custom-input {
+        @apply bg-bright-seaweed;
+    }
+}
+
+/* Map zoom control button styling */
+.leaflet-control-zoom.leaflet-bar.leaflet-control {
+    @apply border-none mt-4;
+}
+
+.leaflet-control-zoom.leaflet-bar.leaflet-control .leaflet-control-zoom-in {
+    @apply bg-bright-seaweed rounded-full flex flex-col justify-center items-center mb-1 text-center shadow-md border-none transition-colors xs:hover:bg-hovered-seaweed;
+}
+
+.leaflet-control-zoom.leaflet-bar.leaflet-control .leaflet-control-zoom-out {
+    @apply bg-bright-seaweed rounded-full flex flex-col justify-center items-center text-center shadow-md border-none transition-colors xs:hover:bg-hovered-seaweed;
+}
+
+.leaflet-control-zoom.leaflet-bar.leaflet-control .leaflet-control-zoom-in span, .leaflet-control-zoom.leaflet-bar.leaflet-control .leaflet-control-zoom-out span {
+    @apply text-white text-base font-lato;
+}
+
+.request-popup .leaflet-popup-content-wrapper {
+    @apply bg-dark-sea;
+}
+
+/* Map native leaflet popup styling */
+.leaflet-popup-tip-container {
+    @apply hidden;
+}
+
+.leaflet-popup .leaflet-popup-content-wrapper {
+    @apply bg-dark-sea;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+    @apply !w-7 !h-7 -mt-2 -mr-2 flex justify-center items-center !rounded-full !text-white !bg-bright-seaweed transition-colors xs:hover:!bg-hovered-seaweed;
+}
+
+.leaflet-container a.leaflet-popup-close-button span {
+    @apply -mt-0.5;
+}
+
+#map-popup-container a {
+    @apply text-dark-sea;
+}
+
+.leaflet-control-attribution a {
+    @apply !text-bright-seaweed;
 }
