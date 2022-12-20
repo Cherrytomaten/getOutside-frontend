@@ -30,7 +30,7 @@ describe('check user login form processes', () => {
     cy.get('#login-username').type('max2');
     cy.get('#login-password').type('wrongPassword');
     cy.get('#login-btn-submit').click();
-    cy.get('.server-fetch-error-text').should('exist').and('have.text', 'No matching data found for given username & password.')
+    cy.get('.server-fetch-error-text').should('exist').and('have.text', 'No active account found with the given credentials')
   })
 })
 

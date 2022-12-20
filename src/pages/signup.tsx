@@ -11,8 +11,6 @@ import { SuccessfullSignup } from "@/components/Signup/SuccessfullSignup";
 
 type SignUpFormProps = {
     username: string,
-    fname: string,
-    lname: string,
     email: string,
     password: string,
     cpassword: string
@@ -22,8 +20,8 @@ function Signup() {
     const { fetchUserAuthState } = useAuth();
     const isAlreadyAuthenticated = useAlreadyAuthRedirect(fetchUserAuthState);
     const { registerUserState, sendToRegisterMachine } = useRegisterMachineManager();
-    const [formData, setFormData] = useState<SignUpFormProps>({ username: '', fname: '', lname: '', email: '', password: '', cpassword: '' });
-    const [formErrors, setFormErrors] = useState<SignUpFormProps>({ username: '', fname: '', lname: '', email: '', password: '', cpassword: '' });
+    const [formData, setFormData] = useState<SignUpFormProps>({ username: '', email: '', password: '', cpassword: '' });
+    const [formErrors, setFormErrors] = useState<SignUpFormProps>({ username: '', email: '', password: '', cpassword: '' });
 
     // Reset form on page load
     useEffect(() => {
@@ -40,20 +38,6 @@ function Signup() {
             data = {...data, username: 'Please enter a username'};
         } else {
             data = {...data, username: ''};
-        }
-
-        if (formData.fname === '') {
-            data = {...data, fname: 'Please enter your first name'};
-            validator = false;
-        } else {
-            data = {...data, fname: ''};
-        }
-
-        if (formData.lname === '') {
-            data = {...data, lname: 'Please enter your last name'};
-            validator = false;
-        } else {
-            data = {...data, lname: ''};
         }
 
         if (formData.email === '') {
@@ -94,10 +78,10 @@ function Signup() {
         e.preventDefault();
         if (validateForm()) {
             if (registerUserState.matches('failure')) {
-                sendToRegisterMachine({ type: 'RETRY_REGISTER', payload: { username: formData.username, email: formData.email, fname: formData.fname, lname: formData.lname, password: formData.password } });
+                sendToRegisterMachine({ type: 'RETRY_REGISTER', payload: { username: formData.username, email: formData.email, password: formData.password } });
                 return;
             }
-            sendToRegisterMachine({ type: 'ATTEMPT_REGISTER', payload: { username: formData.username, email: formData.email, fname: formData.fname, lname: formData.lname, password: formData.password } });
+            sendToRegisterMachine({ type: 'ATTEMPT_REGISTER', payload: { username: formData.username, email: formData.email, password: formData.password } });
         }
     }
 
@@ -155,84 +139,6 @@ function Signup() {
                                 <p
                                     className="input-error-text mt-1 text-red-600">
                                     {formErrors.username}
-                                </p>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
-
-                <div
-                    className={`${
-                        formErrors.fname !== '' ? 'mb-3' : ''
-                    } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}
-                >
-                    <label htmlFor="signup-fname" className="invisible w-0 h-0">
-                        First name
-                    </label>
-                    <input
-                        type="text"
-                        className={`${
-                            formErrors.fname !== ''
-                                ? 'border-red-600'
-                                : 'border-bright-seaweed hover:border-hovered-seaweed'
-                        } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                            setFormData({ ...formData, fname: e.target.value })
-                        }
-                        onClick={() => setFormErrors({ ...formErrors, fname: '' })}
-                        onFocus={() => setFormErrors({ ...formErrors, fname: '' })}
-                        placeholder="First name"
-                        id="signup-fname"
-                    />
-                    <AnimatePresence>
-                        {formErrors.fname !== '' && (
-                            <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                exit={{ opacity: 0, height: 0 }}
-                                transition={{ ease: 'easeOut', duration: .2 }}>
-                                <p
-                                    className="input-error-text mt-1 text-red-600">
-                                    {formErrors.fname}
-                                </p>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
-
-                <div
-                    className={`${
-                        formErrors.lname !== '' ? 'mb-3' : ''
-                    } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}
-                >
-                    <label htmlFor="signup-lname" className="invisible w-0 h-0">
-                        Last name
-                    </label>
-                    <input
-                        type="text"
-                        className={`${
-                            formErrors.lname !== ''
-                                ? 'border-red-600'
-                                : 'border-bright-seaweed hover:border-hovered-seaweed'
-                        } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                            setFormData({ ...formData, lname: e.target.value })
-                        }
-                        onClick={() => setFormErrors({ ...formErrors, lname: '' })}
-                        onFocus={() => setFormErrors({ ...formErrors, lname: '' })}
-                        placeholder="Last name"
-                        id="signup-lname"
-                    />
-                    <AnimatePresence>
-                        {formErrors.lname !== '' && (
-                            <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                exit={{ opacity: 0, height: 0 }}
-                                transition={{ ease: 'easeOut', duration: .2 }}>
-                                <p
-                                    className="input-error-text mt-1 text-red-600">
-                                    {formErrors.lname}
                                 </p>
                             </motion.div>
                         )}

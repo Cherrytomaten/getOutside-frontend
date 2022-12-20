@@ -5,7 +5,7 @@ type SuccessfullSignupProps = {
     username: string;
 }
 
-function SuccessfullSignup({username}: SuccessfullSignupProps) {
+function SuccessfullSignup({ username }: SuccessfullSignupProps) {
     return (
         <main id="successfull-signup-container" className="w-full h-screen flex flex-col justify-start items-center overflow-x-hidden">
             <div className="w-full h-2/5 max-h-64 flex justify-center my-[6vh]">
@@ -15,7 +15,7 @@ function SuccessfullSignup({username}: SuccessfullSignupProps) {
                 className="text-bright-seaweed">{username}</span>!</h2>
             <h3 className="px-3 pb-10 text-2xl text-center text-white xs:text-3xl">You&apos;ve been signed up
                 successfully!</h3>
-            <Link href="/">
+            <Link href="/login">
                 <button
                     type="button"
                     id="already-signedup-btn"

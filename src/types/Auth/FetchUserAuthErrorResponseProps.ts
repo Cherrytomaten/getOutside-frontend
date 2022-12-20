@@ -1,6 +1,6 @@
 import { NextApiResponse } from "next";
 
-type FetchUserDataErrorProps = {
+type FetchUserAuthErrorResponseProps = {
     response: NextApiResponse & {
         data: {
             message: string
@@ -8,5 +8,5 @@ type FetchUserDataErrorProps = {
     }
 }
 
-export type { FetchUserDataErrorProps };
+export type { FetchUserAuthErrorResponseProps };
 
