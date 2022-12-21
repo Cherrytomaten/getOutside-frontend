@@ -5,53 +5,61 @@ import { useUserAuth } from '@/hooks/useUserAuth';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { AUTH_TOKEN } from '@/types/constants';
-import { tokenDecompiler } from '@/util/tokenDecompiler';
-import dummyFetchData from '@/lib/dummyFetchData';
 import { GetServerSidePropsContext } from 'next';
+import axios, { AxiosResponse } from 'axios';
+import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
+import { BackendErrorResponse } from '@/types/Backend/BackendErrorResponse';
+import { Logger } from '@/util/logger';
 
-type MockData = UserProps & {
-  MOCK_password: string;
+type UserDataServerResponseProps = {
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  profile_picture: string | null;
 };
+
+type UserDataServerResponse = AxiosResponse<UserDataServerResponseProps>;
 
 type ProfileProps = {
   username: string;
-  email: string;
   fname: string;
   lname: string;
-  pic: string;
+  email: string;
+  pic: string | null;
 };
-
-// TODO: ordentliche Typdeklarationen
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const tokenData: string | undefined = context.req.cookies[AUTH_TOKEN];
 
   try {
-    if (tokenData === undefined) {
+    if (tokenData === undefined || tokenData === 'undefined') {
       throw new Error('TokenData is undefined!');
     }
 
-    const { userId } = tokenDecompiler(tokenData);
-    if (userId === '') {
-      throw new Error('TokenData does not contain expected values.');
-    }
+    const authToken: TokenPayload = JSON.parse(tokenData);
 
-    const user: MockData | string = await dummyFetchData(tokenData, userId);
-    console.log('user: ', user);
-
-    if (typeof user === 'string') {
-      throw new Error('User is not an object!');
-    }
-
-    return {
-      props: {
-        username: user.username,
-        email: user.email,
-        fname: user.firstname,
-        lname: user.lastname,
-        pic: user.pic,
-      },
-    };
+    return await axios
+      .get('https://cherrytomaten.herokuapp.com/authentication/user/', {
+        headers: {
+          Authorization: 'Bearer ' + authToken.token,
+        },
+      })
+      .then((_res: UserDataServerResponse) => {
+        Logger.log('resdata: ', _res.data);
+        return {
+          props: {
+            username: _res.data.username,
+            fname: _res.data.first_name,
+            lname: _res.data.last_name,
+            email: _res.data.email,
+            pic: _res.data.profile_picture,
+          },
+        };
+      })
+      .catch((_err: BackendErrorResponse) => {
+        throw new Error('Internal Server Error.');
+      });
   } catch (err) {
     console.log('Error requesting profile page: ', err);
     return {
@@ -78,9 +86,9 @@ function Profile({ ...userPayload }: ProfileProps) {
   return (
     <ProfilePage
       username={userPayload.username}
-      email={userPayload.email}
       fname={userPayload.fname}
       lname={userPayload.lname}
+      email={userPayload.email}
       pic={userPayload.pic}
     />
   );

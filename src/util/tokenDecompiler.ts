@@ -1,17 +1,27 @@
-type ReturnToken = {
-  token: string;
-  userId: string;
-  expirationDate: number;
-};
+import { Logger } from "@/util/logger";
+import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 
-function tokenDecompiler(tokenData: string): ReturnToken {
-  const tokenDataWithoutBearer = tokenData.split(' ')[1];
-  const tokenDataSplit: Array<string> = tokenDataWithoutBearer.split('.');
-  const token = tokenDataSplit[0];
-  const userId = tokenDataSplit[1];
-  const expirationDate = parseInt(tokenDataSplit[2]);
-
-  return { token, userId, expirationDate };
+type RawTokenPayload = {
+    token_type: string;
+    exp: string;
+    iat: string;
+    jti: string;
+    user_id: string;
 }
 
-export { tokenDecompiler };
+function tokenDecompiler(token: string): TokenPayload | null {
+    const payload: string[] = token.split('.');
+
+    // Check wrong format
+    if (payload.length !== 3) {
+        return null;
+    }
+
+    const buffer = new Buffer(payload[1], 'base64');
+    const tokenData: RawTokenPayload = JSON.parse(buffer.toString('ascii'));
+
+    Logger.log("decompiled token:", tokenData);
+    return { type: tokenData.token_type, token: token, expiration: Number(tokenData.exp), userId: tokenData.user_id };
+}
+
+export { tokenDecompiler }

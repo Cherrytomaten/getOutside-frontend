@@ -4,8 +4,44 @@ import { useUserAuth } from "@/hooks/useUserAuth";
 import { useAuth } from "@/context/AuthContext";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useEffect } from "react";
+import { ACTIVE_CATEGORIES, RADIUS_FILTER } from "@/types/constants";
+import { GetServerSidePropsContext } from "next";
 
-function Home() {
+type MapCookiesPayload = {
+    radius: number;
+    activeCategories: string[];
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+    let _radius: number | undefined = undefined;
+    let _activeCategories: string[] | undefined = undefined;
+
+    try {
+        if (context.req.cookies[RADIUS_FILTER]) {
+            _radius = JSON.parse(context.req.cookies[RADIUS_FILTER]).radius;
+        }
+
+    } catch(_err) {
+        console.error("An error occured while getting the radius cookie.");
+    }
+
+    try {
+       if (context.req.cookies[ACTIVE_CATEGORIES]) {
+           _activeCategories = JSON.parse(context.req.cookies[ACTIVE_CATEGORIES]).activeCats.split(',');
+       }
+    } catch(_err) {
+        console.error("An error occured while getting the active categories cookie.");
+    }
+
+    return {
+        props: {
+            radius: _radius ? _radius : 3000,
+            activeCategories: _activeCategories ? _activeCategories : []
+        },
+    };
+}
+
+function Home({ ...cookiePayload }: MapCookiesPayload) {
     const router = useRouter();
     const authenticationHook = useUserAuth();
     const { fetchUserAuthState } = useAuth();
@@ -21,10 +57,9 @@ function Home() {
     }
 
     return (
-        <>
-            <Map />
-            <button onClick={() => authenticationHook.logout()}>Logout</button>
-        </>
+        <main className="w-full h-full min-h-screen max-h-screen overflow-hidden">
+            <Map cookiedCategories={cookiePayload.activeCategories} cookiedRadius={cookiePayload.radius} />
+        </main>
     );
 }
 

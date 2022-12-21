@@ -15,7 +15,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     const cookie = getCookie(AUTH_TOKEN);
     cookie === null ? setShowNavbar(false) : setShowNavbar(true);
-    console.log(cookie);
   }, [router]);
 
   return (

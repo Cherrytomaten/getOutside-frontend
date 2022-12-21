@@ -2,7 +2,7 @@ import { Repo } from "@/types/Repo/Repo";
 import { RegisterUserProps } from "@/types/User/RegisterUserProps";
 import axios from "axios";
 import { FetchRegisterDataResponse } from "@/types/User/FetchRegisterDataResponse";
-import { FetchUserDataErrorProps } from "@/types/Auth/FetchUserDataErrorProps";
+import { FetchUserAuthErrorResponseProps } from "@/types/Auth/FetchUserAuthErrorResponseProps";
 
 class RegisterRepo implements Repo<RegisterUserProps> {
     /**
@@ -17,7 +17,7 @@ class RegisterRepo implements Repo<RegisterUserProps> {
             .then((res: FetchRegisterDataResponse) => {
                 return Promise.resolve(res.data);
             })
-            .catch((err: FetchUserDataErrorProps) => {
+            .catch((err: FetchUserAuthErrorResponseProps) => {
                 return Promise.reject(err.response.data);
             })
     }

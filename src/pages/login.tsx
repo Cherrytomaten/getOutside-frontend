@@ -22,8 +22,6 @@ function Login() {
     let validator: boolean = true;
     let data = formData;
 
-    console.log(formData);
-
     if (formData.username === '') {
       data = { ...data, username: 'Please enter username' };
       validator = false;

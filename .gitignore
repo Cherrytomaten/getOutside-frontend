@@ -26,6 +26,7 @@ yarn-error.log*
 .pnpm-debug.log*
 # for testing
 test.http
+src/pages/Playground.tsx
 html.html
 
 # local env files

@@ -92,7 +92,7 @@ function MapPoint({ ...props }: MapPointProps) {
               className="absolute top-2 right-2 bg-dark-sea/50 rounded-full hover:cursor-pointer"
               title="Close"
             >
-              <CloseSvg width="40" height="40" />
+              <CloseSvg width="40px" height="40px" fill="#f0f0f0" />
             </button>
           </Link>
         </div>
