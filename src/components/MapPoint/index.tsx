@@ -74,7 +74,7 @@ function MapPoint({ ...props }: MapPointProps) {
   }
 
   return (
-    <section
+    <main
       id={props.uuid}
       className="relative w-full h-full min-h-screen flex justify-center p-5 mb-12 text-default-font"
     >
@@ -286,7 +286,7 @@ function MapPoint({ ...props }: MapPointProps) {
           </div>
         </div>
       </div>
-    </section>
+    </main>
   );
 }
 

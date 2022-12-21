@@ -4,24 +4,35 @@ import Link from 'next/link';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { PasswordInput } from '../PasswordInput';
 import { AnimatePresence, motion } from 'framer-motion';
+import axios from 'axios';
+import { convertBase64 } from '@/util/convertToBase64';
 
-// TODO: sinnvolle Typdeklarationen
 type ValidateProps = {
   validated: boolean;
   message: string;
 };
 
-function ProfilePage({ ...props }: any) {
+type ProfileProps = {
+  username: string;
+  email: string;
+  fname: string;
+  lname: string;
+  pic: string;
+};
+
+function ProfilePage({ ...props }: ProfileProps) {
   const authenticationHook = useUserAuth();
   const [changePw, setChangePw] = useState<boolean>(false);
   const [pwInputData, setPwInputData] = useState<string>('');
   const [pwInputErr, setPwInputErr] = useState<boolean>(false);
   const [errMessage, setErrMessage] = useState<string>('');
-
-  // const [showFn, setShowFn] = useState<boolean>(false);
-  // const [fnData, setFnData] = useState<string>("");
-  // const [fnErr, setFnErr] = useState<boolean>(false);
-  // const [fnErrMessage, setFnErrMessage] = useState<string>("");
+  const [pwInputSuccess, setPwInputSuccess] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [profilePic, setProfilePic] = useState<any>(null);
+  const [pPicMessage, setPPicMessage] = useState<{
+    message: string;
+    err: boolean;
+  }>({ message: '', err: false });
 
   function validatePassword(): ValidateProps {
     if (pwInputData === '' || pwInputData === undefined) {
@@ -37,7 +48,7 @@ function ProfilePage({ ...props }: any) {
     }
   }
 
-  function handleSubmit(e: FormEvent<HTMLButtonElement>) {
+  function handleSubmit(e: FormEvent<HTMLButtonElement>): void {
     e.preventDefault();
     setErrMessage('');
     const { validated, message } = validatePassword();
@@ -47,27 +58,71 @@ function ProfilePage({ ...props }: any) {
       return;
     } else {
       // TODO: functionality to renew user password
+      setPwInputSuccess(true);
+      setSuccessMessage(message);
       console.log('user password changed successfully.');
     }
   }
 
-  // function handleFnSubmit(e: FormEvent<HTMLButtonElement>) {
-  //   e.preventDefault();
-  //   setFnErrMessage('');
-  //   const { validated, message } = validate();
-  //   if (!validated) {
-  //     setPwInputErr(true);
-  //     setErrMessage(message);
-  //     return;
-  //   } else {
-  //     // TODO: functionality to renew user password
-  //     console.log('user password changed successfully.');
-  //   }
-  // }
+  function handleInputChange(e: any) {
+    if (
+      e === undefined ||
+      e.target.files === undefined ||
+      e.target.files[0] === undefined
+    ) {
+      return;
+    }
+
+    if (e.target.files[0].size > 1097152) {
+      console.log('file too big');
+      setProfilePic('SizeError');
+      setPPicMessage({ message: 'File is too big!', err: true });
+      return;
+    }
+
+    console.log(e.target.files);
+
+    if (e.target.files.length > 1) {
+      console.log('You can only upload one Picture!');
+      setPPicMessage({
+        message: 'You can only upload one Picture!',
+        err: true,
+      });
+      return;
+    }
+
+    setProfilePic(e.target.files[0]);
+    setPPicMessage({ message: 'Picture saved in clipboard.', err: false });
+  }
+
+  async function uploadProfilePic() {
+    const base64Pic: string | ArrayBuffer | null = await convertBase64(
+      profilePic
+    );
+
+    console.log('base64: ', base64Pic);
+
+    return await axios
+      .post('/api/user/pfp/set', {
+        picture: base64Pic,
+      })
+      .then((res: any) => {
+        setProfilePic(null);
+        setPPicMessage({ message: '', err: false });
+        console.log('Success');
+        // return Promise.resolve(res.data);
+      })
+      .catch((err: any) => {
+        setProfilePic(null);
+        setPPicMessage({ message: '', err: false });
+        console.log('Error');
+        // return Promise.reject(err.response.data);
+      });
+  }
 
   return (
     <main
-      id={props.user.userId}
+      id={props.username + props.email}
       className="w-full h-full min-h-screen flex justify-center items-center mb-8 text-white"
     >
       <div
@@ -80,36 +135,73 @@ function ProfilePage({ ...props }: any) {
         >
           <h1 className="py-14 text-4xl">
             Welcome{' '}
-            <span className="text-bright-seaweed">{props.user.username}</span>!
+            <span className="text-bright-seaweed">{props.username}</span>!
           </h1>
-          <div className="flex flex-col justify-center items-center">
+          <div className="relative flex flex-col justify-center items-center">
             <div
               id="img-container"
               className="relative flex-auto w-48 min-w-[10rem] max-w-[14rem] h-48 min-h-[10rem] max-h-[14rem]"
             >
               <Image
-                src={props.user.pic}
+                src={props.pic}
                 alt="Profilbild"
                 layout="fill"
                 objectFit="cover"
                 className="rounded-full"
               />
             </div>
-            <button
-              type="button"
-              id="change-profile-pic-btn"
-              title="Change Profile Picture"
-              className="mq-hover:hover:bg-dark-seaweed px-2 py-1 mt-4 text-default-font border-solid border-2 rounded-lg border-dark-seaweed transition-all"
+            <div
+              id="btns-container"
+              className="flex flex-row justify-center items-center transition-all"
             >
-              Change Picture
-            </button>
+              <input
+                type="file"
+                id="upload-profile-pic-btn"
+                name="profile-pic-upload"
+                title="Upload Profile Picture"
+                className="hidden"
+                accept="image/*"
+                onChange={handleInputChange}
+              />
+              <label
+                htmlFor="upload-profile-pic-btn"
+                className="mq-hover:hover:bg-dark-seaweed px-2 py-1 mt-4 text-default-font border-solid border-2 rounded-lg border-dark-seaweed transition-all cursor-pointer"
+              >
+                Upload Picture
+              </label>
+              {profilePic !== null && !pPicMessage.err && (
+                <>
+                  <div className="w-5 h-full"></div>
+                  <button
+                    type="submit"
+                    id="submit-profile-pic-btn"
+                    title="Submit Profile Picture"
+                    className="mq-hover:hover:text-dark-sea mq-hover:hover:bg-bright-seaweed px-2 py-1 mt-4 text-default-font border-solid border-2 rounded-lg border-bright-seaweed transition-all"
+                    onClick={uploadProfilePic}
+                  >
+                    Submit Picture
+                  </button>
+                </>
+              )}
+            </div>
+            {profilePic !== null && (
+              <div className="absolute top-full max-w-[264px] pt-2 text-center">
+                <p
+                  className={`${
+                    pPicMessage.err ? 'text-danger' : 'text-bright-seaweed'
+                  }`}
+                >
+                  {pPicMessage.message}
+                </p>
+              </div>
+            )}
           </div>
         </section>
 
         {/* SECTION 2 */}
         <section
           id="settings-section"
-          className="w-full max-w-[430px] flex flex-col justify-center items-center mt-20 mb-12 bg-darker-sea"
+          className="w-full max-w-[430px] flex flex-col justify-center items-center mt-16 mb-12 bg-darker-sea"
         >
           {/* OPTIONS */}
           <div className="w-full h-14 flex flex-row justify-between items-center px-6 border-b-2 border-dark-sea">
@@ -169,6 +261,8 @@ function ProfilePage({ ...props }: any) {
           <div
             className={`w-full ${changePw ? 'h-28' : 'h-14'} ${
               pwInputErr && 'h-32'
+            } ${
+              pwInputSuccess && 'h-32'
             } pt-[9px] border-b-2 border-dark-sea transition-all`}
           >
             <div className="w-full flex flex-row justify-between items-center px-6">
@@ -183,11 +277,14 @@ function ProfilePage({ ...props }: any) {
                   setErrMessage('');
                   setPwInputErr(false);
                   setPwInputData('');
+                  setPwInputSuccess(false);
+                  setSuccessMessage('');
                 }}
               >
                 Change
               </button>
             </div>
+
             {changePw && (
               <>
                 <div className="w-full flex flex-row justify-between items-start px-6 mt-3">
@@ -207,6 +304,8 @@ function ProfilePage({ ...props }: any) {
                       onFocus={() => {
                         setPwInputErr(false);
                         setErrMessage('');
+                        setPwInputSuccess(false);
+                        setSuccessMessage('');
                       }}
                     />
                     <AnimatePresence>
@@ -219,6 +318,18 @@ function ProfilePage({ ...props }: any) {
                         >
                           <p className="input-error-text mt-1 text-danger">
                             {errMessage}
+                          </p>
+                        </motion.div>
+                      )}
+                      {pwInputSuccess && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ ease: 'easeOut', duration: 0.2 }}
+                        >
+                          <p className="input-success-text mt-1 text-bright-seaweed">
+                            {successMessage}
                           </p>
                         </motion.div>
                       )}
@@ -237,79 +348,6 @@ function ProfilePage({ ...props }: any) {
               </>
             )}
           </div>
-
-          {/* CHANGE FIRSTNAME */}
-          {/* <div
-            className={`w-full ${showFn ? 'h-28' : 'h-14'} ${
-              fnErr && 'h-32'
-            } pt-[9px] border-b-2 border-dark-sea transition-all`}
-          >
-            <div className="w-full flex flex-row justify-between items-center px-6">
-              <p>Change Firstname</p>
-              <button
-                type="button"
-                id="change-fn-btn"
-                title="Change Firstname"
-                className="mq-hover:hover:bg-lighter-sea min-w-[80px] px-2 py-1 ml-4 text-default-font border-solid border-2 rounded-lg border-lighter-sea transition-all"
-                onClick={() => {
-                  setShowFn(!showFn);
-                  setFnData('');
-                  setFnErr(false);
-                  setFnErrMessage('');
-                }}
-              >
-                Change
-              </button>
-            </div>
-            {showFn && (
-              <>
-                <div className="w-full flex flex-row justify-between items-start px-6 mt-3">
-                  <div className="w-full flex flex-col justify-center items-start">
-                    <label htmlFor="new-firstname"></label>
-                    <PasswordInput
-                      id="set-firstname"
-                      placeholder="New Firstname..."
-                      className={`${
-                        fnErr
-                          ? 'border-danger'
-                          : 'border-bright-seaweed hover:border-hovered-seaweed'
-                      } w-full py-1 text-default-font bg-transparent border-solid border-b-2 rounded-none  transition-all appearance-none`}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                        setFnData(e.target.value)
-                      }
-                      onFocus={() => {
-                        setFnErr(false);
-                        setFnErrMessage('');
-                      }}
-                    />
-                    <AnimatePresence>
-                      {fnErr && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ ease: 'easeOut', duration: 0.2 }}
-                        >
-                          <p className="input-error-text mt-1 text-danger">
-                            {fnErrMessage}
-                          </p>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                  <button
-                    type="button"
-                    id="send-fn-btn"
-                    title="Submit"
-                    onClick={(e) => handleSubmit(e)}
-                    className="mq-hover:hover:text-dark-sea mq-hover:hover:bg-bright-seaweed min-w-[80px] px-2 py-1 ml-4 text-default-font border-solid border-2 rounded-lg border-bright-seaweed transition-all"
-                  >
-                    Submit
-                  </button>
-                </div>
-              </>
-            )}
-          </div> */}
 
           {/* LOGOUT */}
           <div className="w-full h-14 flex flex-row justify-between items-center px-6 border-b-2 border-dark-sea">

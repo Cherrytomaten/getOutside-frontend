@@ -1,10 +1,23 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head'
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider } from '@/context/AuthContext';
 import { Navbar } from '@/components/Navbar';
+import { useEffect, useState } from 'react';
+import { getCookie } from '@/util/cookieManager';
+import { useRouter } from 'next/router';
+import { AUTH_TOKEN } from '@/types/constants';
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+  const [showNavbar, setShowNavbar] = useState<boolean>(false);
+
+  useEffect(() => {
+    const cookie = getCookie(AUTH_TOKEN);
+    cookie === null ? setShowNavbar(false) : setShowNavbar(true);
+    console.log(cookie);
+  }, [router]);
+
   return (
     <>
       <Head>
@@ -22,7 +35,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <AuthProvider>
         <Component {...pageProps} />
-        <Navbar />
+        {showNavbar && <Navbar />}
       </AuthProvider>
     </>
   );

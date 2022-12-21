@@ -24,62 +24,62 @@ const opening1: OpeningProps = {
 };
 
 const opening2: OpeningProps = {
-  monday: '1-467',
-  tuesday: 'offen',
-  wednesday: 'zu',
-  thursday: 'auch offen',
-  friday: '13.00',
-  saturday: 'pipapo',
-  sunday: '14.00-14.10',
+  monday: '10.00-20.00',
+  tuesday: '08.00-18.00',
+  wednesday: '12.00-22.00',
+  thursday: '12.00-22.00',
+  friday: '12.00-20.00',
+  saturday: 'geschlossen',
+  sunday: 'geschlossen',
 };
 
 const comments1: CommentProps[] = [
   {
     author: 'Gerhard',
-    text: 'Das ist ein Kommentar',
+    text: 'Das ist ein Kommentar, hahaha xD',
   },
   {
     author: 'Sabine',
     text: 'Sabines Kommmentar, der sehr sehr lang ist. Ja Sabine hat wirklich sehr viel Text geschrieben, um hier den Rahmen zu sprengen.',
   },
   {
-    author: 'Nummer 3',
-    text: 'Sabines Kommmentar, der sehr sehr lang ist. Ja Sabine hat wirklich sehr viel Text geschrieben, um hier den Rahmen zu sprengen.',
+    author: 'Jean',
+    text: 'Hey! Wir suchen noch Leute zum Spielen, kommt 16:00 dazu!',
   },
   {
-    author: 'Nummer 4',
-    text: 'Sabines Kommmentar, der sehr sehr lang ist. Ja Sabine hat wirklich sehr viel Text geschrieben, um hier den Rahmen zu sprengen.',
+    author: 'Friedi',
+    text: 'richtig frische Luft hier ;)',
   },
 ];
 
 const comments2: CommentProps[] = [
   {
-    author: 'Autor 1',
-    text: 'Das ist Kommentar 1',
+    author: 'Bertold B.',
+    text: 'Super Spot! Kann auch gut zum Parkour trainieren genutzt werden.',
   },
   {
-    author: 'Autor 2',
-    text: 'Das ist Kommentar 2',
+    author: 'Linus',
+    text: 'Leider immer etwas voll',
   },
   {
-    author: 'Autor 3',
-    text: 'Das ist Kommentar 3',
+    author: 'Viv',
+    text: 'Im Winter etwas glatt, im Sommer einfach beste!',
   },
   {
-    author: 'Autor 4',
-    text: 'Das ist Kommentar 4',
+    author: 'Jona',
+    text: 'Yeahh! Endlich rauskomm!',
   },
   {
-    author: 'Autor 5',
-    text: 'Das ist Kommentar 5',
+    author: 'Bertold B.',
+    text: 'Danke für den Tipp!',
   },
   {
-    author: 'Autor 6',
-    text: 'Das ist Kommentar 6',
+    author: 'Sabrina',
+    text: 'Nicht gut für Fußball spielen, sonst in Ordnung',
   },
   {
-    author: 'Autor 7',
-    text: 'Das ist Kommentar 7',
+    author: 'Bibi',
+    text: 'Einfach ZAUBERhaft!!!',
   },
 ];
 
@@ -109,9 +109,9 @@ const mockMapPoints: MapPointProps[] = [
     name: 'Bob MacQuarrie Skateboard Park (SK8 Extreme Park)',
     desc: 'Flat asphalt surface, 10 components, City run learn to skateboard programs, City run skateboard camps in summer.',
     address: 'Youville Drive 144, 14905 Berlin',
-    opening: opening2,
+    opening: opening1,
     rating: 1.6,
-    comments: comments2,
+    comments: comments1,
     image: skateparkImg,
   },
   {
@@ -129,9 +129,9 @@ const mockMapPoints: MapPointProps[] = [
     name: 'Roving Baskteball Park Location',
     desc: 'Flat surface, 5 components',
     address: '2785 8th Line Road, Berlin',
-    opening: opening2,
+    opening: opening1,
     rating: 3.5,
-    comments: comments2,
+    comments: comments1,
     image: basketBallImg,
   },
   {
@@ -139,7 +139,7 @@ const mockMapPoints: MapPointProps[] = [
     name: 'Roving volleyball Location',
     desc: 'Flat surface, 9 components',
     address: '10 Warner Colpitts Lane, Berlin',
-    opening: opening2,
+    opening: opening1,
     rating: 3.5,
     comments: comments2,
     image: volleyBallImg,
@@ -151,7 +151,7 @@ const mockMapPoints: MapPointProps[] = [
     address: '101 Centrepointe Drive',
     opening: opening2,
     rating: 4.5,
-    comments: comments2,
+    comments: comments1,
     image: volleyBallImg,
   },
   {
@@ -159,7 +159,7 @@ const mockMapPoints: MapPointProps[] = [
     name: 'Greenboro Spa',
     desc: 'Flat asphalt surface, 5 components',
     address: '3142 Conroy Road, Berlin',
-    opening: opening2,
+    opening: opening1,
     rating: 1,
     comments: comments2,
     image: spaImg,
@@ -169,9 +169,9 @@ const mockMapPoints: MapPointProps[] = [
     name: 'Bridlewood Spa',
     desc: 'Flat asphalt surface, no components',
     address: '65 Stonehaven Drive, Berlin',
-    opening: opening2,
+    opening: opening1,
     rating: 2,
-    comments: comments2,
+    comments: comments1,
     image: spaImg,
   },
   {
@@ -181,7 +181,7 @@ const mockMapPoints: MapPointProps[] = [
     address: '100 Clifford Campbell Street',
     opening: opening2,
     rating: 3,
-    comments: comments2,
+    comments: comments1,
     image: tennisImg,
   },
   {
@@ -201,7 +201,7 @@ const mockMapPoints: MapPointProps[] = [
     address: '5660 Osgoode Main Street, Berlin',
     opening: opening2,
     rating: 5,
-    comments: comments2,
+    comments: comments1,
     image: skateparkImg,
   },
   {
@@ -231,7 +231,7 @@ const mockMapPoints: MapPointProps[] = [
     address: '190 Glen Park Drive, Berlin',
     opening: opening2,
     rating: 3.2,
-    comments: comments2,
+    comments: comments1,
     image: spaImg,
   },
   {
@@ -239,7 +239,7 @@ const mockMapPoints: MapPointProps[] = [
     name: 'Goulbourn Spa',
     desc: '1000 surface, 60000 components',
     address: '1500 Shea Road, Berlin',
-    opening: opening2,
+    opening: opening1,
     rating: 4.4,
     comments: comments2,
     image: spaImg,
@@ -249,9 +249,9 @@ const mockMapPoints: MapPointProps[] = [
     name: 'Manotick Skateboard Park',
     desc: 'Flat asphalt surface, 8 components',
     address: '5572 Doctor Leach Drive, Berlin',
-    opening: opening2,
+    opening: opening1,
     rating: 4.4,
-    comments: comments2,
+    comments: comments1,
     image: skateparkImg,
   },
   {
@@ -271,7 +271,7 @@ const mockMapPoints: MapPointProps[] = [
     address: '51 Berrigan Drive, Berlin',
     opening: opening2,
     rating: 2.4,
-    comments: comments2,
+    comments: comments1,
     image: tennisImg,
   },
   {
@@ -279,7 +279,7 @@ const mockMapPoints: MapPointProps[] = [
     name: 'EugÃne Martineau tennis Park',
     desc: '1 component',
     address: '710 Mikinak Road, Berlin',
-    opening: opening2,
+    opening: opening1,
     rating: 3.5,
     comments: comments2,
     image: tennisImg,
@@ -289,7 +289,7 @@ const mockMapPoints: MapPointProps[] = [
     name: 'Vista Speedball Park',
     desc: 'Flat surface, 5 components, Flat surface, 5 components, Flat surface, 5 components',
     address: '720 Vistapark Drive, Berlin',
-    opening: opening2,
+    opening: opening1,
     rating: 3.5,
     comments: comments2,
     image: volleyBallImg,
@@ -301,7 +301,7 @@ const mockMapPoints: MapPointProps[] = [
     address: 'Schäfersee 13407',
     opening: opening2,
     rating: 5,
-    comments: comments2,
+    comments: comments1,
     image: spaImg,
   },
 ];
