@@ -2,6 +2,7 @@
 const withPWA = require('next-pwa')({
   disable: false,
   dest: 'public',
+  swSrc: 'https://www.get-outside-app.de/sw.js',
   register: true,
   skipWaiting: true,
   fallbacks: {
@@ -13,5 +14,4 @@ const withPWA = require('next-pwa')({
 module.exports = withPWA({
   reactStrictMode: false,
   swcMinify: true,
-  swSrc: 'https://www.get-outside-app.de/sw.js'
 });
