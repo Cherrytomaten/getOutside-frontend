@@ -11,7 +11,7 @@ function Navbar() {
   const [hoverProfile, setHoverProfile] = useState<boolean>(false);
 
   return (
-    <div className="z-[99999] fixed bottom-0 w-screen h-20 flex justify-center items-center bg-dark-sea">
+    <div className="z-[99998] fixed bottom-0 w-screen h-20 flex justify-center items-center bg-dark-sea">
       <nav className="w-full max-w-lg h-full bg-dark-sea">
         <ul className="w-full h-full flex justify-between items-center px-6">
           <Link href="/favorites">

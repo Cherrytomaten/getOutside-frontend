@@ -8,6 +8,7 @@ import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorRespons
 import { setCookie } from "@/util/cookieManager";
 import { ACTIVE_CATEGORIES, RADIUS_FILTER } from "@/types/constants";
 import { ActivityType } from "@/types/Pins/ActivityType";
+import { Logger } from "@/util/logger";
 
 type useManageMapDataProps = {
     radius: number;
@@ -26,7 +27,7 @@ function useManageMapData({ radius, location, categoryFilter, setAllCats, locati
                 }) => {
                     PinRepo.getByRadius(event.payload.location, event.payload.radius).then(
                         (res: PinProps[]) => {
-                            console.log(`Queried ${res.length} Pins.`);
+                            Logger.log(`Queried ${res.length} Pins.`);
                             sendToPinQueryMachine({
                                 type: 'RESOLVE',
                                 pins: res,
@@ -41,7 +42,7 @@ function useManageMapData({ radius, location, categoryFilter, setAllCats, locati
                                 message = err.errors.message;
                             }
 
-                            console.log('Failed to query pins:', message);
+                            Logger.log('Failed to query pins:', message);
                             sendToPinQueryMachine({
                                 type: 'REJECT',
                                 err: message,

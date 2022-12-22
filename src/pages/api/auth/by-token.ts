@@ -29,12 +29,12 @@ export default async function handler(_req: NextApiRequest, res: AuthByTokenResp
         return res.status(405).json({errors: { message: 'Given request method is not allowed here.' } });
     }
 
-    const authTokenString = _req.cookies[AUTH_TOKEN];
-    if (authTokenString === undefined || authTokenString === 'undefined') {
-        return res.status(400).json({errors: {message: 'Wrong token format.'}});
-    }
-
     try {
+        const authTokenString = _req.cookies[AUTH_TOKEN];
+        if (authTokenString === undefined || authTokenString === 'undefined') {
+            return res.status(400).json({errors: {message: 'Wrong token format.'}});
+        }
+
         const refTokenString = _req.cookies[AUTH_REFRESH_TOKEN];
         if (refTokenString === undefined) {
             return res.status(400).json({errors: {message: 'Wrong refresh token format.'}});

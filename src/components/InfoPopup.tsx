@@ -30,7 +30,7 @@ function InfoPopup({ text ,exp }: InfoPopupProps) {
                     initial={{x: "-100%", opacity: 0}}
                     animate={{x: 0, opacity: 1}}
                     exit={{x: "100%", opacity: 0}}
-                    className="z-[99999] absolute bottom-20 left-0 w-full h-auto px-4">
+                    className="z-[99999] absolute bottom-24 left-0 w-full h-auto px-4">
                     <div className="relative w-full h-full p-3 pb-3.5 overflow-hidden bg-orange-sun rounded-md shadow-xl">
                         <p className="text-sm text-default-font">{text}</p>
                         <motion.div
