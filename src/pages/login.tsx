@@ -22,8 +22,6 @@ function Login() {
     let validator: boolean = true;
     let data = formData;
 
-    console.log(formData);
-
     if (formData.username === '') {
       data = { ...data, username: 'Please enter username' };
       validator = false;
@@ -79,9 +77,9 @@ function Login() {
   }
 
   return (
-    <main className="w-full h-screen flex flex-col justify-start items-center overflow-x-hidden">
-      <div className="w-full h-2/5 max-h-64 flex justify-center my-[6vh]">
-        <LogoNew width="auto" height="100%" />
+    <main className="w-full h-full min-h-screen flex flex-col justify-start items-center overflow-x-hidden">
+      <div className="w-full h-auto max-h-64 flex justify-center my-14">
+        <LogoNew width="220px" height="auto" />
       </div>
       <form
         className="flex-auto w-4/5 max-w-md flex flex-col justify-start items-center px-5 pb-10"
@@ -99,9 +97,9 @@ function Login() {
             type="text"
             className={`${
               formErrors.username !== ''
-                ? 'border-red-600'
+                ? 'border-danger'
                 : 'border-bright-seaweed hover:border-hovered-seaweed'
-            } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1`}
+            } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, username: e.target.value })
             }
@@ -112,16 +110,16 @@ function Login() {
           />
           <AnimatePresence>
             {formErrors.username !== '' && (
-                <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ ease: 'easeOut', duration: .2 }}>
-                  <p
-                      className="input-error-text mt-1 text-red-600">
-                    {formErrors.username}
-                  </p>
-                </motion.div>
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ ease: 'easeOut', duration: 0.2 }}
+              >
+                <p className="input-error-text mt-1 text-danger">
+                  {formErrors.username}
+                </p>
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
@@ -136,9 +134,9 @@ function Login() {
           <PasswordInput
             className={`${
               formErrors.password !== ''
-                ? 'border-red-600'
+                ? 'border-danger'
                 : 'border-bright-seaweed hover:border-hovered-seaweed'
-            } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1`}
+            } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setFormData({ ...formData, password: e.target.value })
             }
@@ -149,16 +147,16 @@ function Login() {
           />
           <AnimatePresence>
             {formErrors.password !== '' && (
-                <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ ease: 'easeOut', duration: .2 }}>
-                  <p
-                      className="input-error-text mt-1 text-red-600">
-                    {formErrors.password}
-                  </p>
-                </motion.div>
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ ease: 'easeOut', duration: 0.2 }}
+              >
+                <p className="input-error-text mt-1 text-danger">
+                  {formErrors.password}
+                </p>
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
@@ -167,7 +165,7 @@ function Login() {
             type="submit"
             value="Login"
             id="login-btn-submit"
-            className="w-full max-w-xs p-2 mb-4 text-dark-sea bg-bright-seaweed rounded-md transition-colors cursor-pointer hover:bg-hovered-seaweed"
+            className="mq-hover:hover:bg-hovered-seaweed w-full max-w-xs p-2 mb-4 text-dark-sea bg-bright-seaweed rounded-md transition-colors cursor-pointer"
           />
           <Link href="/signup">
             <button
@@ -182,7 +180,7 @@ function Login() {
             fetchUserAuthState.context.err !== null &&
             formErrors.username === '' &&
             formErrors.password === '' && (
-              <p className="server-fetch-error-text mt-4 text-center text-red-600">
+              <p className="server-fetch-error-text mt-4 text-center text-danger">
                 {fetchUserAuthState.context.err.errors.message}
               </p>
             )}

@@ -7,4 +7,5 @@ type UserProps = {
   token: string;
   refreshToken: string;
   expiration: number;
+  pic: string;
 };
