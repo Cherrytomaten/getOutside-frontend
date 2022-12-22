@@ -12,5 +12,6 @@ const withPWA = require('next-pwa')({
 
 module.exports = withPWA({
   reactStrictMode: false,
-  swcMinify: true
+  swcMinify: true,
+  swSrc: 'https://www.get-outside-app.de/sw.js'
 });
