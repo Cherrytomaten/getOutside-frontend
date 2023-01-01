@@ -36,7 +36,7 @@ function FilterMenu({ allCategories, categoryFilter, setCatFilter }: FilterMenuP
     }
 
     return (
-        <div className="w-full h-full flex flex-col justify-start items-center pt-20 overflow-y-scroll bg-dark-sea/95">
+        <div className="hide-scrollbar w-full h-full flex flex-col justify-start items-center pt-20 overflow-y-scroll bg-dark-sea/95">
             <h3 className="mb-6 text-5xl text-white">Categories</h3>
             <div className="w-full flex flex-row justify-center items-center py-3 mb-7">
                 <button

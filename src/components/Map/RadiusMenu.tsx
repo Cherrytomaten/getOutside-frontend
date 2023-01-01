@@ -22,7 +22,7 @@ function RadiusMenu({ radius, updateRadius, mapDataFetchState, toggleMenu }: Rad
     }
 
     return (
-        <div className="w-full h-full flex flex-col justify-start items-center pt-20 overflow-y-scroll bg-dark-sea/95">
+        <div className="hide-scrollbar w-full h-full flex flex-col justify-start items-center pt-20 overflow-y-scroll bg-dark-sea/95">
             <h3 className="mb-10 text-5xl text-white">Radius</h3>
             <div className="relative w-full">
                 <Listbox

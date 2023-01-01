@@ -48,7 +48,7 @@ function ContentPopup({trigger, setTrigger, children}: ContentPopupProps) {
                     initial={{opacity: 0}}
                     animate="showContainer"
                     exit="hideContainer"
-                    className="z-[9999] absolute top-0 left-0 w-full h-full flex flex-col justify-start items-center pt-10 overflow-hidden bg-dark-sea/60 backdrop-blur-sm md:px-5">
+                    className="hide-scrollbar z-[9999] absolute top-0 left-0 w-full h-full flex flex-col justify-start items-center pt-10 overflow-hidden bg-dark-sea/60 backdrop-blur-sm md:px-5">
                     <motion.div
                         initial={{y: '100%'}}
                         animate={{y: 0}}
