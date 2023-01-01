@@ -4,7 +4,7 @@ import { useUserAuth } from "@/hooks/useUserAuth";
 import { useAuth } from "@/context/AuthContext";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useEffect } from "react";
-import { ACTIVE_CATEGORIES, RADIUS_FILTER } from "@/types/constants";
+import { ACTIVE_CATEGORIES, RADIUS_FILTER, DEFAULT_RADIUS } from "@/types/constants";
 import { GetServerSidePropsContext } from "next";
 
 type MapCookiesPayload = {
@@ -35,7 +35,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     return {
         props: {
-            radius: _radius ? _radius : 3000,
+            radius: _radius ? _radius : DEFAULT_RADIUS,
             activeCategories: _activeCategories ? _activeCategories : []
         },
     };

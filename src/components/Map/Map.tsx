@@ -11,11 +11,11 @@ import { Filter } from "@/resources/svg/Filter";
 import { MapPopup } from "@/components/Map/MapPopup";
 import { LocationTracker } from "@/components/Map/LocationTracker";
 import { ContentPopup } from "@/components/ContentPopup";
-import { Radius } from "@/resources/svg/Radius";
 import { DEFAULT_POSITION } from "@/types/constants";
 import { useManageMapData } from "@/hooks/useManageMapData";
 import { ActivityIcon } from "@/resources/leafletIcons/ActivityIcon";
 import { SmallSpinner } from "@/components/SmallSpinner";
+import { Radius } from "@/resources/svg/Radius";
 
 type MapProps = {
     cookiedCategories: string[];
@@ -90,27 +90,29 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
 
             <div className="z-[999] absolute top-4 right-4 md:right-8">
                 <div
-                    className="w-14 h-14 flex flex-col justify-center items-center px-3 bg-bright-seaweed rounded-full shadow-md transition-colors cursor-pointer xs:hover:bg-hovered-seaweed"
+                    className="relative w-12 h-12 flex flex-col justify-center items-center px-3 bg-bright-seaweed rounded-full shadow-md transition-colors cursor-pointer xs:hover:bg-hovered-seaweed"
                     role="button"
                     aria-label="Category filter"
+                    title="Select categories"
                     onClick={() => setShowCatFilter(true)}
                 >
                     <Filter width="100%" height="auto" fill="#fff"></Filter>
+                    <div className="z-10 absolute -right-2 -bottom-2 w-7 h-7 flex flex-col justify-center items-center bg-white rounded-full"><span className="text-xs">{categoryFilter.length}</span></div>
                 </div>
 
                 <div
-                    className="relative w-14 h-14 flex flex-col justify-center items-center px-3 mt-3 bg-bright-seaweed rounded-full shadow-md transition-colors cursor-pointer xs:hover:bg-hovered-seaweed"
+                    className="w-12 h-12 flex flex-col justify-center items-center px-3 mt-3 bg-bright-seaweed rounded-full shadow-md transition-colors cursor-pointer xs:hover:bg-hovered-seaweed"
                     role="button"
-                    aria-label="Radius filter"
+                    aria-label="Filter filter"
+                    title="Select radius"
                     onClick={() => setShowRadiusFilter(true)}
                 >
                     <Radius width="100%" height="auto" fill="#fff"></Radius>
-                    <div className="z-10 absolute -right-2 -bottom-2 w-7 h-7 flex flex-col justify-center items-center bg-white rounded-full"><span className="text-xs">{radius/1000}</span></div>
                 </div>
             </div>
 
             <ContentPopup trigger={showCatFilter} setTrigger={setShowCatFilter}>
-                <FilterMenu allCategories={allCategories} categoryFilter={categoryFilter} setCatFilter={setCategoryFilter} />
+                <FilterMenu allCategories={allCategories} categoryFilter={categoryFilter} setCatFilter={setCategoryFilter} setTrigger={setShowCatFilter} />
             </ContentPopup>
 
             <ContentPopup trigger={showRadiusFilter} setTrigger={setShowRadiusFilter}>

@@ -60,7 +60,7 @@ function ContentPopup({trigger, setTrigger, children}: ContentPopupProps) {
                         onDragEnd={(e, info) => {
                             handleDragEvent(info)
                         }}
-                        className="relative w-full max-w-6xl h-full px-6 pt-15 overflow-y-scroll bg-dark-sea rounded-t-xl touch-none md:px-10">
+                        className="hide-scrollbar relative w-full max-w-6xl h-full px-6 pt-15 overflow-y-scroll bg-dark-sea rounded-t-xl touch-none md:px-10">
                         <button
                             className="modest-shadow absolute top-4 right-4 w-10 h-10 p-2 bg-bright-seaweed rounded-full transition-colors hover:xs:bg-hovered-seaweed"
                             onClick={() => setTrigger(false)}>

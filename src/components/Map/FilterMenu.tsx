@@ -5,13 +5,16 @@ type FilterMenuProps = {
     allCategories: string[];
     categoryFilter: ActivityType[];
     setCatFilter: Dispatch<SetStateAction<string[]>>;
+    setTrigger: Dispatch<any>;
 }
 
-function FilterMenu({ allCategories, categoryFilter, setCatFilter }: FilterMenuProps) {
+function FilterMenu({ allCategories, categoryFilter, setCatFilter, setTrigger }: FilterMenuProps) {
     function capitalizeFirstLetter(text: string) {
         if (text.length === 0) { return ""; }
         return text.charAt(0).toUpperCase() + text.slice(1);
     }
+
+
 
     function changeHandler(event: ChangeEvent<HTMLInputElement>) {
         const { target: { value } } = event;
@@ -40,12 +43,12 @@ function FilterMenu({ allCategories, categoryFilter, setCatFilter }: FilterMenuP
             <h3 className="mb-6 text-5xl text-white">Categories</h3>
             <div className="w-full flex flex-row justify-center items-center py-3 mb-7">
                 <button
-                    className="w-full max-w-[200px] px-6 py-1.5 mr-2 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-dark-sea-hover disabled:hover:bg-dark-sea-hover xs:hover:bg-hovered-seaweed"
+                    className="w-full max-w-[200px] px-6 py-1.5 mr-2 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-darker-sea disabled:hover:bg-darker-sea xs:hover:bg-hovered-seaweed"
                     onClick={selectAll}
                     disabled={allCategories.length === categoryFilter.length}
                 >Select all</button>
                 <button
-                    className="w-full max-w-[200px] px-6 py-1.5 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-dark-sea-hover disabled:hover:bg-dark-sea-hover xs:hover:bg-hovered-seaweed"
+                    className="w-full max-w-[200px] px-6 py-1.5 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-darker-sea disabled:hover:bg-darker-sea xs:hover:bg-hovered-seaweed"
                     onClick={unselectAll}
                     disabled={categoryFilter.length === 0}
                 >Unselect all</button>
@@ -74,6 +77,10 @@ function FilterMenu({ allCategories, categoryFilter, setCatFilter }: FilterMenuP
                     );
                 })}
             </form>
+            <button
+                className="w-full max-w-[200px] px-6 py-1.5 mt-8 mb-4 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-darker-sea disabled:hover:bg-darker-sea xs:hover:bg-hovered-seaweed"
+                onClick={() => setTrigger(false)}
+            >Apply</button>
         </div>
     );
 }
