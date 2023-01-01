@@ -134,3 +134,7 @@
 .leaflet-control-attribution a {
     @apply !text-bright-seaweed;
 }
+
+.leaflet-control-attribution {
+    @apply text-[7px] md:text-xs;
+}

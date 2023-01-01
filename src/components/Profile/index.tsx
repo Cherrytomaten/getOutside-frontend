@@ -1,7 +1,6 @@
-import Image from 'next/image';
 import { useUserAuth } from '@/hooks/useUserAuth';
 import Link from 'next/link';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import { PasswordInput } from '../PasswordInput';
 import { AnimatePresence, motion } from 'framer-motion';
 import axios from 'axios';
@@ -96,7 +95,7 @@ function ProfilePage({ ...props }: ProfileProps) {
   }
 
   async function handleFnameSubmit(
-    e: FormEvent<HTMLButtonElement>
+    _e: FormEvent<HTMLButtonElement>
   ): Promise<void> {
     setChangeFname({ ...changeFname, message: '', err: '' });
     if (
@@ -118,7 +117,7 @@ function ProfilePage({ ...props }: ProfileProps) {
           first_name: changeFname.data,
           last_name: '',
         })
-        .then((res: any) => {
+        .then((_res: any) => {
           (document.getElementById('set-fname') as HTMLInputElement).value = '';
           setLocalProps({ ...localProps, fname: changeFname.data });
           setChangeFname({
@@ -129,7 +128,7 @@ function ProfilePage({ ...props }: ProfileProps) {
           });
           Logger.log('Success');
         })
-        .catch((err: any) => {
+        .catch((_err: any) => {
           setChangeFname({
             ...changeFname,
             data: '',
@@ -184,13 +183,13 @@ function ProfilePage({ ...props }: ProfileProps) {
       .post('/api/user/pfp/set', {
         picture: base64Pic,
       })
-      .then((res: any) => {
+      .then((_res: any) => {
         setProfilePic(null);
         setPPicMessage({ message: '', err: false });
         Logger.log('Success');
         // return Promise.resolve(res.data);
       })
-      .catch((err: any) => {
+      .catch((_err: any) => {
         setProfilePic(null);
         setPPicMessage({ message: '', err: false });
         Logger.log('Error');
@@ -201,7 +200,7 @@ function ProfilePage({ ...props }: ProfileProps) {
   return (
     <main
       id={localProps.username + localProps.email}
-      className="w-full h-full min-h-screen flex justify-center items-center mb-8 text-white"
+      className="w-full h-full min-h-screen flex justify-center items-center mb-8 text-white lg:pt-10"
     >
       <div
         id="profile-wrapper"

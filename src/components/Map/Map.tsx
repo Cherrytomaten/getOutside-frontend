@@ -35,7 +35,7 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
 
     const mapElem = useMemo(() => (
         <MapContainer
-            className="w-screen h-screen"
+            className="w-screen h-[calc(100vh-56px)] lg:mt-14"
             center={userLocation}
             zoom={13}
             minZoom={7}
