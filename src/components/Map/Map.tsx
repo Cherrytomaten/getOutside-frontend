@@ -4,7 +4,7 @@ import { LatLngExpression } from 'leaflet';
 import { FilterMenu } from '@/components/Map/FilterMenu';
 import { PinProps } from '@/types/Pins';
 import { ActivityType } from '@/types/Pins/ActivityType';
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { RadiusMenu } from "@/components/Map/RadiusMenu";
 import { Filter } from "@/resources/svg/Filter";
@@ -32,11 +32,6 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
     const [locationPreference, setLocationPreference] = useState<boolean | null>(null);
     const [userLocation, setUserLocation] = useState<LatLngExpression>(DEFAULT_POSITION);
     const { fetchPinDataQueryState } = useManageMapData({ radius: radius, location: userLocation, categoryFilter: categoryFilter, setCatFilter: setCategoryFilter, allCats: allCategories, setAllCats: setAllCategories, locationPreference: locationPreference });
-
-    useEffect(() => {
-        console.log("ALL", allCategories.length);
-        console.log("SELECTED", categoryFilter.length);
-    }, [allCategories, categoryFilter])
 
     const mapElem = useMemo(() => (
         <MapContainer
