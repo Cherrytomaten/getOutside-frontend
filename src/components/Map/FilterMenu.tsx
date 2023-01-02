@@ -14,8 +14,6 @@ function FilterMenu({ allCategories, categoryFilter, setCatFilter, setTrigger }:
         return text.charAt(0).toUpperCase() + text.slice(1);
     }
 
-
-
     function changeHandler(event: ChangeEvent<HTMLInputElement>) {
         const { target: { value } } = event;
 
