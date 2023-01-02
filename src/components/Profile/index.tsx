@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import axios from 'axios';
 import { convertBase64 } from '@/util/convertToBase64';
 import { Logger } from '@/util/logger';
+import { imgCompressor } from "@/util/imgCompressor";
 
 type ValidateProps = {
   validated: boolean;
@@ -141,7 +142,7 @@ function ProfilePage({ ...props }: ProfileProps) {
     }
   }
 
-  function handleInputChange(e: any) {
+  async function handleInputChange(e: any) {
     if (
       e === undefined ||
       e.target.files === undefined ||
@@ -149,15 +150,6 @@ function ProfilePage({ ...props }: ProfileProps) {
     ) {
       return;
     }
-
-    if (e.target.files[0].size > 1097152) {
-      Logger.log('file too big');
-      setProfilePic('SizeError');
-      setPPicMessage({ message: 'File is too big!', err: true });
-      return;
-    }
-
-    Logger.log(e.target.files);
 
     if (e.target.files.length > 1) {
       Logger.log('You can only upload one Picture!');
@@ -168,7 +160,16 @@ function ProfilePage({ ...props }: ProfileProps) {
       return;
     }
 
-    setProfilePic(e.target.files[0]);
+    const compressedImage = await imgCompressor(e.target.files[0]);
+
+    if (compressedImage.size > 2097152) {
+      Logger.log('file too big', compressedImage.size);
+      setProfilePic('SizeError');
+      setPPicMessage({ message: 'File is too big!', err: true });
+      return;
+    }
+
+    setProfilePic(compressedImage);
     setPPicMessage({ message: 'Picture saved in clipboard.', err: false });
   }
 
