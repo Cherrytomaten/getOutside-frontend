@@ -1,12 +1,12 @@
-import Image from 'next/image';
 import { useUserAuth } from '@/hooks/useUserAuth';
 import Link from 'next/link';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import { PasswordInput } from '../PasswordInput';
 import { AnimatePresence, motion } from 'framer-motion';
 import axios from 'axios';
 import { convertBase64 } from '@/util/convertToBase64';
 import { Logger } from '@/util/logger';
+import { imgCompressor } from "@/util/imgCompressor";
 
 type ValidateProps = {
   validated: boolean;
@@ -96,7 +96,7 @@ function ProfilePage({ ...props }: ProfileProps) {
   }
 
   async function handleFnameSubmit(
-    e: FormEvent<HTMLButtonElement>
+    _e: FormEvent<HTMLButtonElement>
   ): Promise<void> {
     setChangeFname({ ...changeFname, message: '', err: '' });
     if (
@@ -118,7 +118,7 @@ function ProfilePage({ ...props }: ProfileProps) {
           first_name: changeFname.data,
           last_name: '',
         })
-        .then((res: any) => {
+        .then((_res: any) => {
           (document.getElementById('set-fname') as HTMLInputElement).value = '';
           setLocalProps({ ...localProps, fname: changeFname.data });
           setChangeFname({
@@ -129,7 +129,7 @@ function ProfilePage({ ...props }: ProfileProps) {
           });
           Logger.log('Success');
         })
-        .catch((err: any) => {
+        .catch((_err: any) => {
           setChangeFname({
             ...changeFname,
             data: '',
@@ -142,7 +142,7 @@ function ProfilePage({ ...props }: ProfileProps) {
     }
   }
 
-  function handleInputChange(e: any) {
+  async function handleInputChange(e: any) {
     if (
       e === undefined ||
       e.target.files === undefined ||
@@ -150,15 +150,6 @@ function ProfilePage({ ...props }: ProfileProps) {
     ) {
       return;
     }
-
-    if (e.target.files[0].size > 1097152) {
-      Logger.log('file too big');
-      setProfilePic('SizeError');
-      setPPicMessage({ message: 'File is too big!', err: true });
-      return;
-    }
-
-    Logger.log(e.target.files);
 
     if (e.target.files.length > 1) {
       Logger.log('You can only upload one Picture!');
@@ -169,7 +160,16 @@ function ProfilePage({ ...props }: ProfileProps) {
       return;
     }
 
-    setProfilePic(e.target.files[0]);
+    const compressedImage = await imgCompressor(e.target.files[0]);
+
+    if (compressedImage.size > 2097152) {
+      Logger.log('file too big', compressedImage.size);
+      setProfilePic('SizeError');
+      setPPicMessage({ message: 'File is too big!', err: true });
+      return;
+    }
+
+    setProfilePic(compressedImage);
     setPPicMessage({ message: 'Picture saved in clipboard.', err: false });
   }
 
@@ -184,13 +184,13 @@ function ProfilePage({ ...props }: ProfileProps) {
       .post('/api/user/pfp/set', {
         picture: base64Pic,
       })
-      .then((res: any) => {
+      .then((_res: any) => {
         setProfilePic(null);
         setPPicMessage({ message: '', err: false });
         Logger.log('Success');
         // return Promise.resolve(res.data);
       })
-      .catch((err: any) => {
+      .catch((_err: any) => {
         setProfilePic(null);
         setPPicMessage({ message: '', err: false });
         Logger.log('Error');
@@ -201,7 +201,7 @@ function ProfilePage({ ...props }: ProfileProps) {
   return (
     <main
       id={localProps.username + localProps.email}
-      className="w-full h-full min-h-screen flex justify-center items-center mb-8 text-white"
+      className="w-full h-full min-h-screen flex justify-center items-center mb-8 text-white lg:pt-10"
     >
       <div
         id="profile-wrapper"
