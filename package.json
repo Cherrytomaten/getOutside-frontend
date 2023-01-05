@@ -35,6 +35,7 @@
     "axios": "^1.2.0",
     "bcrypt": "^5.1.0",
     "compressorjs": "^1.1.1",
+    "express": "^4.18.2",
     "framer-motion": "^7.6.7",
     "geolib": "^3.3.3",
     "leaflet": "^1.9.2",
