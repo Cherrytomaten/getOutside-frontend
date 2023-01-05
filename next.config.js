@@ -1,16 +1,14 @@
 /** @type {import('next').NextConfig} */
-const withPWA = require('next-pwa')({
-  disable: true,
-  dest: 'public',
+const runtimeCaching = require("next-pwa/cache");
+const withPWA = require("next-pwa")({
+  disable: false,
+  dest: "public",
   register: true,
-  skipWaiting: true,
-  fallbacks: {
-    document: '/pages/_offline.tsx'
-  },
-  buildExcludes: [/middleware-manifest.json$/]
-})
-
-module.exports = withPWA({
-  reactStrictMode: true,
-  swcMinify: true
+  skipWaiting: false,
+  runtimeCaching
 });
+const nextConfig = withPWA({
+  reactStrictMode: false
+});
+
+module.exports = nextConfig;
