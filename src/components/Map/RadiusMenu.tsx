@@ -2,6 +2,7 @@ import {    Dispatch, Fragment, SetStateAction } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { ChevronUpDown } from "@/resources/svg/ChevronUpDown";
 import { PinQueryStateMachine } from "@/types/Pins/MapPinQueryMachine";
+import { ChevronDown } from "@/resources/svg/ChevronDown";
 
 type RadiusMenuProps = {
     radius: number;
@@ -22,8 +23,9 @@ function RadiusMenu({ radius, updateRadius, mapDataFetchState, toggleMenu }: Rad
     }
 
     return (
-        <div className="w-full h-full flex flex-col justify-start items-center pt-20 overflow-y-scroll bg-dark-sea/95">
-            <h3 className="mb-10 text-5xl text-white">Radius</h3>
+        <div className="hide-scrollbar w-full h-full flex flex-col justify-start items-center pt-20 overflow-y-scroll bg-dark-sea/95">
+            <h3 className="mb-6 text-5xl text-white">Radius</h3>
+            <p className="mb-4 font-light text-white">Click on the drop-down menu to select a <span className="text-bright-seaweed">radius</span> in which you want to look for new <span className="text-bright-seaweed">spots</span>.</p>
             <div className="relative w-full">
                 <Listbox
                     value={radius}
@@ -35,7 +37,7 @@ function RadiusMenu({ radius, updateRadius, mapDataFetchState, toggleMenu }: Rad
                         className={`relative w-full p-4 text-left bg-no-repeat bg-clip-padding border-none rounded-xl cursor-pointer transition-colors focus:border-acid-green focus:outline-none ${mapDataFetchState.value === 'pending' ? 'bg-gray-500' : ' bg-gray-200'}`}>
                         <span className="block truncate">Selected range : <span className="ml-3 font-bold text-bright-seaweed">{radius/1000} km</span></span>
                         <span className="absolute inset-y-0 right-0 flex items-center pr-6 pointer-events-none">
-                        <ChevronUpDown width="25px" height="25px" fill='#a2a2a2' />
+                        <ChevronDown width="20px" height="20px" fill='#a2a2a2' />
                     </span>
                     </Listbox.Button>
                     <Transition

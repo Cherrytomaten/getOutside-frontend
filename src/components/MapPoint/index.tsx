@@ -76,7 +76,7 @@ function MapPoint({ ...props }: MapPointProps) {
   return (
     <main
       id={props.uuid}
-      className="relative w-full h-full min-h-screen flex justify-center p-5 mb-12 text-default-font"
+      className="relative w-full h-full min-h-screen flex justify-center p-5 mt-12 mb-12 text-default-font"
     >
       <div id="card-wrapper" className="min-w-0 max-w-sm">
         <div className="relative w-full mb-8 overflow-hidden rounded-t-3xl">
