@@ -14,7 +14,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     const cookie = getCookie(AUTH_TOKEN);
-    cookie === null ? setShowNavbar(false) : setShowNavbar(true);
+    // hide navbar if user not logged in or on mainpage
+    if (cookie === null || router.pathname === '/') {
+      setShowNavbar(false);
+    } else {
+      setShowNavbar(true);
+    }
   }, [router]);
 
   return (

@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useAlreadyAuthRedirect } from "@/hooks/useAlreadyAuthRedirect";
 import { useRegisterMachineManager } from "@/hooks/useRegisterMachineManager";
 import { SuccessfullSignup } from "@/components/Signup/SuccessfullSignup";
+import { validatePassword } from '@/util/passwordValidator';
 
 type SignUpFormProps = {
     username: string,
@@ -48,15 +49,19 @@ function Signup() {
         }
 
         if (formData.password === '') {
-            data = {...data, password: 'Please enter a password'};
-            validator = false;
+          data = { ...data, password: 'Please enter a password' };
+          validator = false;
         }
         // one uppercase, one digit, three lowercase, length of atleast 8
-        else if (!/^(?=.*[A-Z])(?=.*[0-9]).{8,}$/.test(formData.password)) {
-            data = {...data, password: 'The choosen password is too weak!\n It should contain atleast one big letter, one number and the length should be at minimum of 8 characters.'};
-            validator = false;
+        else if (validatePassword(formData.password).validated === false) {
+          data = {
+            ...data,
+            password:
+              'The choosen password is too weak!\n It should contain at least one big letter, one number and the length should be at minimum of 8 characters.',
+          };
+          validator = false;
         } else {
-            data = {...data, password: ''};
+          data = { ...data, password: '' };
         }
 
         if (formData.cpassword === '') {

@@ -79,6 +79,8 @@ export default async function handler(
           .json({ errors: { message: err.response.data.detail } });
       });
   } catch (_err) {
-    return res.status(400).json({ errors: { message: 'Wrong token format.' } });
+    return res
+      .status(400)
+      .json({ errors: { message: 'Could not update user data.' } });
   }
 }

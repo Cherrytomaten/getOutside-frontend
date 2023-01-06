@@ -6,7 +6,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import ExpandSvg from '@/resources/svg/Expand';
 import Link from 'next/link';
 
-function MapPoint({ ...props }: MapPointProps) {
+type MapPointPayloadProps = MapPointProps & {
+  category: any | null;
+  creator_id: any | null;
+  longitude: number;
+  latitude: number;
+};
+
+function MapPoint({ ...props }: MapPointPayloadProps) {
   // Review
   const allStars: JSX.Element[] = RenderStars(props.rating, '34', '34');
   const minimumComments: number = 2;

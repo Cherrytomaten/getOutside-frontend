@@ -1,17 +1,13 @@
-import Image from 'next/image';
 import { useUserAuth } from '@/hooks/useUserAuth';
 import Link from 'next/link';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import { PasswordInput } from '../PasswordInput';
 import { AnimatePresence, motion } from 'framer-motion';
 import axios from 'axios';
 import { convertBase64 } from '@/util/convertToBase64';
 import { Logger } from '@/util/logger';
-
-type ValidateProps = {
-  validated: boolean;
-  message: string;
-};
+import { validatePassword } from '@/util/passwordValidator';
+import { InfoPopup } from '../InfoPopup';
 
 type ProfileProps = {
   username: string;
@@ -25,12 +21,6 @@ function ProfilePage({ ...props }: ProfileProps) {
   // Logout
   const authenticationHook = useUserAuth();
   // Change Password
-  // const [changePw, setChangePw] = useState<boolean>(false);
-  // const [pwInputData, setPwInputData] = useState<string>('');
-  // const [pwInputErr, setPwInputErr] = useState<boolean>(false);
-  // const [errMessage, setErrMessage] = useState<string>('');
-  // const [pwInputSuccess, setPwInputSuccess] = useState<boolean>(false);
-  // const [successMessage, setSuccessMessage] = useState<string>('');
   const [changePw, setChangePw] = useState<{
     visible: boolean;
     data: string;
@@ -66,24 +56,10 @@ function ProfilePage({ ...props }: ProfileProps) {
     pic: props.pic,
   });
 
-  function validatePassword(): ValidateProps {
-    if (changePw.data === '' || changePw.data === undefined) {
-      return { validated: false, message: 'Password must not be empty!' };
-    } else {
-      const regex = new RegExp(
-        '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})'
-      );
-      if (regex.test(changePw.data)) {
-        return { validated: true, message: 'Validation success!' };
-      }
-      return { validated: false, message: 'Password not strong enough!' };
-    }
-  }
-
-  function handleSubmit(e: FormEvent<HTMLButtonElement>): void {
+  function handlePwSubmit(e: FormEvent<HTMLButtonElement>): void {
     e.preventDefault();
     setChangePw({ ...changePw, err: '' });
-    const { validated, message } = validatePassword();
+    const { validated, message } = validatePassword(changePw.data);
     if (!validated) {
       setChangePw({ ...changePw, message: '', err: message });
       return;
@@ -142,7 +118,7 @@ function ProfilePage({ ...props }: ProfileProps) {
     }
   }
 
-  function handleInputChange(e: any) {
+  function handlePictureInputChange(e: any) {
     if (
       e === undefined ||
       e.target.files === undefined ||
@@ -151,14 +127,14 @@ function ProfilePage({ ...props }: ProfileProps) {
       return;
     }
 
-    if (e.target.files[0].size > 1097152) {
+    if (e.target.files[0].size > 2097152) {
       Logger.log('file too big');
       setProfilePic('SizeError');
       setPPicMessage({ message: 'File is too big!', err: true });
       return;
     }
 
-    Logger.log(e.target.files);
+    Logger.log(e.target.files[0]);
 
     if (e.target.files.length > 1) {
       Logger.log('You can only upload one Picture!');
@@ -173,16 +149,42 @@ function ProfilePage({ ...props }: ProfileProps) {
     setPPicMessage({ message: 'Picture saved in clipboard.', err: false });
   }
 
-  async function uploadProfilePic() {
-    const base64Pic: string | ArrayBuffer | null = await convertBase64(
-      profilePic
-    );
+  // async function uploadProfilePic() {
+  //   const base64Pic: string | ArrayBuffer | null = await convertBase64(
+  //     profilePic
+  //   );
 
-    Logger.log('base64: ', base64Pic);
+  //   Logger.log('base64: ', base64Pic);
+
+  // return await axios
+  //   .post('/api/user/pfp/set', {
+  //     picture: base64Pic,
+  //   })
+  //   .then((res: any) => {
+  //     setProfilePic(null);
+  //     setPPicMessage({ message: '', err: false });
+  //     Logger.log('Success');
+  //     // return Promise.resolve(res.data);
+  //   })
+  //   .catch((err: any) => {
+  //     setProfilePic(null);
+  //     setPPicMessage({ message: '', err: false });
+  //     Logger.log('Error');
+  //     // return Promise.reject(err.response.data);
+  //   });
+  // }
+
+  async function uploadProfilePic() {
+    let form_data = new FormData();
+    console.log('profilePic: ', profilePic);
+    form_data.append('file', profilePic);
+    console.log(form_data);
 
     return await axios
-      .post('/api/user/pfp/set', {
-        picture: base64Pic,
+      .put('/api/user/pfp/set', form_data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       })
       .then((res: any) => {
         setProfilePic(null);
@@ -193,7 +195,7 @@ function ProfilePage({ ...props }: ProfileProps) {
       .catch((err: any) => {
         setProfilePic(null);
         setPPicMessage({ message: '', err: false });
-        Logger.log('Error');
+        Logger.log('Upload Profile Pic Axios Error');
         // return Promise.reject(err.response.data);
       });
   }
@@ -242,7 +244,7 @@ function ProfilePage({ ...props }: ProfileProps) {
                 title="Upload Profile Picture"
                 className="hidden"
                 accept="image/*"
-                onChange={handleInputChange}
+                onChange={handlePictureInputChange}
               />
               <label
                 htmlFor="upload-profile-pic-btn"
@@ -401,6 +403,14 @@ function ProfilePage({ ...props }: ProfileProps) {
                           </p>
                         </motion.div>
                       )}
+                      {changePw.err === 'Password not strong enough!' && (
+                        <div className="absolute bottom-10 ">
+                          <InfoPopup
+                            text="The choosen password is too weak! It should contain at least one big letter, one number and the length should be at minimum of 8 characters."
+                            exp={10000}
+                          />
+                        </div>
+                      )}
                       {changePw.message !== '' && (
                         <motion.div
                           initial={{ opacity: 0, height: 0 }}
@@ -419,7 +429,7 @@ function ProfilePage({ ...props }: ProfileProps) {
                     type="button"
                     id="send-pw-btn"
                     title="Submit"
-                    onClick={(e) => handleSubmit(e)}
+                    onClick={(e) => handlePwSubmit(e)}
                     className="mq-hover:hover:text-dark-sea mq-hover:hover:bg-bright-seaweed min-w-[80px] px-2 py-1 ml-4 text-default-font border-solid border-2 rounded-lg border-bright-seaweed transition-all"
                   >
                     Submit
