@@ -5,9 +5,10 @@ type FilterMenuProps = {
     allCategories: string[];
     categoryFilter: ActivityType[];
     setCatFilter: Dispatch<SetStateAction<string[]>>;
+    setTrigger: Dispatch<any>;
 }
 
-function FilterMenu({ allCategories, categoryFilter, setCatFilter }: FilterMenuProps) {
+function FilterMenu({ allCategories, categoryFilter, setCatFilter, setTrigger }: FilterMenuProps) {
     function capitalizeFirstLetter(text: string) {
         if (text.length === 0) { return ""; }
         return text.charAt(0).toUpperCase() + text.slice(1);
@@ -36,20 +37,22 @@ function FilterMenu({ allCategories, categoryFilter, setCatFilter }: FilterMenuP
     }
 
     return (
-        <div className="w-full h-full flex flex-col justify-start items-center pt-20 overflow-y-scroll bg-dark-sea/95">
+        <div className="hide-scrollbar w-full h-full flex flex-col justify-start items-center pt-20 overflow-y-scroll bg-dark-sea/95">
             <h3 className="mb-6 text-5xl text-white">Categories</h3>
-            <div className="w-full flex flex-row justify-center items-center py-3 mb-7">
-                <button
-                    className="w-full max-w-[200px] px-6 py-1.5 mr-2 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-dark-sea-hover disabled:hover:bg-dark-sea-hover xs:hover:bg-hovered-seaweed"
-                    onClick={selectAll}
-                    disabled={allCategories.length === categoryFilter.length}
-                >Select all</button>
-                <button
-                    className="w-full max-w-[200px] px-6 py-1.5 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-dark-sea-hover disabled:hover:bg-dark-sea-hover xs:hover:bg-hovered-seaweed"
-                    onClick={unselectAll}
-                    disabled={categoryFilter.length === 0}
-                >Unselect all</button>
-            </div>
+            {allCategories.length !== 0 &&
+                <div className="w-full flex flex-row justify-center items-center py-3 mb-7">
+                    <button
+                        className="w-full max-w-[200px] px-6 py-1.5 mr-2 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-darker-sea disabled:hover:bg-darker-sea xs:hover:bg-hovered-seaweed"
+                        onClick={selectAll}
+                        disabled={allCategories.length === categoryFilter.length}
+                    >Select all</button>
+                    <button
+                        className="w-full max-w-[200px] px-6 py-1.5 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-darker-sea disabled:hover:bg-darker-sea xs:hover:bg-hovered-seaweed"
+                        onClick={unselectAll}
+                        disabled={categoryFilter.length === 0}
+                    >Unselect all</button>
+                </div>
+            }
             <form>
                 {allCategories.map((catElem: string) => {
                     return(
@@ -74,6 +77,15 @@ function FilterMenu({ allCategories, categoryFilter, setCatFilter }: FilterMenuP
                     );
                 })}
             </form>
+            {allCategories.length !== 0 ?
+                (<button
+                    className="w-full max-w-[200px] px-6 py-1.5 mt-8 mb-4 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-darker-sea disabled:hover:bg-darker-sea xs:hover:bg-hovered-seaweed"
+                    onClick={() => setTrigger(false)}
+                >Apply</button>)
+                : (
+                    <p className="mt-10 text-lg text-center text-white">Seems like we found no spot in your currently selected range.<br/><span className="text-bright-seaweed">Try to select a higher range to find new spots!</span></p>
+                )
+            }
         </div>
     );
 }

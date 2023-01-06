@@ -8,16 +8,19 @@ import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorRespons
 import { setCookie } from "@/util/cookieManager";
 import { ACTIVE_CATEGORIES, RADIUS_FILTER } from "@/types/constants";
 import { ActivityType } from "@/types/Pins/ActivityType";
+import { Logger } from "@/util/logger";
 
 type useManageMapDataProps = {
     radius: number;
     location: LatLngExpression;
     categoryFilter: ActivityType[];
+    setCatFilter: Dispatch<SetStateAction<string[]>>;
     locationPreference: boolean | null;
+    allCats: string[];
     setAllCats: Dispatch<SetStateAction<string[]>>;
 }
 
-function useManageMapData({ radius, location, categoryFilter, setAllCats, locationPreference }: useManageMapDataProps) {
+function useManageMapData({ radius, location, allCats, categoryFilter, setCatFilter, setAllCats, locationPreference }: useManageMapDataProps) {
     const [fetchPinDataQueryState, sendToPinQueryMachine] = useMachine(
         fetchPinsMachine,
         {
@@ -26,7 +29,7 @@ function useManageMapData({ radius, location, categoryFilter, setAllCats, locati
                 }) => {
                     PinRepo.getByRadius(event.payload.location, event.payload.radius).then(
                         (res: PinProps[]) => {
-                            console.log(`Queried ${res.length} Pins.`);
+                            Logger.log(`Queried ${res.length} Pins.`);
                             sendToPinQueryMachine({
                                 type: 'RESOLVE',
                                 pins: res,
@@ -41,7 +44,7 @@ function useManageMapData({ radius, location, categoryFilter, setAllCats, locati
                                 message = err.errors.message;
                             }
 
-                            console.log('Failed to query pins:', message);
+                            Logger.log('Failed to query pins:', message);
                             sendToPinQueryMachine({
                                 type: 'REJECT',
                                 err: message,
@@ -74,10 +77,24 @@ function useManageMapData({ radius, location, categoryFilter, setAllCats, locati
         setCookie({ name: ACTIVE_CATEGORIES, value: { "activeCats": categoryFilter.toString() }, exp: 14400000});
     }, [categoryFilter]);
 
-    // update all possible Cats for the cat filter
     useEffect(() => {
+        const oldAllCats: string[] = allCats;
+        const newAllCats: string[] = [...new Set(fetchPinDataQueryState.context.pins.map((activity) => activity.properties.TYPE.toLowerCase()))];
+
+        // remove all selection where the category doesn't exist in the current range anymore
+        const updatedCatFilter = categoryFilter.filter(cat => newAllCats.includes(cat));
+
+        // get all categories that are actually new and weren't present before
+        const actuallyNewCats = newAllCats.filter(cat => !oldAllCats.includes(cat));
+
+        // update all possible Cats for the cat filter
         setAllCats([...new Set(fetchPinDataQueryState.context.pins.map((activity) => activity.properties.TYPE.toLowerCase()))]);
-    }, [fetchPinDataQueryState.context.pins, setAllCats]);
+
+        // auto select newly acquired categories + unselect unpresent categories
+        setCatFilter([...new Set([...updatedCatFilter, ...actuallyNewCats])]);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetchPinDataQueryState.context.pins]);
 
     return { fetchPinDataQueryState, sendToPinQueryMachine };
 }

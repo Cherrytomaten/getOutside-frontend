@@ -1,14 +1,17 @@
-function Radius({ width, height, fill }: SvgProps) {
+function Radius({ width, height, fill }:SvgProps) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
             width={width}
             height={height}
+            fill="none"
             viewBox="0 0 24 24"
-            fill={fill}>
-            <path d="M0 0h24v24H0z" fill="none"/><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/>
+            strokeWidth={1.5}
+            stroke={fill}
+        >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
         </svg>
-    )
+    );
 }
 
 export { Radius };
