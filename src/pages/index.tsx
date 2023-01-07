@@ -67,7 +67,7 @@ function Home() {
                     initial={{opacity: 0}}
                     animate={{opacity: 1}}
                     transition={{ease: 'easeOut', duration: .4, delay: 1.7}}
-                    className="w-full max-w-xs px-4 pb-24 mt-10">
+                    className="w-full max-w-xs px-4 pb-24 mt-10 text-center">
                     <Link href="/signup">
                         <button
                             type="button"
@@ -78,9 +78,12 @@ function Home() {
                     <Link href="/login">
                         <button
                             type="button"
-                            className="w-full max-w-xs p-2 text-default-font border-solid border rounded-md border-bright-seaweed transition-all cursor-pointer hover:border-hovered-seaweed hover:ring-1 hover:ring-inset hover:ring-bright-seaweed"
+                            className="w-full max-w-xs p-2 mb-2 text-default-font border-solid border rounded-md border-bright-seaweed transition-all cursor-pointer hover:border-hovered-seaweed hover:ring-1 hover:ring-inset hover:ring-bright-seaweed"
                         >Log in
                         </button>
+                    </Link>
+                    <Link href="/forgot-password">
+                        <a className="font-light text-bright-seaweed transition-colors xs:hover:text-hovered-seaweed">Forgot your password?</a>
                     </Link>
                 </motion.div>
             </div>
