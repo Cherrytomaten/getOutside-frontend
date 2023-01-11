@@ -171,10 +171,13 @@ function Login() {
             <button
               type="button"
               id="signup-btn"
-              className="w-full max-w-xs p-2 text-default-font border-solid border rounded-md border-bright-seaweed transition-all cursor-pointer hover:border-hovered-seaweed hover:ring-1 hover:ring-inset hover:ring-bright-seaweed"
+              className="w-full max-w-xs p-2 mb-2 text-default-font border-solid border rounded-md border-bright-seaweed transition-all cursor-pointer hover:border-hovered-seaweed hover:ring-1 hover:ring-inset hover:ring-bright-seaweed"
             >
               Sign up
             </button>
+          </Link>
+          <Link href="/forgot-password">
+            <a className="font-light text-bright-seaweed transition-colors xs:hover:text-hovered-seaweed">Forgot your password?</a>
           </Link>
           {!fetchUserAuthState.matches('pending') &&
             fetchUserAuthState.context.err !== null &&
