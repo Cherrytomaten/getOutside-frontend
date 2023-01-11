@@ -63,6 +63,7 @@ Following features are still **work in progress**:
 - user page (missing some features to change more user data)
 - Add pinpoints
 - Add comments
+- Rate a spot
 - Show multiple images on one pinpoint
 
 ### Planned features
