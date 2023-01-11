@@ -1,26 +1,70 @@
 ## GetOutside frontend Nextjs Project
-#### Please use the following flow structure to commit to this repo:
-1. Checkout the develop branch, if you're not already on this branch<br/>
-`git checkout develop`<br/>
-2. Now you can create your personal feature branch from that with<br/>
-`git checkout -b YOUR_BRANCH_NAME`
-The `-b` attribute means that git creates a new branch if one with this exact name doesn't exist already.<br/>
-   (You can also combine these two steps with `git checkout -b YOUR_BRANCH_NAME develop`)<br/>
-3. After you finished your Feature do a pull request to get approval of your changes before your code is merged into the dev branch
-Please follow a clean pull request structure.
 
-## Pull request structure
-There must be a title in this format: `Feature|Bugfix|Hotfix|Release: Title`","- If applicable, add your issue ticket (e.g. `A-100`) with a slash in the title (Feature/A-100: Title)","- Use `Feature` for enhancements or new functionality","- Use `Bugfix` only if you fixed a known bug","- Use `Hotfix` for problems introduced by previous merges","- Use proper capitalization in your title"]'
-Please also always provide a short description, explaining your changes.
-An example for a good pr title would be: 'Feature: Setup Server connection'
-When your pull request has the desired structure, the pr will automatically be labeled with the `Good structure` tag. Requests without this label
-will be ignored until a proper format is provided.
+An App for outside adventures! GetOutside is live, heck it out now [here](https://www.get-outside-app.de) yourself!
 
-## Pull request approval
-After your request, atleast one or more members have to check out your code and approve it. If a developer finds an error or has some sort of
-misunderstanding, they can comment on certain code passages and instead of approving the pr, the author will be requested to make changes to his code
-before the pr gets approved.
+## Table of Contents
 
-## Merge approved request
-After a request has been approved, it's always the 'honor' of the original author to merge the pr into the branch. Please use 'squash and merge' for
-your merge. The default title can be kept as such but please remove the optional description.
+1. [Getting started](#getting-started)
+2. [Deployment](#deployment)
+3. [Task distribution](#task-distribution)
+4. [Roadmap](#roadmap)
+
+
+### Getting started
+
+To test our project locally instead on our deployed domain follow these steps:
+1. Get the repository. We recommend the easiest way, which is cloning the current main branch of this repository directly into your personal directory with:<br/>
+`$ git clone https://github.com/Cherrytomaten/getOutside-frontend`
+2. Once the repository is cloned, there will be a `package.json` file in the root of the project, containing all information regarding of the dependencies of this project.<br/> It should be noticed that this project requires [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable) to be runned, as we disabled npm by choice. For further information about the projects dependencies, take a look at the [package.json](https://github.com/Cherrytomaten/getOutside-frontend/blob/main/package.json).
+3. Navigate to the projects directory and run `yarn install` to install all necessary dependencies.
+4. Now the project can be launched with `yarn start`.
+5. The default url/port is `localhost:3000`
+
+### Deployment
+
+#### Repository structure
+
+In this repository we follow the **Git Feature Branch Workflow**.<br/>
+This has several advantages for the workflow in our team:
+
+> The core idea behind the "Feature Branch Workflow" is that all feature development should take place in a dedicated branch instead of the main branch. This encapsulation makes it easy for multiple developers to work on a particular feature without disturbing the main codebase. It also means the main branch will never contain broken code, which is a huge advantage for continuous integration environments.
+> <br/> [Further information](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow)
+
+The Feature Branch Workflow assumes a central repository, and main represents the official project history. Instead of committing directly on their local main branch, developers create a new branch every time they start working on a new feature. Feature branches should have descriptive names, e.g. <b>feature/</b>animated-menu-items. The idea is to give a clear, highly-focused purpose to each branch.<br/><br/>
+In addition, feature branches are pushed to the **develop** branch first. This makes it possible to share a feature with other developers without touching any official code. After a feature branch was approved inside a pull-request and merged into develop, the feature branch will be deleted, to keep the repository clean.
+<br/><br/>
+Once a bigger feature is finished and all necessary feature branches are merged into develop, the develop branch will be merged into main. Every merge on main counts as new version of our project.
+
+### Task distribution
+#### We have 3 developers working on the frontend:
+- **Adham**<br/>
+  - Who is responsible for testing finalized feature branches on bugs or inconvenient implementations.
+  - Initializing new frontend routes and set up the base for it to be picked up by Leon or Marlon for further altering and adjustments.
+  - Fetching proper demo data.
+- **Leon**<br/>
+   - Who connects frontend routes, that were using mock data with actual backend API routes
+   - Adds default components like the pinpoint page or profil page.
+   - Tests new features on bugs
+   - Reviews pull-requests by Marlon
+- **Marlon**<br/>
+   - Who is responsible for the frontend managing, which includes: distributing tasks, keeping in touch with the backend, plan on how to implement new features with the current code structure, reviewing pull-requests and maintaining the frontend repository.
+   - Adds complex features like the authentication frame
+   - Adds API frontend proxy API routes ([Nextjs proxy API](https://nextjs.org/docs/api-routes/introduction))
+   - polishes code structure
+   - polishes design of components
+   - Providing workshops / support for *nextJs/TypeScript/server data fetching* to the team
+
+**All tasks are documented in our ticket system on linear [here](https://linear.app/cherrytomaten/project/getoutside-78a479cfd135)**
+
+### Roadmap
+Following features are still **work in progress**:
+- user forgot password (missing API backend)
+- favorites page (design polish)
+- user page (missing some features to change more user data)
+- Add pinpoints
+- Add comments
+- Rate a spot
+- Show multiple images on one pinpoint
+
+### Planned features
+- User can show that they're currently at a specific spot, so other users can see how many people are at one spot.
