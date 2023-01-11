@@ -79,7 +79,17 @@ function useManageMapData({ radius, location, allCats, categoryFilter, setCatFil
 
     useEffect(() => {
         const oldAllCats: string[] = allCats;
-        const newAllCats: string[] = [...new Set(fetchPinDataQueryState.context.pins.map((activity) => activity.properties.TYPE.toLowerCase()))];
+        const newAllCats: string[] = [
+          ...new Set(
+            fetchPinDataQueryState.context.pins.map((activity) => {
+              if (activity.category !== null) {
+                return activity.category.toLowerCase();
+              } else {
+                return '';
+              }
+            })
+          ),
+        ];
 
         // remove all selection where the category doesn't exist in the current range anymore
         const updatedCatFilter = categoryFilter.filter(cat => newAllCats.includes(cat));
@@ -88,7 +98,17 @@ function useManageMapData({ radius, location, allCats, categoryFilter, setCatFil
         const actuallyNewCats = newAllCats.filter(cat => !oldAllCats.includes(cat));
 
         // update all possible Cats for the cat filter
-        setAllCats([...new Set(fetchPinDataQueryState.context.pins.map((activity) => activity.properties.TYPE.toLowerCase()))]);
+        setAllCats([
+          ...new Set(
+            fetchPinDataQueryState.context.pins.map((activity) => {
+              if (activity.category !== null) {
+                return activity.category.toLowerCase();
+              } else {
+                return '';
+              }
+            })
+          ),
+        ]);
 
         // auto select newly acquired categories + unselect unpresent categories
         setCatFilter([...new Set([...updatedCatFilter, ...actuallyNewCats])]);

@@ -53,22 +53,24 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
 
             <div>
                 {fetchPinDataQueryState.context.pins.map((pinElemData: PinProps) => {
-                    if (!categoryFilter.includes(pinElemData.properties.TYPE)) {
-                        return null;
-                    }
-                    return (
-                        <div key={pinElemData.properties.PARK_ID + "-marker-id"}>
-                            <Marker
-                                alt=""
-                                position={[
-                                    pinElemData.geometry.coordinates[0],
-                                    pinElemData.geometry.coordinates[1],
-                                ]}
-                                icon={ActivityIcon}>
-                                <MapPopup pin={pinElemData} />
-                            </Marker>
-                        </div>
-                    );
+                  //   if (
+                  //     pinElemData.category === null ||
+                  //     !categoryFilter.includes(pinElemData.category)
+                  //   ) {
+                  //     return null;
+                  //   }
+
+                  return (
+                    <div key={pinElemData.uuid + '-marker-id'}>
+                      <Marker
+                        alt=""
+                        position={[pinElemData.latitude, pinElemData.longitude]}
+                        icon={ActivityIcon}
+                      >
+                        <MapPopup pin={pinElemData} />
+                      </Marker>
+                    </div>
+                  );
                 })}
             </div>
         </MapContainer>
