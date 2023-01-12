@@ -10,6 +10,15 @@ type PicDataRequest = NextApiRequest & {
   };
 };
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '3mb',
+    },
+  },
+}
+
+
 export default async function handler(
   _req: PicDataRequest,
   res: NextApiResponse
