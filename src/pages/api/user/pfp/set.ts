@@ -2,6 +2,7 @@ import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
 import { AUTH_TOKEN } from '@/types/constants';
 import { Logger } from '@/util/logger';
 import axios from 'axios';
+import { pullAt } from 'cypress/types/lodash';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 type PicDataRequest = NextApiRequest & {
@@ -16,8 +17,11 @@ export const config = {
       sizeLimit: '3mb',
     },
   },
-}
+};
 
+const axiosInstance = axios.create({
+  maxContentLength: 100000 * 1024 * 1024,
+});
 
 export default async function handler(
   _req: PicDataRequest,
@@ -31,8 +35,6 @@ export default async function handler(
       errors: { message: 'Given request method is not allowed here.' },
     });
   }
-
-  Logger.log('req: ', _req.body);
 
   if (_req.body === null) {
     return res
@@ -48,30 +50,43 @@ export default async function handler(
         .json({ errors: { message: 'Wrong token format.' } });
     }
 
+    console.log('body: ', _req.body.file);
+
     const authToken: TokenPayload = JSON.parse(authTokenString);
 
-    return await axios
-      .put(
-        `https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}`,
-        {
-          file: _req.body,
-        },
-        {
-          headers: {
-            'Authorization': 'Bearer ' + authToken.token,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      )
-      .then((_res: any) => {
-        return res.status(_res.status);
-      })
-      .catch((err: any) => {
-        console.log('Error: ', err);
-        return res
-          .status(err.response.status)
-          .json({ error: { message: err } });
-      });
+    // return await axiosInstance
+    //   .put(
+    //     `https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}`,
+    //     {
+    //       file: _req.body,
+    //     },
+    //     {
+    //       headers: {
+    //         'Authorization': 'Bearer ' + authToken.token,
+    //         'Content-Type': 'multipart/form-data',
+    //       },
+    //     }
+    //   )
+    //   .then((_res: any) => {
+    //     return res.status(_res.status);
+    //   })
+    //   .catch((err: any) => {
+    //     console.log('Error: ', err.message);
+    //     return res
+    //       .status(err.response.status)
+    //       .json({ error: { message: err.message } });
+    //   });
+
+    // return await fetch(`https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}`, {
+    //   method: "put",
+    //   headers: {
+    //             'Authorization': 'Bearer ' + authToken.token,
+    //             'Content-Type': 'multipart/form-data',
+    //           },
+    //   body: {
+    //     "file": _req.body,
+    //   }
+    // })
   } catch (_err) {
     return res.status(400).json({
       error: { message: 'Uploading the profile picture went wrong.' },

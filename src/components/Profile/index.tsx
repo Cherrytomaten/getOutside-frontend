@@ -8,6 +8,7 @@ import { convertBase64 } from '@/util/convertToBase64';
 import { Logger } from '@/util/logger';
 import { validatePassword } from '@/util/passwordValidator';
 import { InfoPopup } from '../InfoPopup';
+import FormData from 'form-data';
 
 type ProfileProps = {
   username: string;
@@ -127,7 +128,7 @@ function ProfilePage({ ...props }: ProfileProps) {
       return;
     }
 
-    if (e.target.files[0].size > 2097152) {
+    if (e.target.files[0].size > 3145720) {
       Logger.log('file too big');
       setProfilePic('SizeError');
       setPPicMessage({ message: 'File is too big!', err: true });
@@ -178,14 +179,18 @@ function ProfilePage({ ...props }: ProfileProps) {
     let form_data = new FormData();
     console.log('profilePic: ', profilePic);
     form_data.append('file', profilePic);
-    console.log(form_data);
+    console.log('formdata: ', form_data);
 
     return await axios
-      .put('/api/user/pfp/set', form_data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+      .put(
+        '/api/user/pfp/set',
+        { file: 'Hello World' },
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      )
       .then((res: any) => {
         setProfilePic(null);
         setPPicMessage({ message: '', err: false });
