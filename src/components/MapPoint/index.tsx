@@ -82,7 +82,7 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
 
   return (
     <main
-      id={props.uuid}
+      id={'mappoint-id-' + props.id}
       className="relative w-full h-full min-h-screen flex justify-center p-5 mb-12 text-default-font"
     >
       <div id="card-wrapper" className="min-w-0 max-w-sm">

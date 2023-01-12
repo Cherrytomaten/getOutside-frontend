@@ -2,19 +2,13 @@ import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { MapPoint } from '@/components/MapPoint';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { useUserAuth } from "@/hooks/useUserAuth";
-import { useAuth } from "@/context/AuthContext";
-import { Logger } from "@/util/logger";
+import { useEffect } from 'react';
+import { useUserAuth } from '@/hooks/useUserAuth';
+import { useAuth } from '@/context/AuthContext';
+import { Logger } from '@/util/logger';
 import { GetServerSidePropsContext } from 'next';
 import { BackendErrorResponse } from '@/types/Backend/BackendErrorResponse';
-
-type MapPointPayloadProps = MapPointProps & {
-  category: any | null;
-  creator_id: any | null;
-  longitude: number;
-  latitude: number;
-};
+import { PinProps } from '@/types/Pins';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const mappointId: string | string[] | undefined = context.params?.pid;
@@ -58,17 +52,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
-function MapPointPage({ ...mapointPayload }: MapPointPayloadProps) {
+function MapPointPage({ ...mapointPayload }: PinProps) {
   const router = useRouter();
-  // const [mapPointData, setMapPointData] = useState<MapPointProps>();
   const authenticationHook = useUserAuth();
   const { fetchUserAuthState } = useAuth();
-
-  // useEffect(() => {
-  //   if (!router.isReady) return;
-  //   apiRequest();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [router.isReady]);
 
   useEffect(() => {
     if (!authenticationHook.authStatus) {
@@ -80,27 +67,10 @@ function MapPointPage({ ...mapointPayload }: MapPointPayloadProps) {
     return <LoadingSpinner />;
   }
 
-  // async function apiRequest() {
-  //   const backendData = await axios.get('/api/mappoint/get', {
-  //     params: {
-  //       uuid: pid,
-  //     },
-  //   });
-  //   Logger.log('backendData: ', backendData.data);
-  //   setMapPointData(backendData.data);
-  // }
-
-  // if (mapPointData === undefined) {
-  //   return (
-  //     <>
-  //       <LoadingSpinner />
-  //     </>
-  //   );
-  // } else {
   return (
     <>
       <MapPoint
-        uuid={mapointPayload.uuid}
+        id={mapointPayload.id}
         name={mapointPayload.name}
         desc={mapointPayload.desc}
         address={mapointPayload.address}

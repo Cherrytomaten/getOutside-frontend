@@ -29,7 +29,7 @@ function MapPopup({ ...props }: MapPopupProps) {
             <span className="font-normal text-bright-seaweed">Address:</span>{' '}
             {props.pin.address}
           </p>
-          <Link href={`/mappoint/${props.pin.uuid}`}>
+          <Link href={`/mappoint/${props.pin.id}`}>
             <a className="w-full block px-3 py-1 text-center bg-bright-seaweed rounded-full transition-colors xs:hover:bg-hovered-seaweed">
               Visit
             </a>

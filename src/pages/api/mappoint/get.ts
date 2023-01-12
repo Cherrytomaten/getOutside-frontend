@@ -9,7 +9,7 @@ import {
 
 type MapPointApiRequest = NextApiRequest & {
   query: {
-    mapPointUuid: string;
+    mapPointid: string;
   };
 };
 
@@ -85,7 +85,7 @@ const comments2: CommentProps[] = [
 
 const mockMapPoints: MapPointProps[] = [
   {
-    uuid: '1',
+    id: '1',
     name: 'Basketball Platz',
     desc: 'Hier steht eine wunderschöne und definitiv sehr aussagekräftige Beschreibung über einen Basketball Platz, wie man das so von den Usern gewohnt ist, lol.',
     address: 'Luxemburger Straße 100, 12345 Berlin',
@@ -95,7 +95,7 @@ const mockMapPoints: MapPointProps[] = [
     image: basketBallImg,
   },
   {
-    uuid: '2',
+    id: '2',
     name: 'Volleyball Platz',
     desc: 'Hier steht eine BEschreibung zum Volleyball Platz.',
     address: 'Frankfurter Allee 144, 10365 Berlin',
@@ -105,7 +105,7 @@ const mockMapPoints: MapPointProps[] = [
     image: volleyBallImg,
   },
   {
-    uuid: '1219',
+    id: '1219',
     name: 'Bob MacQuarrie Skateboard Park (SK8 Extreme Park)',
     desc: 'Flat asphalt surface, 10 components, City run learn to skateboard programs, City run skateboard camps in summer.',
     address: 'Youville Drive 144, 14905 Berlin',
@@ -115,7 +115,7 @@ const mockMapPoints: MapPointProps[] = [
     image: skateparkImg,
   },
   {
-    uuid: '1157',
+    id: '1157',
     name: 'Walter Baker Basketball Park',
     desc: 'Concrete bowl, 7,000 sq ft.',
     address: '100 Charlie Rogers Place, Berlin',
@@ -125,7 +125,7 @@ const mockMapPoints: MapPointProps[] = [
     image: basketBallImg,
   },
   {
-    uuid: '9157',
+    id: '9157',
     name: 'Roving Baskteball Park Location',
     desc: 'Flat surface, 5 components',
     address: '2785 8th Line Road, Berlin',
@@ -135,7 +135,7 @@ const mockMapPoints: MapPointProps[] = [
     image: basketBallImg,
   },
   {
-    uuid: '1160',
+    id: '1160',
     name: 'Roving volleyball Location',
     desc: 'Flat surface, 9 components',
     address: '10 Warner Colpitts Lane, Berlin',
@@ -145,7 +145,7 @@ const mockMapPoints: MapPointProps[] = [
     image: volleyBallImg,
   },
   {
-    uuid: '1693',
+    id: '1693',
     name: 'Legacy volleball Park',
     desc: 'Large concrete bowl, many street and vertical components, 17,000 sq ft',
     address: '101 Centrepointe Drive',
@@ -155,7 +155,7 @@ const mockMapPoints: MapPointProps[] = [
     image: volleyBallImg,
   },
   {
-    uuid: '1717',
+    id: '1717',
     name: 'Greenboro Spa',
     desc: 'Flat asphalt surface, 5 components',
     address: '3142 Conroy Road, Berlin',
@@ -165,7 +165,7 @@ const mockMapPoints: MapPointProps[] = [
     image: spaImg,
   },
   {
-    uuid: '137',
+    id: '137',
     name: 'Bridlewood Spa',
     desc: 'Flat asphalt surface, no components',
     address: '65 Stonehaven Drive, Berlin',
@@ -175,7 +175,7 @@ const mockMapPoints: MapPointProps[] = [
     image: spaImg,
   },
   {
-    uuid: '1133',
+    id: '1133',
     name: 'Roving Parkour Park Location',
     desc: 'Flat surface, infinity components',
     address: '100 Clifford Campbell Street',
@@ -185,7 +185,7 @@ const mockMapPoints: MapPointProps[] = [
     image: tennisImg,
   },
   {
-    uuid: '657',
+    id: '657',
     name: 'Wolfsburg parkour  Park Location',
     desc: 'smooth surface, 25 components',
     address: '110 Malvern Drive, Berlin',
@@ -195,7 +195,7 @@ const mockMapPoints: MapPointProps[] = [
     image: spaImg,
   },
   {
-    uuid: '653',
+    id: '653',
     name: 'Roving Skateboard Park Location',
     desc: 'Rough surface, 66 components',
     address: '5660 Osgoode Main Street, Berlin',
@@ -205,7 +205,7 @@ const mockMapPoints: MapPointProps[] = [
     image: skateparkImg,
   },
   {
-    uuid: '812',
+    id: '812',
     name: 'Charlie Bowins Handball',
     desc: 'Flat concrete surface, 10 plus components (large half pipe), City run learn to skateboard programs, City run skateboard camps in summer',
     address: '435 Bronson Avenue, Berlin',
@@ -215,7 +215,7 @@ const mockMapPoints: MapPointProps[] = [
     image: volleyBallImg,
   },
   {
-    uuid: '2457',
+    id: '2457',
     name: 'Diamond Jubilee Skateboard Park',
     desc: 'Flat asphalt surface, City run skateboard camps in summer',
     address: '2810 Findlay Creek Drive',
@@ -225,7 +225,7 @@ const mockMapPoints: MapPointProps[] = [
     image: skateparkImg,
   },
   {
-    uuid: '430',
+    id: '430',
     name: 'Blackburn Skateboard Park',
     desc: 'Flat asphalt surface, 5 components, City run skateboard camps in summer',
     address: '190 Glen Park Drive, Berlin',
@@ -235,7 +235,7 @@ const mockMapPoints: MapPointProps[] = [
     image: spaImg,
   },
   {
-    uuid: '989',
+    id: '989',
     name: 'Goulbourn Spa',
     desc: '1000 surface, 60000 components',
     address: '1500 Shea Road, Berlin',
@@ -245,7 +245,7 @@ const mockMapPoints: MapPointProps[] = [
     image: spaImg,
   },
   {
-    uuid: '330',
+    id: '330',
     name: 'Manotick Skateboard Park',
     desc: 'Flat asphalt surface, 8 components',
     address: '5572 Doctor Leach Drive, Berlin',
@@ -255,7 +255,7 @@ const mockMapPoints: MapPointProps[] = [
     image: skateparkImg,
   },
   {
-    uuid: '693',
+    id: '693',
     name: 'Pankow Tennis Park Location',
     desc: 'Flat surface, 5555555555555 components',
     address: '1448 Meadow Drive, Berlin',
@@ -265,7 +265,7 @@ const mockMapPoints: MapPointProps[] = [
     image: tennisImg,
   },
   {
-    uuid: '2544',
+    id: '2544',
     name: 'Berrigan Tennis Park',
     desc: 'Flat concrete surface, 10 plus components',
     address: '51 Berrigan Drive, Berlin',
@@ -275,7 +275,7 @@ const mockMapPoints: MapPointProps[] = [
     image: tennisImg,
   },
   {
-    uuid: '2599',
+    id: '2599',
     name: 'EugÃne Martineau tennis Park',
     desc: '1 component',
     address: '710 Mikinak Road, Berlin',
@@ -285,7 +285,7 @@ const mockMapPoints: MapPointProps[] = [
     image: tennisImg,
   },
   {
-    uuid: '2278',
+    id: '2278',
     name: 'Vista Speedball Park',
     desc: 'Flat surface, 5 components, Flat surface, 5 components, Flat surface, 5 components',
     address: '720 Vistapark Drive, Berlin',
@@ -295,7 +295,7 @@ const mockMapPoints: MapPointProps[] = [
     image: volleyBallImg,
   },
   {
-    uuid: '2211',
+    id: '2211',
     name: 'Schäfersee Lake & Park',
     desc: 'Flat surface, 5 components, Flat surface, 5 components, Flat surface, 5 components',
     address: 'Schäfersee 13407',
@@ -310,9 +310,7 @@ export default function handler(
   _req: MapPointApiRequest,
   res: NextApiResponse
 ) {
-  const mapPointObj = mockMapPoints.find(
-    (elem) => elem.uuid === _req.query.uuid
-  );
+  const mapPointObj = mockMapPoints.find((elem) => elem.id === _req.query.id);
 
   try {
     setTimeout(async () => {

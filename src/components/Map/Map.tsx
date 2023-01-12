@@ -61,7 +61,7 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
                   //   }
 
                   return (
-                    <div key={pinElemData.uuid + '-marker-id'}>
+                    <div key={pinElemData.id + '-marker-id'}>
                       <Marker
                         alt=""
                         position={[pinElemData.latitude, pinElemData.longitude]}
