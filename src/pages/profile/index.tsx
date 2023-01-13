@@ -63,7 +63,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   } catch (err) {
     console.log('Error requesting profile page: ', err);
     return {
-      notFound: true,
+      //notFound: true,
+      props: {
+        username: "username",
+        fname: "first_name",
+        lname: "last_name",
+        email: "email@adress",
+        pic: "picture_url",
+      },
     };
   }
 }
@@ -73,6 +80,7 @@ function Profile({ ...userPayload }: ProfileProps) {
   const authenticationHook = useUserAuth();
   const { fetchUserAuthState } = useAuth();
 
+  /*
   useEffect(() => {
     if (!authenticationHook.authStatus) {
       router.push('/login');
@@ -82,6 +90,8 @@ function Profile({ ...userPayload }: ProfileProps) {
   if (fetchUserAuthState.context.user === null) {
     return <LoadingSpinner />;
   }
+
+   */
 
   return (
     <ProfilePage

@@ -7,6 +7,8 @@ import axios from 'axios';
 import { Logger } from '@/util/logger';
 import { validatePassword } from '@/util/passwordValidator';
 import { InfoPopup } from '../InfoPopup';
+import { ContentPopup } from "@/components/ContentPopup";
+import { EditProfil } from "@/components/Profile/EditProfil";
 
 type ProfileProps = {
   username: string;
@@ -54,6 +56,8 @@ function ProfilePage({ ...props }: ProfileProps) {
     email: props.email,
     pic: props.pic,
   });
+
+  const [showEditPopup, setShowEditPopup] = useState<boolean>(false);
 
   function handlePwSubmit(e: FormEvent<HTMLButtonElement>): void {
     e.preventDefault();
@@ -201,8 +205,11 @@ function ProfilePage({ ...props }: ProfileProps) {
   return (
     <main
       id={localProps.username + localProps.email}
-      className="w-full h-full min-h-screen flex justify-center items-center mb-8 text-white"
+      className="relative w-full h-full min-h-screen flex justify-center items-center mb-8 text-white"
     >
+      <ContentPopup trigger={showEditPopup} setTrigger={setShowEditPopup} bgColor="bg-white">
+        <EditProfil />
+      </ContentPopup>
       <div
         id="profile-wrapper"
         className="w-full h-full min-h-screen flex flex-col justify-start items-center"
@@ -250,6 +257,7 @@ function ProfilePage({ ...props }: ProfileProps) {
               >
                 Upload Picture
               </label>
+              <button onClick={() => setShowEditPopup(true)}>Edit Profil</button>
               {profilePic !== null && !pPicMessage.err && (
                 <>
                   <div className="w-5 h-full"></div>
