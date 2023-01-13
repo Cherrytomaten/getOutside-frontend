@@ -1,8 +1,7 @@
 import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
 import { AUTH_TOKEN } from '@/types/constants';
-import { Logger } from '@/util/logger';
 import axios from 'axios';
-import { pullAt } from 'cypress/types/lodash';
+import formidable from 'formidable';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 type PicDataRequest = NextApiRequest & {
@@ -13,22 +12,14 @@ type PicDataRequest = NextApiRequest & {
 
 export const config = {
   api: {
-    bodyParser: {
-      sizeLimit: '3mb',
-    },
-  },
+    bodyParser: false
+  }
 };
-
-const axiosInstance = axios.create({
-  maxContentLength: 100000 * 1024 * 1024,
-});
 
 export default async function handler(
   _req: PicDataRequest,
   res: NextApiResponse
 ) {
-  Logger.log('handler');
-
   // wrong request method
   if (_req.method !== 'PUT') {
     return res.status(405).json({
@@ -50,43 +41,44 @@ export default async function handler(
         .json({ errors: { message: 'Wrong token format.' } });
     }
 
-    console.log('body: ', _req.body.file);
-
     const authToken: TokenPayload = JSON.parse(authTokenString);
 
-    // return await axiosInstance
-    //   .put(
-    //     `https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}`,
-    //     {
-    //       file: _req.body,
-    //     },
-    //     {
-    //       headers: {
-    //         'Authorization': 'Bearer ' + authToken.token,
-    //         'Content-Type': 'multipart/form-data',
-    //       },
-    //     }
-    //   )
-    //   .then((_res: any) => {
-    //     return res.status(_res.status);
-    //   })
-    //   .catch((err: any) => {
-    //     console.log('Error: ', err.message);
-    //     return res
-    //       .status(err.response.status)
-    //       .json({ error: { message: err.message } });
-    //   });
+    // const form = new formidable.IncomingForm();
+    // form.uploadDir = "./";
+    // form.keepExtensions = true;
+    // form.parse(_req, (err, fields, files) => {
+    //   console.log(files);
+    // });
 
-    // return await fetch(`https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}`, {
-    //   method: "put",
-    //   headers: {
-    //             'Authorization': 'Bearer ' + authToken.token,
-    //             'Content-Type': 'multipart/form-data',
-    //           },
-    //   body: {
-    //     "file": _req.body,
-    //   }
-    // })
+    const data = await new Promise(function (resolve, reject) {
+      const form = new formidable.IncomingForm({ keepExtensions: true });
+      form.parse(_req, function (err, fields, files) {
+        if (err) return reject(err);
+        resolve({ fields, files });
+      });
+    });
+
+    return await axios.put(`https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}`,
+        {
+          name: "abd",
+        },
+        {
+          headers: {
+            'Authorization': 'Bearer ' + authToken.token,
+          },
+          maxContentLength: 100000000,
+          maxBodyLength: 1000000000
+        }
+      )
+      .then((_res: any) => {
+        return res.status(_res.status);
+      })
+      .catch((err: any) => {
+        console.log('Error: ', err);
+        return res
+          .status(err.response.status)
+          .json({ error: { message: err.message } });
+      });
   } catch (_err) {
     return res.status(400).json({
       error: { message: 'Uploading the profile picture went wrong.' },

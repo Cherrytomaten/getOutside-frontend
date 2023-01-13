@@ -36,7 +36,7 @@
     "bcrypt": "^5.1.0",
     "compressorjs": "^1.1.1",
     "express": "^4.18.2",
-    "form-data": "^4.0.0",
+    "formidable": "^2.1.1",
     "framer-motion": "^7.6.7",
     "geolib": "^3.3.3",
     "leaflet": "^1.9.2",
@@ -50,6 +50,7 @@
   },
   "devDependencies": {
     "@aacn_org/eslint-plugin-tailwind-classname-order": "^0.2.7",
+    "@types/formidable": "^2.0.5",
     "@types/leaflet": "^1.9.0",
     "@types/node": "18.11.0",
     "@types/react": "18.0.21",

@@ -4,11 +4,9 @@ import { ChangeEvent, FormEvent, useState } from 'react';
 import { PasswordInput } from '../PasswordInput';
 import { AnimatePresence, motion } from 'framer-motion';
 import axios from 'axios';
-import { convertBase64 } from '@/util/convertToBase64';
 import { Logger } from '@/util/logger';
 import { validatePassword } from '@/util/passwordValidator';
 import { InfoPopup } from '../InfoPopup';
-import FormData from 'form-data';
 
 type ProfileProps = {
   username: string;
@@ -73,7 +71,7 @@ function ProfilePage({ ...props }: ProfileProps) {
   }
 
   async function handleFnameSubmit(
-    e: FormEvent<HTMLButtonElement>
+    _e: FormEvent<HTMLButtonElement>
   ): Promise<void> {
     setChangeFname({ ...changeFname, message: '', err: '' });
     if (
@@ -95,7 +93,7 @@ function ProfilePage({ ...props }: ProfileProps) {
           first_name: changeFname.data,
           last_name: '',
         })
-        .then((res: any) => {
+        .then((_res: any) => {
           (document.getElementById('set-fname') as HTMLInputElement).value = '';
           setLocalProps({ ...localProps, fname: changeFname.data });
           setChangeFname({
@@ -106,7 +104,7 @@ function ProfilePage({ ...props }: ProfileProps) {
           });
           Logger.log('Success');
         })
-        .catch((err: any) => {
+        .catch((_err: any) => {
           setChangeFname({
             ...changeFname,
             data: '',
@@ -184,20 +182,15 @@ function ProfilePage({ ...props }: ProfileProps) {
     return await axios
       .put(
         '/api/user/pfp/set',
-        { file: 'Hello World' },
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
+        form_data,
       )
-      .then((res: any) => {
+      .then((_res: any) => {
         setProfilePic(null);
         setPPicMessage({ message: '', err: false });
         Logger.log('Success');
         // return Promise.resolve(res.data);
       })
-      .catch((err: any) => {
+      .catch((_err: any) => {
         setProfilePic(null);
         setPPicMessage({ message: '', err: false });
         Logger.log('Upload Profile Pic Axios Error');
