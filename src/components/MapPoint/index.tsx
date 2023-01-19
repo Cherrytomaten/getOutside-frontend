@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import ExpandSvg from '@/resources/svg/Expand';
 import Link from 'next/link';
+import CommentsForm from '@/components/CommentsForm';
 
 function MapPoint({ ...props }: MapPointProps) {
   // Review
@@ -222,6 +223,7 @@ function MapPoint({ ...props }: MapPointProps) {
             {/* Kommentare */}
             <div className="mb-5">
               <h3 className="mb-1 text-lg">Comments:</h3>
+              <CommentsForm />
               <ul>
                 {props.comments.length === 0 ? (
                   <p className="min-h-[65px] flex flex-col justify-around p-3 mb-3 bg-dark-seaweed rounded-xl">
