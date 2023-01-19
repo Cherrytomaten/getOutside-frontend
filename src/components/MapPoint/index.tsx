@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import ExpandSvg from '@/resources/svg/Expand';
 import Link from 'next/link';
+import CommentsForm from '@/components/CommentsForm';
 
 function MapPoint({ ...props }: MapPointProps) {
   // Review
@@ -95,6 +96,9 @@ function MapPoint({ ...props }: MapPointProps) {
               <CloseSvg width="40px" height="40px" fill="#f0f0f0" />
             </button>
           </Link>
+        </div>
+        <div>
+          <CommentsForm />
         </div>
         <div
           id="lower-wrapper"
