@@ -2,7 +2,8 @@ import { Repo } from "@/types/Repo/Repo";
 import { RegisterUserProps } from "@/types/User/RegisterUserProps";
 import axios from "axios";
 import { FetchRegisterDataResponse } from "@/types/User/FetchRegisterDataResponse";
-import { FetchUserAuthErrorResponseProps } from "@/types/Auth/FetchUserAuthErrorResponseProps";
+import { WrapperServerErrorResponse } from "@/types/Server/WrapperServerErrorResponse";
+import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 
 class RegisterRepo implements Repo<RegisterUserProps> {
     /**
@@ -17,7 +18,24 @@ class RegisterRepo implements Repo<RegisterUserProps> {
             .then((res: FetchRegisterDataResponse) => {
                 return Promise.resolve(res.data);
             })
-            .catch((err: FetchUserAuthErrorResponseProps) => {
+            .catch((err: WrapperServerErrorResponse) => {
+                return Promise.reject(err.response.data);
+            })
+    }
+
+    /**
+     * Repo function to send a verification email to an existing email from a user account.
+     * @param email that exists for a registered user.
+     * @return void on success or an error message.
+     */
+    public async confirmEmail(email: string): Promise<void | FetchServerErrorResponse> {
+        return await axios.post('/api/register/confirm-email', {
+            email: email
+        })
+            .then((_res) => {
+                return Promise.resolve();
+            })
+            .catch((err: WrapperServerErrorResponse) => {
                 return Promise.reject(err.response.data);
             })
     }

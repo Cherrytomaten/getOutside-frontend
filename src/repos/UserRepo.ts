@@ -1,12 +1,12 @@
 import { IUserAuthRepo } from "@/types/Repo/IUserAuthRepo";
 import axios from "axios";
 import { FetchUserAuthResponseProps } from "@/types/Auth/FetchUserAuthResponseProps";
-import { FetchUserAuthErrorResponseProps } from "@/types/Auth/FetchUserAuthErrorResponseProps";
 import { deleteCookies, getCookie, setCookies } from "@/util/cookieManager";
 import { ACTIVE_CATEGORIES, AUTH_REFRESH_TOKEN, AUTH_TOKEN, RADIUS_FILTER } from "@/types/constants";
 import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 import { UserAuthProps } from "@/types/User";
 import { Logger } from "@/util/logger";
+import { WrapperServerErrorResponse } from "@/types/Server/WrapperServerErrorResponse";
 
 
 /**
@@ -44,7 +44,7 @@ class UserAuthRepo implements IUserAuthRepo {
         ]);
         return Promise.resolve(res.data);
       })
-      .catch((err: FetchUserAuthErrorResponseProps) => {
+      .catch((err: WrapperServerErrorResponse) => {
         return Promise.reject(err.response.data);
       });
   }
@@ -70,7 +70,7 @@ class UserAuthRepo implements IUserAuthRepo {
         ]);
         return Promise.resolve(res.data);
       })
-      .catch((err: FetchUserAuthErrorResponseProps) => {
+      .catch((err: WrapperServerErrorResponse) => {
         return Promise.reject(err.response.data);
       });
   }
@@ -100,7 +100,7 @@ class UserAuthRepo implements IUserAuthRepo {
         ]);
         return Promise.resolve(res.data);
       })
-      .catch((err: FetchUserAuthErrorResponseProps) => {
+      .catch((err: WrapperServerErrorResponse) => {
         deleteCookies([AUTH_TOKEN, AUTH_REFRESH_TOKEN]);
         return Promise.reject(err.response.data);
       });
@@ -119,7 +119,7 @@ class UserAuthRepo implements IUserAuthRepo {
         .then((_res) => {
           Logger.log('Refresh token revoked successfully.');
         })
-        .catch((_err: FetchUserAuthErrorResponseProps) => {
+        .catch((_err: WrapperServerErrorResponse) => {
           Logger.log('Error while trying to revoke token:', _err.response.data.message);
         })
   }
