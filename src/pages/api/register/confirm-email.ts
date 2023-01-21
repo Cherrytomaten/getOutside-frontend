@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import axios from "axios";
-import { FetchRegisterDataResponse } from "@/types/User/FetchRegisterDataResponse";
+import axios, { AxiosResponse } from "axios";
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 import { BackendErrorResponse } from "@/types/Backend/BackendErrorResponse";
 
@@ -8,13 +7,22 @@ type ConfirmEmailRequest = NextApiRequest & {
     body: { email: string };
 };
 
-type RegisterResponse = NextApiResponse<{username: string, email: string} | FetchServerErrorResponse>;
+type ConfirmEmailResponseBody = {
+    msg: string;
+}
 
-export default async function handler(_req: ConfirmEmailRequest, res: RegisterResponse) {
+type ConfirmEmailResponse = NextApiResponse<ConfirmEmailResponseBody | FetchServerErrorResponse>;
+
+export default async function handler(_req: ConfirmEmailRequest, res: ConfirmEmailResponse) {
+    // wrong request method
+    if (_req.method !== 'POST') {
+        return res.status(405).json({errors: { message: 'Given request method is not allowed here.' } });
+    }
+
     return await axios.post('https://cherrytomaten.herokuapp.com/authentication/user/confirm-email/', {
         "email": _req.body.email,
     })
-        .then((_res: FetchRegisterDataResponse) => {
+        .then((_res: AxiosResponse<ConfirmEmailResponseBody>) => {
             return res.status(201).json(_res.data);
         })
         .catch((err: BackendErrorResponse) => {

@@ -4,6 +4,7 @@ import axios from "axios";
 import { FetchRegisterDataResponse } from "@/types/User/FetchRegisterDataResponse";
 import { WrapperServerErrorResponse } from "@/types/Server/WrapperServerErrorResponse";
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
+import { ActivateRegisteredUserProps } from "@/types/User/ActivateRegisteredUserProps";
 
 class RegisterRepo implements Repo<RegisterUserProps> {
     /**
@@ -26,11 +27,34 @@ class RegisterRepo implements Repo<RegisterUserProps> {
     /**
      * Repo function to send a verification email to an existing email from a user account.
      * @param email that exists for a registered user.
-     * @return void on success or an error message.
+     * @return either void on success or an error message.
      */
-    public async confirmEmail(email: string): Promise<void | FetchServerErrorResponse> {
+    public async sendConfirmationEmail(email: string): Promise<void | FetchServerErrorResponse> {
         return await axios.post('/api/register/confirm-email', {
             email: email
+        })
+            .then((_res) => {
+                return Promise.resolve();
+            })
+            .catch((err: WrapperServerErrorResponse) => {
+                return Promise.reject(err.response.data);
+            })
+    }
+
+    /**
+     * Repo function to activate a user account, these params are fetched from the url, that was sent by email.
+     * @param user_uuid id of the user
+     * @param user_mail email of the user
+     * @param confirmation_token generated confirmation token for the user
+     * @return either void on success or an error message.
+     */
+    public async activateUser({ user_uuid, user_mail, confirmation_token }: ActivateRegisteredUserProps): Promise<void | WrapperServerErrorResponse> {
+        return await axios.get('/api/register/activate', {
+            params: {
+                user_uuid: user_uuid,
+                user_mail: user_mail,
+                confirmation_token: confirmation_token
+            }
         })
             .then((_res) => {
                 return Promise.resolve();

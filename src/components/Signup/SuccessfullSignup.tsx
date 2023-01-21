@@ -22,7 +22,7 @@ function SuccessfullSignup({ username, email }: SuccessfullSignupProps) {
 
         setServerErr(null);
         setTimer(9);
-        RegisterRepoClass.confirmEmail(_email)
+        RegisterRepoClass.sendConfirmationEmail(_email)
             .then((_res) => {
                 return;
             })
