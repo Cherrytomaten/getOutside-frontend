@@ -27,7 +27,7 @@ class RegisterRepo implements Repo<RegisterUserProps> {
     /**
      * Repo function to send a verification email to an existing email from a user account.
      * @param email that exists for a registered user.
-     * @return either void on success or an error message.
+     * @returns either void on success or an error message.
      */
     public async sendConfirmationEmail(email: string): Promise<void | FetchServerErrorResponse> {
         return await axios.post('/api/register/confirm-email', {
@@ -46,7 +46,7 @@ class RegisterRepo implements Repo<RegisterUserProps> {
      * @param user_uuid id of the user
      * @param user_mail email of the user
      * @param confirmation_token generated confirmation token for the user
-     * @return either void on success or an error message.
+     * @returns either void on success or an error message.
      */
     public async activateUser({ user_uuid, user_mail, confirmation_token }: ActivateRegisteredUserProps): Promise<void | WrapperServerErrorResponse> {
         return await axios.get('/api/register/activate', {

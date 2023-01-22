@@ -1,3 +1,4 @@
 # Block all crawlers for /activate
 User-agent: *
 Disallow: /confirm-email
+Disallow: /reset-password
