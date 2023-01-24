@@ -7,9 +7,21 @@ import ExpandSvg from '@/resources/svg/Expand';
 import Link from 'next/link';
 import CommentsForm from '@/components/CommentsForm';
 import axios from 'axios';
+import { UserAuthRepo } from '@/repos/UserRepo';
+import { AuthStateMachine } from '@/types/Auth';
+import { getSelectorsByUserAgent } from 'react-device-detect';
+import { UserAuthProps } from '@/types/User';
+import { Logger } from '@/util/logger';
+
+type AuthContextProps = {
+  fetchUserAuthState: AuthStateMachine;
+  sendToUserAuthMachine: (arg0: any) => any;
+  UserRepoClass: UserAuthRepo;
+};
 
 function MapPoint({ ...props }: MapPointProps) {
   // Review
+  const UserRepoClass = new UserAuthRepo();
   const allStars: JSX.Element[] = RenderStars(props.rating, '34', '34');
   const minimumComments: number = 2;
   const [counter, setCounter] = useState<number>(minimumComments); // Counter for number of shown comments
@@ -19,7 +31,14 @@ function MapPoint({ ...props }: MapPointProps) {
   const [showRating, setShowRating] = useState<boolean>(false);
   const [comments, setComments] = useState(null);
   let commentArray = props.comments;
-  console.log('commentArray', commentArray);
+  // console.log('commentArray', commentArray);
+  // console.log('cookie', document.cookie);
+  // console.log(
+  //   'UserRepoClass',
+  //   UserRepoClass.getUserByToken().then((result) => {
+  //     console.log(result); // "Hello World!"
+  //   })
+  // );
 
   // automatically scroll down if a new comment appears
   // neglect this behavior on first mounting of component
@@ -32,6 +51,14 @@ function MapPoint({ ...props }: MapPointProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [counter]);
+
+  function getUser() {
+    UserRepoClass.getUserByToken().then((res) => {
+      console.log(res.access.type);
+      console.log(res);
+      console.log(res.userId);
+    });
+  }
 
   // display a number of comments depending on the counter (Hook)
   function showComments(): CommentProps[] {
@@ -90,7 +117,7 @@ function MapPoint({ ...props }: MapPointProps) {
       }
   };
 
-  function handleKeyDown(e) {
+  function handleKeyDown(e: any) {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e);
@@ -98,9 +125,10 @@ function MapPoint({ ...props }: MapPointProps) {
   }
 
   function addComment(comment: any): void {
+    getUser();
     const messageObj = {
       // display real author name ????
-      author: 'Adham',
+      author: 'ʕ•́ᴥ•̀ʔっ',
       text: comment,
     };
     const newCommentsArray = commentArray.unshift(messageObj);
