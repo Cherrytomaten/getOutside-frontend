@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { TextField, Button } from '@material-ui/core';
 
 // pin id übergeben
-const CommentForm = (id: number) => {
+const CommentForm = (uuid: String) => {
   const [comment, setComment] = useState('');
 
   const handleChange = (event: any) => {
@@ -13,8 +12,7 @@ const CommentForm = (id: number) => {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     try {
-      // Step 3: Make an API call to post the comment
-      const response = await axios.post('/api/comments', { comment, id });
+      const response = await axios.post('/api/comments', { comment, uuid });
       console.log(response.data);
     } catch (err) {
       console.error(err);
@@ -23,27 +21,18 @@ const CommentForm = (id: number) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <TextField
-        value={comment}
-        fullWidth
-        label="Leave a comment"
-        id="fullWidth"
-        placeholder="Leave a comment"
+      <textarea
+        id="comment"
+        className="w-full p-1 mt-1 text-white bg-transparent border rounded-md"
         onChange={handleChange}
-        variant="outlined"
-        InputProps={{
-          style: {
-            color: 'white',
-          },
-        }}
-      />
-      {/* https://mui.com/material-ui/react-text-field/#customization */}
-      <p>&nbsp;</p>
+        placeholder="Leave a comment"
+        rows="1"
+      ></textarea>
       <input
         type="submit"
         value="Post comment"
         id="signup-btn-submit"
-        className="flex-auto w-full max-w-xs h-full p-2 mb-4 text-white bg-bright-seaweed border-solid border rounded-md transition-colors cursor-pointer"
+        className="flex-auto w-full p-1 mt-1 mb-5 text-white bg-bright-seaweed border-solid border rounded-md transition-colors cursor-pointer"
       />
     </form>
   );

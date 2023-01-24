@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import ExpandSvg from '@/resources/svg/Expand';
 import Link from 'next/link';
 import CommentsForm from '@/components/CommentsForm';
+import axios from 'axios';
 
 function MapPoint({ ...props }: MapPointProps) {
   // Review
@@ -16,6 +17,9 @@ function MapPoint({ ...props }: MapPointProps) {
   const [expandDesc, setExpandDesc] = useState<boolean>(false); // boolean to open the description
   const [descSize, setDescSize] = useState<number>(0); // description size - workaround for the arrow to show right
   const [showRating, setShowRating] = useState<boolean>(false);
+  const [comments, setComments] = useState(null);
+  let commentArray = props.comments;
+  console.log('commentArray', commentArray);
 
   // automatically scroll down if a new comment appears
   // neglect this behavior on first mounting of component
@@ -31,7 +35,7 @@ function MapPoint({ ...props }: MapPointProps) {
 
   // display a number of comments depending on the counter (Hook)
   function showComments(): CommentProps[] {
-    return props.comments.slice(0, counter);
+    return commentArray.slice(0, counter);
   }
 
   // calculates height of elem considering parents
@@ -63,6 +67,44 @@ function MapPoint({ ...props }: MapPointProps) {
     } else {
       console.log('No more comments.');
     }
+  }
+
+  const [comment, setComment] = useState('');
+
+  const handleChange = (event: any) => {
+    setComment(event.target.value);
+  };
+
+  const handleSubmit = async (event: any) => {
+    //clear textArea with ID ????
+    event.preventDefault();
+    const uuid = props.uuid;
+    if (comment)
+      try {
+        addComment(comment);
+        setComment('');
+        const response = await axios.post('/api/comments', { comment, uuid });
+        console.log(response.data);
+      } catch (err) {
+        console.error(err);
+      }
+  };
+
+  function handleKeyDown(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  }
+
+  function addComment(comment: any): void {
+    const messageObj = {
+      // display real author name ????
+      author: 'Adham',
+      text: comment,
+    };
+    const newCommentsArray = commentArray.unshift(messageObj);
+    setComments(newCommentsArray);
   }
 
   // decrement counter
@@ -222,8 +264,25 @@ function MapPoint({ ...props }: MapPointProps) {
             </div>
             {/* Kommentare */}
             <div className="mb-5">
-              <h3 className="mb-1 text-lg">Comments:</h3>
-              <CommentsForm />
+              {/* <CommentsForm mappointId={props.uuid} /> */}
+              <form onSubmit={handleSubmit}>
+                <h3 className="mb-.5 text-lg">Comments:</h3>
+                <textarea
+                  id="commentsTextArea"
+                  value={comment}
+                  className="w-full p-1 mt-1 text-white bg-transparent border rounded-md"
+                  onChange={handleChange}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Add a comment..."
+                  rows="1"
+                ></textarea>
+                <input
+                  type="submit"
+                  value="Post comment"
+                  id="signup-btn-submit"
+                  className="flex-auto w-full p-1 mt-1 mb-5 font-bold text-white bg-bright-seaweed border-solid border rounded-md transition-colors cursor-pointer"
+                />
+              </form>
               <ul>
                 {props.comments.length === 0 ? (
                   <p className="min-h-[65px] flex flex-col justify-around p-3 mb-3 bg-dark-seaweed rounded-xl">
