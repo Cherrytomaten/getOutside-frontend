@@ -13,6 +13,11 @@ type ConfirmEmailResponseBody = {
 
 type ConfirmEmailResponse = NextApiResponse<ConfirmEmailResponseBody | FetchServerErrorResponse>;
 
+/**
+ * Send out an email to the just registered user.
+ * @param _req containing the email in the body
+ * @param res short message if the email was sent successfully or an error response
+ */
 export default async function handler(_req: ConfirmEmailRequest, res: ConfirmEmailResponse) {
     // wrong request method
     if (_req.method !== 'POST') {

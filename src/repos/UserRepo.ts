@@ -8,6 +8,7 @@ import { UserAuthProps } from "@/types/User";
 import { Logger } from "@/util/logger";
 import { WrapperServerErrorResponse } from "@/types/Server/WrapperServerErrorResponse";
 import { ResetPasswordProps } from "@/types/User/ResetPasswordProps";
+import { UserDataProps } from "@/types/User/UserDataProps";
 
 
 /**
@@ -48,6 +49,20 @@ class UserAuthRepo implements IUserAuthRepo {
       .catch((err: WrapperServerErrorResponse) => {
         return Promise.reject(err.response.data);
       });
+  }
+
+  /**
+   * Repo function to fetch detailed information about the currently logged-in user.
+   * @returns detailed user information
+   */
+  public async getUserData(): Promise<UserDataProps> {
+    return await axios.get('/api/get-data/')
+        .then((res: { data: UserDataProps }) => {
+          return Promise.resolve(res.data);
+        })
+        .catch((err: WrapperServerErrorResponse) => {
+          return Promise.reject(err.response.data);
+        })
   }
 
   /**

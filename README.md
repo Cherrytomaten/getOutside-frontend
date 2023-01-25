@@ -49,10 +49,11 @@ Once a bigger feature is finished and all necessary feature branches are merged 
 - **Marlon**<br/>
    - Who is responsible for the frontend managing, which includes: distributing tasks, keeping in touch with the backend, plan on how to implement new features with the current code structure, reviewing pull-requests and maintaining the frontend repository.
    - Adds complex features like the authentication frame
-   - Adds API frontend proxy API routes ([Nextjs proxy API](https://nextjs.org/docs/api-routes/introduction))
+   - Adds & maintains API frontend proxy API routes ([Nextjs proxy API](https://nextjs.org/docs/api-routes/introduction))
    - polishes code structure
    - polishes design of components
    - Providing workshops / support for *nextJs/TypeScript/server data fetching* to the team
+   - Writing the proxy API documentation [(source)](https://app.swaggerhub.com/apis/Cherrytomaten_fe/getoutside_frontend_proxy/1.0.0#/)
 
 **All tasks are documented in our ticket system on linear [here](https://linear.app/cherrytomaten/project/getoutside-78a479cfd135)**
 

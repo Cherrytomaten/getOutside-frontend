@@ -51,8 +51,8 @@ function SuccessfullSignup({ username, email }: SuccessfullSignupProps) {
             </div>
             <h2 className="px-3 pb-3 text-2xl text-center text-white xs:text-3xl">Welcome <span className="text-bright-seaweed">{username}</span>!</h2>
             <h3 className="px-3 pb-10 text-2xl text-center text-white xs:text-3xl">You&apos;ve been signed up
-                successfully!</h3>
-            <p className="px-3 pb-10 text-lg text-center text-white">We&apos;ve sent you a verification link to your email<br/><span className="text-bright-seaweed">{email}</span>!</p>
+                successfully</h3>
+            <p className="px-3 pb-10 text-lg text-center text-white">We&apos;ve sent you a verification link to your email<br/><span className="text-bright-seaweed">{email}</span></p>
             <Link href="/login">
                 <button
                     type="button"

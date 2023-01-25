@@ -1,0 +1,5 @@
+class FavRepo {
+
+}
+
+export { FavRepo };

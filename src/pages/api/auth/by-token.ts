@@ -43,6 +43,7 @@ export default async function handler(_req: NextApiRequest, res: AuthByTokenResp
         const authToken: TokenPayload = JSON.parse(authTokenString);
         const refAuthToken: TokenPayload = JSON.parse(refTokenString);
 
+        // just for confirmation purpose and not actual data query
         return await axios.get('https://cherrytomaten.herokuapp.com/authentication/user/', {
             headers: {
                 'Authorization': 'Bearer ' + authToken.token
