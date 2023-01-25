@@ -56,13 +56,14 @@ class UserAuthRepo implements IUserAuthRepo {
    * @returns detailed user information
    */
   public async getUserData(): Promise<UserDataProps> {
-    return await axios.get('/api/user/get-data')
-        .then((res: { data: UserDataProps }) => {
-          return Promise.resolve(res.data);
-        })
-        .catch((err: WrapperServerErrorResponse) => {
-          return Promise.reject(err.response.data);
-        })
+    return await axios
+      .get('/api/user/get-data')
+      .then((res: { data: UserDataProps }) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((err: WrapperServerErrorResponse) => {
+        return Promise.reject(err.response.data);
+      });
   }
 
   /**
@@ -92,25 +93,25 @@ class UserAuthRepo implements IUserAuthRepo {
       });
   }
 
-  public async getUserData(authAccessToken: any): Promise<any> {
-    console.log('authAccessToken', authAccessToken);
-    //  const authToken: TokenPayload = JSON.parse(authAccessToken);
-    //  console.log('authToken', authToken);
-    // console.log('authToken', authToken); n
-    return await axios
-      .get('https://cherrytomaten.herokuapp.com/authentication/user/' , {
-        headers: {
-            'Authorization': 'Bearer ' + authAccessToken.token
-        }
-    })
-      .then((res: FetchUserAuthResponseProps) => {
+  // public async getUserData(authAccessToken: any): Promise<any> {
+  //   console.log('authAccessToken', authAccessToken);
+  //   //  const authToken: TokenPayload = JSON.parse(authAccessToken);
+  //   //  console.log('authToken', authToken);
+  //   // console.log('authToken', authToken); n
+  //   return await axios
+  //     .get('https://cherrytomaten.herokuapp.com/authentication/user/' , {
+  //       headers: {
+  //           'Authorization': 'Bearer ' + authAccessToken.token
+  //       }
+  //   })
+  //     .then((res: FetchUserAuthResponseProps) => {
 
-        return Promise.resolve(res);
-      })
-      .catch((err: FetchUserAuthErrorResponseProps) => {
-        return Promise.reject(err);
-      });
-  }
+  //       return Promise.resolve(res);
+  //     })
+  //     .catch((err: FetchUserAuthErrorResponseProps) => {
+  //       return Promise.reject(err);
+  //     });
+  // }
 
   /**
    * Repo function to refresh the existing token with its refresh token.
@@ -148,16 +149,19 @@ class UserAuthRepo implements IUserAuthRepo {
    * @param email email that belongs to the users account
    * @returns either void on success or an error message.
    */
-  public async forgotPassword(email: string): Promise<void | WrapperServerErrorResponse> {
-    return await axios.post('/api/user/forgot-password', {
-      email: email
-    })
-        .then((_res) => {
-          return Promise.resolve();
-        })
-        .catch((err: WrapperServerErrorResponse) => {
-          return Promise.reject(err.response.data);
-        })
+  public async forgotPassword(
+    email: string
+  ): Promise<void | WrapperServerErrorResponse> {
+    return await axios
+      .post('/api/user/forgot-password', {
+        email: email,
+      })
+      .then((_res) => {
+        return Promise.resolve();
+      })
+      .catch((err: WrapperServerErrorResponse) => {
+        return Promise.reject(err.response.data);
+      });
   }
 
   /**
@@ -169,20 +173,27 @@ class UserAuthRepo implements IUserAuthRepo {
    * @param password2 new password string confirmation (identical duplicate)
    * @returns either void on success or an error message.
    */
-  public async resetPassword({ user_id, user_mail, confirmation_token, password, password2 }: ResetPasswordProps): Promise<void | WrapperServerErrorResponse> {
-    return await axios.put('/api/user/reset-password', {
-      user_id: user_id,
-      user_mail: user_mail,
-      confirmation_token: confirmation_token,
-      password: password,
-      password2: password2
-    })
-        .then((_res) => {
-          return Promise.resolve();
-        })
-        .catch((err: WrapperServerErrorResponse) => {
-          return Promise.reject(err.response.data);
-        })
+  public async resetPassword({
+    user_id,
+    user_mail,
+    confirmation_token,
+    password,
+    password2,
+  }: ResetPasswordProps): Promise<void | WrapperServerErrorResponse> {
+    return await axios
+      .put('/api/user/reset-password', {
+        user_id: user_id,
+        user_mail: user_mail,
+        confirmation_token: confirmation_token,
+        password: password,
+        password2: password2,
+      })
+      .then((_res) => {
+        return Promise.resolve();
+      })
+      .catch((err: WrapperServerErrorResponse) => {
+        return Promise.reject(err.response.data);
+      });
   }
 
   /**

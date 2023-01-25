@@ -7,21 +7,14 @@ import ExpandSvg from '@/resources/svg/Expand';
 import Link from 'next/link';
 import CommentsForm from '@/components/CommentsForm';
 import axios from 'axios';
-import { UserAuthRepo } from '@/repos/UserRepo';
+import { UserRepoClass } from '@/repos/UserRepo';
 import { AuthStateMachine } from '@/types/Auth';
 import { getSelectorsByUserAgent } from 'react-device-detect';
 import { UserAuthProps } from '@/types/User';
 import { Logger } from '@/util/logger';
 
-type AuthContextProps = {
-  fetchUserAuthState: AuthStateMachine;
-  sendToUserAuthMachine: (arg0: any) => any;
-  UserRepoClass: UserAuthRepo;
-};
-
 function MapPoint({ ...props }: MapPointProps) {
   // Review
-  const UserRepoClass = new UserAuthRepo();
   const allStars: JSX.Element[] = RenderStars(props.rating, '34', '34');
   const minimumComments: number = 2;
   const [counter, setCounter] = useState<number>(minimumComments); // Counter for number of shown comments
@@ -30,15 +23,8 @@ function MapPoint({ ...props }: MapPointProps) {
   const [descSize, setDescSize] = useState<number>(0); // description size - workaround for the arrow to show right
   const [showRating, setShowRating] = useState<boolean>(false);
   const [comments, setComments] = useState(null);
-  let commentArray = props.comments;
-  // console.log('commentArray', commentArray);
-  // console.log('cookie', document.cookie);
-  // console.log(
-  //   'UserRepoClass',
-  //   UserRepoClass.getUserByToken().then((result) => {
-  //     console.log(result); // "Hello World!"
-  //   })
-  // );
+  const [comment, setComment] = useState('');
+  const commentArray = props.comments;
 
   // automatically scroll down if a new comment appears
   // neglect this behavior on first mounting of component
@@ -51,15 +37,6 @@ function MapPoint({ ...props }: MapPointProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [counter]);
-
-  async function getUserName() {
-    await UserRepoClass.getUserByToken().then((res) => {
-      UserRepoClass.getUserData(res.access);
-      console.log(res.access.type);
-      console.log(res);
-      console.log(res.userId);
-    });
-  }
 
   // display a number of comments depending on the counter (Hook)
   function showComments(): CommentProps[] {
@@ -97,8 +74,6 @@ function MapPoint({ ...props }: MapPointProps) {
     }
   }
 
-  const [comment, setComment] = useState('');
-
   const handleChange = (event: any) => {
     setComment(event.target.value);
   };
@@ -125,15 +100,20 @@ function MapPoint({ ...props }: MapPointProps) {
     }
   }
 
-  function addComment(comment: any): void {
-    getUserName();
-    const messageObj = {
-      // display real author name ????
-      author: 'ʕ•́ᴥ•̀ʔっ',
-      text: comment,
-    };
-    const newCommentsArray = commentArray.unshift(messageObj);
-    setComments(newCommentsArray);
+  async function addComment(comment: String) {
+    await UserRepoClass.getUserData().then((res: any) => {
+      // console.log(res.access.type);
+      console.log(res);
+      console.log(res.username);
+      // console.log(res.userId);
+
+      const messageObj = {
+        author: res.username,
+        text: comment,
+      };
+      const newCommentsArray = commentArray.unshift(messageObj);
+      setComments(newCommentsArray);
+    });
   }
 
   // decrement counter
@@ -293,7 +273,6 @@ function MapPoint({ ...props }: MapPointProps) {
             </div>
             {/* Kommentare */}
             <div className="mb-5">
-              {/* <CommentsForm mappointId={props.uuid} /> */}
               <form onSubmit={handleSubmit}>
                 <h3 className="mb-.5 text-lg">Comments:</h3>
                 <textarea
