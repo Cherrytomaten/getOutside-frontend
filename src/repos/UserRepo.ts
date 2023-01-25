@@ -197,31 +197,19 @@ class UserAuthRepo implements IUserAuthRepo {
       RADIUS_FILTER,
     ]);
 
-<<<<<<< HEAD
     axios
       .post('/api/auth/revoke', {
         refreshToken: refToken,
       })
       .then((_res) => {
-        Logger.log('Refresh token revoked successfully.');
+        logger.log('Refresh token revoked successfully.');
       })
-      .catch((_err: FetchUserAuthErrorResponseProps) => {
-        Logger.log(
+      .catch((_err: WrapperServerErrorResponse) => {
+        logger.log(
           'Error while trying to revoke token:',
           _err.response.data.message
         );
       });
-=======
-    axios.post('/api/auth/revoke', {
-      refreshToken: refToken
-    })
-        .then((_res) => {
-          logger.log('Refresh token revoked successfully.');
-        })
-        .catch((_err: WrapperServerErrorResponse) => {
-          logger.log('Error while trying to revoke token:', _err.response.data.message);
-        })
->>>>>>> develop
   }
 }
 
