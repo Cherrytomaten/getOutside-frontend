@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import ExpandSvg from '@/resources/svg/Expand';
 import Link from 'next/link';
-import CommentsForm from '@/components/CommentsForm';
 import axios from 'axios';
 import { UserRepoClass } from '@/repos/UserRepo';
 import { AuthStateMachine } from '@/types/Auth';
