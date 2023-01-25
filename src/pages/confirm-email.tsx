@@ -2,14 +2,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { sanititzeUrlParams } from "@/util/sanititzeUrlParams";
 import { ActivateRegisteredUserProps } from "@/types/User/ActivateRegisteredUserProps";
-import { RegisterRepo } from "@/repos/RegisterRepo";
+import { RegisterRepoClass } from "@/repos/RegisterRepo";
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 
 function ConfirmEmail() {
     const router = useRouter();
-    const RegisterRepoClass = new RegisterRepo();
     const [serverErr, setServerErr] = useState<string | null>(null);
     const [activationStatus, setActivationStatus] = useState<boolean>(false);
 

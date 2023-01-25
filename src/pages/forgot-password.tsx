@@ -5,7 +5,7 @@ import { createGenericStateMachine } from "@/machines/genericMachine";
 import { useMachine } from "@xstate/react";
 import Link from "next/link";
 import { logger } from "@/util/logger";
-import { UserAuthRepo } from "@/repos/UserRepo";
+import { UserRepoClass } from "@/repos/UserRepo";
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -20,7 +20,6 @@ type ForgotPasswordStateMachineData = {
 const initStateMachine = createGenericStateMachine<ForgotPasswordStateMachineData, ForgotPasswordPayload>();
 
 function ForgotPassword() {
-    const UserRepoClass = new UserAuthRepo();
     const [inputData, setInputData] = useState<string>("");
     const [machineState, sendToMachine] = useMachine(initStateMachine, {
         actions: {

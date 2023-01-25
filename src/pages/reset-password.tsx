@@ -2,7 +2,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { sanititzeUrlParams } from "@/util/sanititzeUrlParams";
 import { ResetPasswordAuthProps } from "@/types/User/ResetPasswordAuthProps";
 import { useRouter } from "next/router";
-import { UserAuthRepo } from "@/repos/UserRepo";
+import { UserRepoClass } from "@/repos/UserRepo";
 import LogoNew from "@/resources/svg/Logo_new";
 import { AnimatePresence, motion } from "framer-motion";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
@@ -27,7 +27,6 @@ const initStateMachine = createGenericStateMachine<ResetPasswordStateMachineData
 
 function ResetPassword() {
     const router = useRouter();
-    const UserRepoClass = new UserAuthRepo();
     const [headerParams, setHeaderParams] = useState<ResetPasswordAuthProps | null>(null);
     const [newPasswords, setNewPasswords] = useState<ResetPassword>({password: "", confirmationPassword: ""});
     const [formErrors, setFormErrors] = useState<ResetPassword>({password: "", confirmationPassword: ""});

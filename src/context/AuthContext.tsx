@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useContext } from "react";
 import { useMachine } from "@xstate/react";
 import { fetchAuthUserMachine } from "@/machines/authUser";
-import { UserAuthRepo } from "@/repos/UserRepo";
+import { UserRepoClass } from "@/repos/UserRepo";
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 import { AuthStateMachine } from "@/types/Auth";
 import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
@@ -15,19 +15,18 @@ type LayoutProp = {
 type AuthContextProps = {
     fetchUserAuthState: AuthStateMachine,
     sendToUserAuthMachine: (arg0: any) => any,
-    UserRepoClass: UserAuthRepo,
+    UserRepoClass: typeof UserRepoClass,
 }
 
 const AuthContextDefault: AuthContextProps = {
     fetchUserAuthState: null as unknown as AuthStateMachine,
     sendToUserAuthMachine: () => {},
-    UserRepoClass: new UserAuthRepo()
+    UserRepoClass: UserRepoClass
 }
 
 const AuthContextInstance = createContext(AuthContextDefault);
 
 function AuthProvider({children}: LayoutProp) {
-    const UserRepoClass = new UserAuthRepo();
     const [fetchUserAuthState, sendToUserAuthMachine] = useMachine(
       fetchAuthUserMachine,
       {

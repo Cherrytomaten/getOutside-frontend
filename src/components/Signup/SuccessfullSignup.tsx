@@ -1,7 +1,7 @@
 import LogoNew from "@/resources/svg/Logo_new";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { RegisterRepo } from "@/repos/RegisterRepo";
+import { RegisterRepoClass } from "@/repos/RegisterRepo";
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -13,7 +13,6 @@ type SuccessfullSignupProps = {
 function SuccessfullSignup({ username, email }: SuccessfullSignupProps) {
     const [timer, setTimer] = useState<number>(0);
     const [serverErr, setServerErr] = useState<string | null>(null);
-    const RegisterRepoClass = new RegisterRepo();
 
     function sendVerificationEmail(_email: string) {
         if (timer !== 0) {

@@ -1,4 +1,4 @@
-import { RegisterRepo } from "@/repos/RegisterRepo";
+import { RegisterRepoClass } from "@/repos/RegisterRepo";
 import { useMachine } from "@xstate/react";
 import { fetchRegisterMachine } from "@/machines/registerUser";
 import { RegisterUserProps } from "@/types/User/RegisterUserProps";
@@ -7,7 +7,6 @@ import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorRespons
 import { logger } from "@/util/logger";
 
 function useRegisterMachineManager() {
-    const RegisterRepoClass = new RegisterRepo();
     const [registerUserState, sendToRegisterMachine] = useMachine(fetchRegisterMachine, {
         actions: {
             registerUser: (ctx, event: { type: 'ATTEMPT_REGISTER'; payload: RegisterUserProps; }) => {

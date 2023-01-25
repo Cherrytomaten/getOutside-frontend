@@ -183,4 +183,4 @@ class UserAuthRepo implements IUserAuthRepo {
   }
 }
 
-export { UserAuthRepo };
+export const UserRepoClass = new UserAuthRepo();

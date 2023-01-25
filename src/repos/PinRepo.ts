@@ -10,7 +10,7 @@ class PinRepo {
      * @param radius set radius to search for around the user location
      * @returns a list of all pins that match the requirements.
      */
-    public static async getByRadius(location: LatLngExpression, radius: number): Promise<any> {
+    public async getByRadius(location: LatLngExpression, radius: number): Promise<any> {
         return await axios.get('/api/pins/get', {
             params: {
                 location: location.toString(),
@@ -26,4 +26,4 @@ class PinRepo {
     }
 }
 
-export { PinRepo };
+export const PinRepoClass = new PinRepo();

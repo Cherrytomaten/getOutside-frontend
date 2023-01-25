@@ -2,4 +2,4 @@ class FavRepo {
 
 }
 
-export { FavRepo };
+export const FavRepoClass =  new FavRepo();
