@@ -24,6 +24,11 @@ type ActivateUserErrorResponse = {
 
 type ActivateUserResponse = NextApiResponse<ActivateUserResponseBody | FetchServerErrorResponse>;
 
+/**
+ * After a user submit his register data, he can activate his account with the credentials found in the email he got.
+ * @param _req containing the parameters to activate the user
+ * @param res short success message or error response
+ */
 export default async function handler(_req: ActivateUserRequest, res: ActivateUserResponse) {
     // wrong request method
     if (_req.method !== 'GET') {

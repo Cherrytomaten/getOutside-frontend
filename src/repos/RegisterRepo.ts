@@ -73,4 +73,4 @@ class RegisterRepo implements Repo<RegisterUserProps> {
     }
 }
 
-export { RegisterRepo };
+export const RegisterRepoClass = new RegisterRepo();

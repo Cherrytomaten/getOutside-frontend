@@ -4,8 +4,8 @@ import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { createGenericStateMachine } from "@/machines/genericMachine";
 import { useMachine } from "@xstate/react";
 import Link from "next/link";
-import { Logger } from "@/util/logger";
-import { UserAuthRepo } from "@/repos/UserRepo";
+import { logger } from "@/util/logger";
+import { UserRepoClass } from "@/repos/UserRepo";
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -20,18 +20,17 @@ type ForgotPasswordStateMachineData = {
 const initStateMachine = createGenericStateMachine<ForgotPasswordStateMachineData, ForgotPasswordPayload>();
 
 function ForgotPassword() {
-    const UserRepoClass = new UserAuthRepo();
     const [inputData, setInputData] = useState<string>("");
     const [machineState, sendToMachine] = useMachine(initStateMachine, {
         actions: {
             pendingFunction: (ctx, event: { type: 'RUN_REQUEST'; payload: ForgotPasswordPayload }) => {
                 UserRepoClass.forgotPassword(event.payload.email)
                     .then((_res) => {
-                        Logger.log("Forgot password request succeeded");
+                        logger.log("Forgot password request succeeded");
                         sendToMachine({ type: 'RESOLVE', data: {message: "request succeeded"}, err: null });
                     })
                     .catch((err: FetchServerErrorResponse) => {
-                        Logger.log("Forgot password request failed");
+                        logger.log("Forgot password request failed");
                         sendToMachine({ type: 'REJECT', data: null, err: err });
                     })
             }

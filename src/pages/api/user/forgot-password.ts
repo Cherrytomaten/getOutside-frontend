@@ -20,6 +20,11 @@ type ForgotPasswordErrorResponse = {
 
 type ForgotPasswordResponse = NextApiResponse<ForgotPasswordResponseBody | FetchServerErrorResponse>;
 
+/**
+ * Send out an email with credentials to reset a users' password.
+ * @param _req containing the email in the body
+ * @param res containing a short message, when the email was sent successfully or an error response
+ */
 export default async function handler(_req: ForgotPasswordRequest, res: ForgotPasswordResponse) {
     // wrong request method
     if (_req.method !== 'POST') {

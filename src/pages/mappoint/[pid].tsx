@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useUserAuth } from "@/hooks/useUserAuth";
 import { useAuth } from "@/context/AuthContext";
-import { Logger } from "@/util/logger";
+import { logger } from "@/util/logger";
 
 const MapPointPage = () => {
   const router = useRouter();
@@ -36,7 +36,7 @@ const MapPointPage = () => {
         uuid: pid,
       },
     });
-    Logger.log('backendData: ', backendData.data);
+    logger.log('backendData: ', backendData.data);
     setMapPointData(backendData.data);
   }
 

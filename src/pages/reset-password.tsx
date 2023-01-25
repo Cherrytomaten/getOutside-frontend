@@ -2,12 +2,12 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { sanititzeUrlParams } from "@/util/sanititzeUrlParams";
 import { ResetPasswordAuthProps } from "@/types/User/ResetPasswordAuthProps";
 import { useRouter } from "next/router";
-import { UserAuthRepo } from "@/repos/UserRepo";
+import { UserRepoClass } from "@/repos/UserRepo";
 import LogoNew from "@/resources/svg/Logo_new";
 import { AnimatePresence, motion } from "framer-motion";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useMachine } from "@xstate/react";
-import { Logger } from "@/util/logger";
+import { logger } from "@/util/logger";
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 import { createGenericStateMachine } from "@/machines/genericMachine";
 import { ResetPasswordProps } from "@/types/User/ResetPasswordProps";
@@ -27,7 +27,6 @@ const initStateMachine = createGenericStateMachine<ResetPasswordStateMachineData
 
 function ResetPassword() {
     const router = useRouter();
-    const UserRepoClass = new UserAuthRepo();
     const [headerParams, setHeaderParams] = useState<ResetPasswordAuthProps | null>(null);
     const [newPasswords, setNewPasswords] = useState<ResetPassword>({password: "", confirmationPassword: ""});
     const [formErrors, setFormErrors] = useState<ResetPassword>({password: "", confirmationPassword: ""});
@@ -42,11 +41,11 @@ function ResetPassword() {
                     password2: event.payload.password2
                 })
                     .then((_res) => {
-                        Logger.log("Reset password request succeeded");
+                        logger.log("Reset password request succeeded");
                         sendToMachine({type: 'RESOLVE', data: {message: "request succeeded"}, err: null});
                     })
                     .catch((err: FetchServerErrorResponse) => {
-                        Logger.log("Reset password request failed");
+                        logger.log("Reset password request failed");
                         console.log(err)
                         sendToMachine({type: 'REJECT', data: null, err: err});
                     })

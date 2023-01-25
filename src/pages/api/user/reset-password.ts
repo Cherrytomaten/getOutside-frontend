@@ -26,6 +26,11 @@ type ResetPasswordErrorResponse = {
 
 type ForgotPasswordResponse = NextApiResponse<ResetPasswordResponseBody | FetchServerErrorResponse>;
 
+/**
+ * Using the credentials from the email, the user can now reset his password to a new one. This route saves the newly set password string.
+ * @param _req containing the confirmation data & new password in the body
+ * @param res containing a short success message in the body or an error response
+ */
 export default async function handler(_req: ResetPasswordRequest, res: ForgotPasswordResponse) {
     // wrong request method
     if (_req.method !== 'PUT') {

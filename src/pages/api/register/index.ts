@@ -21,7 +21,17 @@ type RegisterErrorResponse = {
 
 type RegisterResponse = NextApiResponse<{username: string, email: string} | FetchServerErrorResponse>;
 
+/**
+ * Register a user by adding an entry to the database. The user is not activated at this point.
+ * @param _req containing user data in the body
+ * @param res containing the username & email of the registered user or an error response
+ */
 export default async function handler(_req: RegisterRequest, res: RegisterResponse) {
+    // wrong request method
+    if (_req.method !== 'POST') {
+        return res.status(405).json({errors: { message: 'Given request method is not allowed here.' } });
+    }
+
     return await axios.post('https://cherrytomaten.herokuapp.com/authentication/user/create/', {
         "username": _req.body.user.username,
         "password": _req.body.user.password,

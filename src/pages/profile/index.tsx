@@ -9,7 +9,7 @@ import { GetServerSidePropsContext } from 'next';
 import axios, { AxiosResponse } from 'axios';
 import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
 import { BackendErrorResponse } from '@/types/Backend/BackendErrorResponse';
-import { Logger } from '@/util/logger';
+import { logger } from '@/util/logger';
 
 type UserDataServerResponseProps = {
   username: string;
@@ -46,7 +46,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         },
       })
       .then((_res: UserDataServerResponse) => {
-        Logger.log('resdata: ', _res.data);
+        logger.log('resdata: ', _res.data);
         return {
           props: {
             username: _res.data.username,

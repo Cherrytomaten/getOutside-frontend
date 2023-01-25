@@ -5,9 +5,10 @@ import { deleteCookies, getCookie, setCookies } from "@/util/cookieManager";
 import { ACTIVE_CATEGORIES, AUTH_REFRESH_TOKEN, AUTH_TOKEN, RADIUS_FILTER } from "@/types/constants";
 import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 import { UserAuthProps } from "@/types/User";
-import { Logger } from "@/util/logger";
+import { logger } from "@/util/logger";
 import { WrapperServerErrorResponse } from "@/types/Server/WrapperServerErrorResponse";
 import { ResetPasswordProps } from "@/types/User/ResetPasswordProps";
+import { UserDataProps } from "@/types/User/UserDataProps";
 
 
 /**
@@ -48,6 +49,20 @@ class UserAuthRepo implements IUserAuthRepo {
       .catch((err: WrapperServerErrorResponse) => {
         return Promise.reject(err.response.data);
       });
+  }
+
+  /**
+   * Repo function to fetch detailed information about the currently logged-in user.
+   * @returns detailed user information
+   */
+  public async getUserData(): Promise<UserDataProps> {
+    return await axios.get('/api/get-data/')
+        .then((res: { data: UserDataProps }) => {
+          return Promise.resolve(res.data);
+        })
+        .catch((err: WrapperServerErrorResponse) => {
+          return Promise.reject(err.response.data);
+        })
   }
 
   /**
@@ -160,12 +175,12 @@ class UserAuthRepo implements IUserAuthRepo {
       refreshToken: refToken
     })
         .then((_res) => {
-          Logger.log('Refresh token revoked successfully.');
+          logger.log('Refresh token revoked successfully.');
         })
         .catch((_err: WrapperServerErrorResponse) => {
-          Logger.log('Error while trying to revoke token:', _err.response.data.message);
+          logger.log('Error while trying to revoke token:', _err.response.data.message);
         })
   }
 }
 
-export { UserAuthRepo };
+export const UserRepoClass = new UserAuthRepo();
