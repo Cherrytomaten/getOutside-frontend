@@ -5,7 +5,7 @@ import { deleteCookies, getCookie, setCookies } from "@/util/cookieManager";
 import { ACTIVE_CATEGORIES, AUTH_REFRESH_TOKEN, AUTH_TOKEN, RADIUS_FILTER } from "@/types/constants";
 import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 import { UserAuthProps } from "@/types/User";
-import { Logger } from "@/util/logger";
+import { logger } from "@/util/logger";
 import { WrapperServerErrorResponse } from "@/types/Server/WrapperServerErrorResponse";
 import { ResetPasswordProps } from "@/types/User/ResetPasswordProps";
 import { UserDataProps } from "@/types/User/UserDataProps";
@@ -175,10 +175,10 @@ class UserAuthRepo implements IUserAuthRepo {
       refreshToken: refToken
     })
         .then((_res) => {
-          Logger.log('Refresh token revoked successfully.');
+          logger.log('Refresh token revoked successfully.');
         })
         .catch((_err: WrapperServerErrorResponse) => {
-          Logger.log('Error while trying to revoke token:', _err.response.data.message);
+          logger.log('Error while trying to revoke token:', _err.response.data.message);
         })
   }
 }

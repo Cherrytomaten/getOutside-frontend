@@ -7,7 +7,7 @@ import LogoNew from "@/resources/svg/Logo_new";
 import { AnimatePresence, motion } from "framer-motion";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useMachine } from "@xstate/react";
-import { Logger } from "@/util/logger";
+import { logger } from "@/util/logger";
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 import { createGenericStateMachine } from "@/machines/genericMachine";
 import { ResetPasswordProps } from "@/types/User/ResetPasswordProps";
@@ -42,11 +42,11 @@ function ResetPassword() {
                     password2: event.payload.password2
                 })
                     .then((_res) => {
-                        Logger.log("Reset password request succeeded");
+                        logger.log("Reset password request succeeded");
                         sendToMachine({type: 'RESOLVE', data: {message: "request succeeded"}, err: null});
                     })
                     .catch((err: FetchServerErrorResponse) => {
-                        Logger.log("Reset password request failed");
+                        logger.log("Reset password request failed");
                         console.log(err)
                         sendToMachine({type: 'REJECT', data: null, err: err});
                     })

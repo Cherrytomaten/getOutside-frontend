@@ -1,4 +1,4 @@
-import { Logger } from "@/util/logger";
+import { logger } from "@/util/logger";
 import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 
 type RawTokenPayload = {
@@ -20,7 +20,7 @@ function tokenDecompiler(token: string): TokenPayload | null {
     const buffer = new Buffer(payload[1], 'base64');
     const tokenData: RawTokenPayload = JSON.parse(buffer.toString('ascii'));
 
-    Logger.log("decompiled token:", tokenData);
+    logger.log("decompiled token:", tokenData);
     return { type: tokenData.token_type, token: token, expiration: Number(tokenData.exp), userId: tokenData.user_uuid };
 }
 
