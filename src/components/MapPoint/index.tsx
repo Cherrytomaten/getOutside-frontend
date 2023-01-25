@@ -21,9 +21,9 @@ function MapPoint({ ...props }: MapPointProps) {
   const [expandDesc, setExpandDesc] = useState<boolean>(false); // boolean to open the description
   const [descSize, setDescSize] = useState<number>(0); // description size - workaround for the arrow to show right
   const [showRating, setShowRating] = useState<boolean>(false);
-  const [comments, setComments] = useState(null);
+  const [comments, setComments] = useState<number[]>([]);
   const [comment, setComment] = useState('');
-  const commentArray = props.comments;
+  const commentArray: CommentProps[] = props.comments;
 
   // automatically scroll down if a new comment appears
   // neglect this behavior on first mounting of component
@@ -99,19 +99,19 @@ function MapPoint({ ...props }: MapPointProps) {
     }
   }
 
-  async function addComment(comment: String) {
+  async function addComment(comment: string) {
     await UserRepoClass.getUserData().then((res: any) => {
       // console.log(res.access.type);
       console.log(res);
       console.log(res.username);
       // console.log(res.userId);
 
-      const messageObj = {
+      const messageObj: CommentProps = {
         author: res.username,
         text: comment,
       };
       const newCommentsArray = commentArray.unshift(messageObj);
-      setComments(newCommentsArray);
+      setComments([newCommentsArray]);
     });
   }
 
@@ -281,7 +281,7 @@ function MapPoint({ ...props }: MapPointProps) {
                   onChange={handleChange}
                   onKeyDown={handleKeyDown}
                   placeholder="Add a comment..."
-                  rows="1"
+                  // rows="1"
                 ></textarea>
                 <input
                   type="submit"
