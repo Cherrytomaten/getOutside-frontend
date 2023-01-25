@@ -5,7 +5,7 @@ import { PasswordInput } from '../PasswordInput';
 import { AnimatePresence, motion } from 'framer-motion';
 import axios from 'axios';
 import { convertBase64 } from '@/util/convertToBase64';
-import { Logger } from '@/util/logger';
+import { logger } from '@/util/logger';
 import { imgCompressor } from "@/util/imgCompressor";
 
 type ValidateProps = {
@@ -91,7 +91,7 @@ function ProfilePage({ ...props }: ProfileProps) {
       // TODO: functionality to renew user password
       (document.getElementById('set-password') as HTMLInputElement).value = '';
       setChangePw({ ...changePw, data: '', message: message, err: '' });
-      Logger.log('user password changed successfully.');
+      logger.log('user password changed successfully.');
     }
   }
 
@@ -127,7 +127,7 @@ function ProfilePage({ ...props }: ProfileProps) {
             message: 'Firstname changed successfully!',
             err: '',
           });
-          Logger.log('Success');
+          logger.log('Success');
         })
         .catch((_err: any) => {
           setChangeFname({
@@ -137,7 +137,7 @@ function ProfilePage({ ...props }: ProfileProps) {
             err: 'Internal Server error occured.',
           });
 
-          Logger.log('Error');
+          logger.log('Error');
         });
     }
   }
@@ -152,7 +152,7 @@ function ProfilePage({ ...props }: ProfileProps) {
     }
 
     if (e.target.files.length > 1) {
-      Logger.log('You can only upload one Picture!');
+      logger.log('You can only upload one Picture!');
       setPPicMessage({
         message: 'You can only upload one Picture!',
         err: true,
@@ -163,7 +163,7 @@ function ProfilePage({ ...props }: ProfileProps) {
     const compressedImage = await imgCompressor(e.target.files[0]);
 
     if (compressedImage.size > 2097152) {
-      Logger.log('file too big', compressedImage.size);
+      logger.log('file too big', compressedImage.size);
       setProfilePic('SizeError');
       setPPicMessage({ message: 'File is too big!', err: true });
       return;
@@ -178,7 +178,7 @@ function ProfilePage({ ...props }: ProfileProps) {
       profilePic
     );
 
-    Logger.log('base64: ', base64Pic);
+    logger.log('base64: ', base64Pic);
 
     return await axios
       .post('/api/user/pfp/set', {
@@ -187,13 +187,13 @@ function ProfilePage({ ...props }: ProfileProps) {
       .then((_res: any) => {
         setProfilePic(null);
         setPPicMessage({ message: '', err: false });
-        Logger.log('Success');
+        logger.log('Success');
         // return Promise.resolve(res.data);
       })
       .catch((_err: any) => {
         setProfilePic(null);
         setPPicMessage({ message: '', err: false });
-        Logger.log('Error');
+        logger.log('Error');
         // return Promise.reject(err.response.data);
       });
   }

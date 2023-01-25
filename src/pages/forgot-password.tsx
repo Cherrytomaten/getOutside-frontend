@@ -1,36 +1,36 @@
 import LogoNew from "@/resources/svg/Logo_new";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { createGenericStateMachine } from "@/machines/genericMachine";
 import { useMachine } from "@xstate/react";
 import Link from "next/link";
-import axios, { AxiosResponse } from "axios";
-import { Logger } from "@/util/logger";
+import { logger } from "@/util/logger";
+import { UserRepoClass } from "@/repos/UserRepo";
+import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
+import { AnimatePresence, motion } from "framer-motion";
 
-type ResetPasswordPayload = {
+type ForgotPasswordPayload = {
     email: string;
 }
 
-type ResetPasswordStateMachineData = {
+type ForgotPasswordStateMachineData = {
     message: string;
 }
 
-const initStateMachine = createGenericStateMachine<ResetPasswordStateMachineData, ResetPasswordPayload>();
+const initStateMachine = createGenericStateMachine<ForgotPasswordStateMachineData, ForgotPasswordPayload>();
 
 function ForgotPassword() {
     const [inputData, setInputData] = useState<string>("");
     const [machineState, sendToMachine] = useMachine(initStateMachine, {
         actions: {
-            pendingFunction: (ctx, event: { type: 'RUN_REQUEST'; payload: ResetPasswordPayload }) => {
-                axios.post('/api/user/reset-password', {
-                    email: event.payload.email
-                })
-                    .then((_res: AxiosResponse) => {
-                        Logger.log("Reset password request succeeded");
+            pendingFunction: (ctx, event: { type: 'RUN_REQUEST'; payload: ForgotPasswordPayload }) => {
+                UserRepoClass.forgotPassword(event.payload.email)
+                    .then((_res) => {
+                        logger.log("Forgot password request succeeded");
                         sendToMachine({ type: 'RESOLVE', data: {message: "request succeeded"}, err: null });
                     })
-                    .catch((err) => {
-                        Logger.log("Reset password request failed");
+                    .catch((err: FetchServerErrorResponse) => {
+                        logger.log("Forgot password request failed");
                         sendToMachine({ type: 'REJECT', data: null, err: err });
                     })
             }
@@ -42,13 +42,26 @@ function ForgotPassword() {
         sendToMachine({ type: 'RUN_REQUEST', payload: { email: inputData } });
     }
 
-    function getSubmitBtnState(): boolean {
-        return inputData.length <= 0;
-    }
+    // reset input field after refresh
+    useEffect(() => {
+        const emailInput: HTMLInputElement | null = document.getElementById("rp-mail-input") as HTMLInputElement;
+        if (emailInput !== null) {
+            emailInput.value = inputData;
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        console.log(inputData);
+        const submitBtn: HTMLInputElement | null = document.getElementById("reset-password-submit") as HTMLInputElement;
+        if (submitBtn !== null) {
+            submitBtn.disabled = inputData.length === 0;
+        }
+    }, [inputData]);
 
     // Obscure possible error from server, where user tried to use an email that has no matching account
     // adjust condition to status code later on, to show possible other server errors.
-    if (machineState.matches('success') || machineState.matches('failure')) {
+    if (machineState.matches('success')) {
         return (
             <main className="w-full h-full min-h-screen flex flex-col justify-start items-center overflow-x-hidden">
                 <div className="w-full h-auto max-h-64 flex justify-center my-14">
@@ -85,6 +98,7 @@ function ForgotPassword() {
                         type="email"
                         className={`border-bright-seaweed hover:border-hovered-seaweed bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
                         onChange={(e) => setInputData(e.target.value)}
+                        value={inputData}
                         placeholder="Email"
                         id="rp-mail-input"
                     />
@@ -93,7 +107,7 @@ function ForgotPassword() {
                     <input
                         type="submit"
                         value="Reset password"
-                        disabled={getSubmitBtnState()}
+                        disabled={false}
                         id="reset-password-submit"
                         className="mq-hover:hover:bg-hovered-seaweed w-full max-w-xs p-2 mb-4 text-dark-sea bg-bright-seaweed rounded-md transition-colors cursor-pointer disabled:bg-darker-sea disabled:cursor-default disabled:hover:bg-darker-sea"
                     />
@@ -101,6 +115,20 @@ function ForgotPassword() {
                         <a className="font-light text-bright-seaweed transition-colors xs:hover:text-hovered-seaweed">Back home</a>
                     </Link>
                 </div>
+                <AnimatePresence>
+                    {machineState.matches('failure') && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ ease: 'easeOut', duration: 0.2 }}
+                        >
+                            <p className="input-error-text mt-3 text-danger">
+                                {machineState.context.err.errors.message}
+                            </p>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
                 {machineState.matches('pending') && <LoadingSpinner />}
             </form>
         </main>

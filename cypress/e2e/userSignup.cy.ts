@@ -62,14 +62,31 @@ describe('check signup form process', () => {
             delete req.headers['if-none-match']
         }).as('registerUser');
 
-        cy.get('#signup-username').type('max1');
-        cy.get('#signup-email').type('email@mail.de');
+        cy.get('#signup-username').type('cypressUser');
+        cy.get('#signup-email').type('neverbeforeusesemail@email.de');
         cy.get('#signup-password').type('imStrong123#');
         cy.get('#signup-password-confirm').type('imStrong123#');
 
         cy.get('#signup-btn-submit').click();
-        cy.wait('@registerUser').its('response.statusCode').should('be.greaterThan', 400);
+        cy.wait('@registerUser').its('response.statusCode').should('be.gte', 400);
         cy.get('.server-fetch-error-text').should('exist');
+        cy.get('.server-fetch-error-text').contains('username already exists');
+    })
+
+    it('should throw an error if the email already exists', () => {
+        cy.intercept('POST', '/api/register**', req => {
+            delete req.headers['if-none-match']
+        }).as('registerUser');
+
+        cy.get('#signup-username').type('superNewUsername');
+        cy.get('#signup-email').type('cypress@email.de');
+        cy.get('#signup-password').type('imStrong123#');
+        cy.get('#signup-password-confirm').type('imStrong123#');
+
+        cy.get('#signup-btn-submit').click();
+        cy.wait('@registerUser').its('response.statusCode').should('be.gte', 400);
+        cy.get('.server-fetch-error-text').should('exist');
+        cy.get('.server-fetch-error-text').contains('email already exists');
     })
 
     /*

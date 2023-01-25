@@ -1,7 +1,7 @@
 import { LatLngExpression } from "leaflet";
 import axios from "axios";
 import { PinProps } from "@/types/Pins";
-import { FetchUserAuthErrorResponseProps } from "@/types/Auth/FetchUserAuthErrorResponseProps";
+import { WrapperServerErrorResponse } from "@/types/Server/WrapperServerErrorResponse";
 
 class PinRepo {
     /**
@@ -10,7 +10,7 @@ class PinRepo {
      * @param radius set radius to search for around the user location
      * @returns a list of all pins that match the requirements.
      */
-    public static async getByRadius(location: LatLngExpression, radius: number): Promise<any> {
+    public async getByRadius(location: LatLngExpression, radius: number): Promise<any> {
         return await axios.get('/api/pins/get', {
             params: {
                 location: location.toString(),
@@ -20,10 +20,10 @@ class PinRepo {
             .then((res: { data: PinProps[] }) => {
                 return Promise.resolve(res.data);
             })
-            .catch((err: FetchUserAuthErrorResponseProps) => {
+            .catch((err: WrapperServerErrorResponse) => {
                 return Promise.reject(err.response.data);
             });
     }
 }
 
-export { PinRepo };
+export const PinRepoClass = new PinRepo();

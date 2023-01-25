@@ -2,13 +2,13 @@ import { LatLngExpression } from "leaflet";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { useMachine } from "@xstate/react";
 import { fetchPinsMachine } from "@/machines/mapPinQuery";
-import { PinRepo } from "@/repos/PinRepo";
+import { PinRepoClass } from "@/repos/PinRepo";
 import { PinProps } from "@/types/Pins";
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 import { setCookie } from "@/util/cookieManager";
 import { ACTIVE_CATEGORIES, RADIUS_FILTER } from "@/types/constants";
 import { ActivityType } from "@/types/Pins/ActivityType";
-import { Logger } from "@/util/logger";
+import { logger } from "@/util/logger";
 
 type useManageMapDataProps = {
     radius: number;
@@ -27,9 +27,9 @@ function useManageMapData({ radius, location, allCats, categoryFilter, setCatFil
             actions: {
                 fetchPins: (ctx, event: { type: 'FETCH_PINS'; payload: { location: LatLngExpression, radius: number };
                 }) => {
-                    PinRepo.getByRadius(event.payload.location, event.payload.radius).then(
+                    PinRepoClass.getByRadius(event.payload.location, event.payload.radius).then(
                         (res: PinProps[]) => {
-                            Logger.log(`Queried ${res.length} Pins.`);
+                            logger.log(`Queried ${res.length} Pins.`);
                             sendToPinQueryMachine({
                                 type: 'RESOLVE',
                                 pins: res,
@@ -44,7 +44,7 @@ function useManageMapData({ radius, location, allCats, categoryFilter, setCatFil
                                 message = err.errors.message;
                             }
 
-                            Logger.log('Failed to query pins:', message);
+                            logger.log('Failed to query pins:', message);
                             sendToPinQueryMachine({
                                 type: 'REJECT',
                                 err: message,

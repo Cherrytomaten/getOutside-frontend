@@ -10,6 +10,11 @@ type PinsApiRequest = NextApiRequest & {
     }
 }
 
+/**
+ * Get all pins that are in the selected range
+ * @param _req containing the location lat/long and the desired radius in the header
+ * @param res containing an array in the body, filled with pins
+ */
 export default function handler(_req: PinsApiRequest, res: NextApiResponse) {
     // wrong request method
     if (_req.method !== 'GET') {

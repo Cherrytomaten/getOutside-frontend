@@ -27,7 +27,11 @@ const createGenericStateMachine = <T, W>() => createMachine<GenericStateMachineC
             }
         },
         success: { type: 'final' },
-        failure: { type: 'final' }
+        failure: {
+            on: {
+                RUN_REQUEST: 'pending'
+            }
+        },
     },
 }, {
     actions: {
@@ -38,7 +42,7 @@ const createGenericStateMachine = <T, W>() => createMachine<GenericStateMachineC
 
         setErrorMessage: assign((_ctx, event: any) => ({
             err: event.err,
-        })),
+        }))
     },
 });
 
