@@ -56,7 +56,7 @@ class UserAuthRepo implements IUserAuthRepo {
    * @returns detailed user information
    */
   public async getUserData(): Promise<UserDataProps> {
-    return await axios.get('/api/get-data/')
+    return await axios.get('/api/user/get-data')
         .then((res: { data: UserDataProps }) => {
           return Promise.resolve(res.data);
         })
