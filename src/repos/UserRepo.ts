@@ -54,7 +54,8 @@ class UserAuthRepo implements IUserAuthRepo {
    * @returns the complete userdata with username etc. aswell as a JWT, refresh token & expiration date
    */
   public async getUserByToken(): Promise<UserAuthProps> {
-    return await axios.get('/api/auth/by-token')
+    return await axios
+      .get('/api/auth/by-token')
       .then((res: FetchUserAuthResponseProps) => {
         setCookies([
           {
@@ -75,6 +76,26 @@ class UserAuthRepo implements IUserAuthRepo {
       });
   }
 
+  public async getUserData(authAccessToken: any): Promise<any> {
+    console.log('authAccessToken', authAccessToken);
+    //  const authToken: TokenPayload = JSON.parse(authAccessToken);
+    //  console.log('authToken', authToken);
+    // console.log('authToken', authToken); n
+    return await axios
+      .get('https://cherrytomaten.herokuapp.com/authentication/user/' , {
+        headers: {
+            'Authorization': 'Bearer ' + authAccessToken.token
+        }
+    })
+      .then((res: FetchUserAuthResponseProps) => {
+
+        return Promise.resolve(res);
+      })
+      .catch((err: FetchUserAuthErrorResponseProps) => {
+        return Promise.reject(err);
+      });
+  }
+
   /**
    * Repo function to refresh the existing token with its refresh token.
    * @param refToken the refresh token queried from the user cookies
@@ -83,7 +104,7 @@ class UserAuthRepo implements IUserAuthRepo {
   public async refreshToken(refToken: TokenPayload): Promise<UserAuthProps> {
     return await axios
       .post('/api/auth/refresh-token', {
-        refreshToken: refToken
+        refreshToken: refToken,
       })
       .then((res: FetchUserAuthResponseProps) => {
         setCookies([
@@ -111,17 +132,26 @@ class UserAuthRepo implements IUserAuthRepo {
    */
   public logout() {
     const refToken = getCookie(AUTH_REFRESH_TOKEN);
-    deleteCookies([AUTH_TOKEN, AUTH_REFRESH_TOKEN, ACTIVE_CATEGORIES, RADIUS_FILTER]);
+    deleteCookies([
+      AUTH_TOKEN,
+      AUTH_REFRESH_TOKEN,
+      ACTIVE_CATEGORIES,
+      RADIUS_FILTER,
+    ]);
 
-    axios.post('/api/auth/revoke', {
-      refreshToken: refToken
-    })
-        .then((_res) => {
-          Logger.log('Refresh token revoked successfully.');
-        })
-        .catch((_err: FetchUserAuthErrorResponseProps) => {
-          Logger.log('Error while trying to revoke token:', _err.response.data.message);
-        })
+    axios
+      .post('/api/auth/revoke', {
+        refreshToken: refToken,
+      })
+      .then((_res) => {
+        Logger.log('Refresh token revoked successfully.');
+      })
+      .catch((_err: FetchUserAuthErrorResponseProps) => {
+        Logger.log(
+          'Error while trying to revoke token:',
+          _err.response.data.message
+        );
+      });
   }
 }
 
