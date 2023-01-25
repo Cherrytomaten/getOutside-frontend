@@ -1,7 +1,7 @@
 import { LatLngExpression } from "leaflet";
 import axios from "axios";
 import { PinProps } from "@/types/Pins";
-import { FetchUserAuthErrorResponseProps } from "@/types/Auth/FetchUserAuthErrorResponseProps";
+import { WrapperServerErrorResponse } from "@/types/Server/WrapperServerErrorResponse";
 
 class PinRepo {
     /**
@@ -20,7 +20,7 @@ class PinRepo {
             .then((res: { data: PinProps[] }) => {
                 return Promise.resolve(res.data);
             })
-            .catch((err: FetchUserAuthErrorResponseProps) => {
+            .catch((err: WrapperServerErrorResponse) => {
                 return Promise.reject(err.response.data);
             });
     }

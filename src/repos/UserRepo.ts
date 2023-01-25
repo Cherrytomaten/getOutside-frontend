@@ -1,12 +1,13 @@
 import { IUserAuthRepo } from "@/types/Repo/IUserAuthRepo";
 import axios from "axios";
 import { FetchUserAuthResponseProps } from "@/types/Auth/FetchUserAuthResponseProps";
-import { FetchUserAuthErrorResponseProps } from "@/types/Auth/FetchUserAuthErrorResponseProps";
 import { deleteCookies, getCookie, setCookies } from "@/util/cookieManager";
 import { ACTIVE_CATEGORIES, AUTH_REFRESH_TOKEN, AUTH_TOKEN, RADIUS_FILTER } from "@/types/constants";
 import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 import { UserAuthProps } from "@/types/User";
 import { Logger } from "@/util/logger";
+import { WrapperServerErrorResponse } from "@/types/Server/WrapperServerErrorResponse";
+import { ResetPasswordProps } from "@/types/User/ResetPasswordProps";
 
 
 /**
@@ -44,7 +45,7 @@ class UserAuthRepo implements IUserAuthRepo {
         ]);
         return Promise.resolve(res.data);
       })
-      .catch((err: FetchUserAuthErrorResponseProps) => {
+      .catch((err: WrapperServerErrorResponse) => {
         return Promise.reject(err.response.data);
       });
   }
@@ -70,7 +71,7 @@ class UserAuthRepo implements IUserAuthRepo {
         ]);
         return Promise.resolve(res.data);
       })
-      .catch((err: FetchUserAuthErrorResponseProps) => {
+      .catch((err: WrapperServerErrorResponse) => {
         return Promise.reject(err.response.data);
       });
   }
@@ -100,10 +101,52 @@ class UserAuthRepo implements IUserAuthRepo {
         ]);
         return Promise.resolve(res.data);
       })
-      .catch((err: FetchUserAuthErrorResponseProps) => {
+      .catch((err: WrapperServerErrorResponse) => {
         deleteCookies([AUTH_TOKEN, AUTH_REFRESH_TOKEN]);
         return Promise.reject(err.response.data);
       });
+  }
+
+  /**
+   * Repo function to send an email, to reset the user's password.
+   * @param email email that belongs to the users account
+   * @returns either void on success or an error message.
+   */
+  public async forgotPassword(email: string): Promise<void | WrapperServerErrorResponse> {
+    return await axios.post('/api/user/forgot-password', {
+      email: email
+    })
+        .then((_res) => {
+          return Promise.resolve();
+        })
+        .catch((err: WrapperServerErrorResponse) => {
+          return Promise.reject(err.response.data);
+        })
+  }
+
+  /**
+   * Repo function to change a users password to the newly provided password.
+   * @param user_id id of the user
+   * @param user_mail email of the user
+   * @param confirmation_token generated confirmation token for the user
+   * @param password new password string
+   * @param password2 new password string confirmation (identical duplicate)
+   * @returns either void on success or an error message.
+   */
+  public async resetPassword({ user_id, user_mail, confirmation_token, password, password2 }: ResetPasswordProps): Promise<void | WrapperServerErrorResponse> {
+    return await axios.put('/api/user/reset-password', {
+      user_id: user_id,
+      user_mail: user_mail,
+      confirmation_token: confirmation_token,
+      password: password,
+      password2: password2
+    })
+        .then((_res) => {
+          return Promise.resolve();
+        })
+        .catch((err: WrapperServerErrorResponse) => {
+          return Promise.reject(err.response.data);
+        })
   }
 
   /**
@@ -119,7 +162,7 @@ class UserAuthRepo implements IUserAuthRepo {
         .then((_res) => {
           Logger.log('Refresh token revoked successfully.');
         })
-        .catch((_err: FetchUserAuthErrorResponseProps) => {
+        .catch((_err: WrapperServerErrorResponse) => {
           Logger.log('Error while trying to revoke token:', _err.response.data.message);
         })
   }

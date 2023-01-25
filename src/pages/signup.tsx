@@ -93,8 +93,8 @@ function Signup() {
     }
 
     // successfull sign up page render
-    if (registerUserState.matches('success') && registerUserState.context.user?.username !== null) {
-        return (<SuccessfullSignup username={registerUserState.context.user?.username} />);
+    if (registerUserState.matches('success') && registerUserState.context.user?.username !== null && registerUserState.context.user?.email !== null) {
+        return (<SuccessfullSignup username={registerUserState.context.user.username} email={registerUserState.context.user.email} />);
     }
 
     return (

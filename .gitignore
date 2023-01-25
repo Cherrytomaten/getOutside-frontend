@@ -28,6 +28,7 @@ yarn-error.log*
 test.http
 src/pages/Playground.tsx
 html.html
+test.html
 
 # local env files
 .env*.local
