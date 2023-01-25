@@ -52,8 +52,9 @@ function MapPoint({ ...props }: MapPointProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [counter]);
 
-  function getUser() {
-    UserRepoClass.getUserByToken().then((res) => {
+  async function getUserName() {
+    await UserRepoClass.getUserByToken().then((res) => {
+      UserRepoClass.getUserData(res.access);
       console.log(res.access.type);
       console.log(res);
       console.log(res.userId);
@@ -125,7 +126,7 @@ function MapPoint({ ...props }: MapPointProps) {
   }
 
   function addComment(comment: any): void {
-    getUser();
+    getUserName();
     const messageObj = {
       // display real author name ????
       author: 'ʕ•́ᴥ•̀ʔっ',
