@@ -93,26 +93,6 @@ class UserAuthRepo implements IUserAuthRepo {
       });
   }
 
-  // public async getUserData(authAccessToken: any): Promise<any> {
-  //   console.log('authAccessToken', authAccessToken);
-  //   //  const authToken: TokenPayload = JSON.parse(authAccessToken);
-  //   //  console.log('authToken', authToken);
-  //   // console.log('authToken', authToken); n
-  //   return await axios
-  //     .get('https://cherrytomaten.herokuapp.com/authentication/user/' , {
-  //       headers: {
-  //           'Authorization': 'Bearer ' + authAccessToken.token
-  //       }
-  //   })
-  //     .then((res: FetchUserAuthResponseProps) => {
-
-  //       return Promise.resolve(res);
-  //     })
-  //     .catch((err: FetchUserAuthErrorResponseProps) => {
-  //       return Promise.reject(err);
-  //     });
-  // }
-
   /**
    * Repo function to refresh the existing token with its refresh token.
    * @param refToken the refresh token queried from the user cookies

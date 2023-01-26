@@ -10,7 +10,7 @@ import { UserRepoClass } from '@/repos/UserRepo';
 import { AuthStateMachine } from '@/types/Auth';
 import { getSelectorsByUserAgent } from 'react-device-detect';
 import { UserAuthProps } from '@/types/User';
-import { Logger } from '@/util/logger';
+import { logger } from '@/util/logger';
 
 function MapPoint({ ...props }: MapPointProps) {
   // Review
@@ -80,15 +80,19 @@ function MapPoint({ ...props }: MapPointProps) {
   const handleSubmit = async (event: any) => {
     //clear textArea with ID ????
     event.preventDefault();
-    const uuid = props.uuid;
+    const mappointPin_id = props.uuid;
     if (comment)
       try {
-        addComment(comment);
+        const text = comment;
+        addComment(text);
         setComment('');
-        const response = await axios.post('/api/comments', { comment, uuid });
-        console.log(response.data);
+        const response = await axios.post('/api/comments', {
+          text,
+          mappointPin_id,
+        });
+        logger.log(response.data);
       } catch (err) {
-        console.error(err);
+        logger.log(err);
       }
   };
 
@@ -101,11 +105,6 @@ function MapPoint({ ...props }: MapPointProps) {
 
   async function addComment(comment: string) {
     await UserRepoClass.getUserData().then((res: any) => {
-      // console.log(res.access.type);
-      console.log(res);
-      console.log(res.username);
-      // console.log(res.userId);
-
       const messageObj: CommentProps = {
         author: res.username,
         text: comment,
