@@ -28,7 +28,7 @@ type RegisterResponse = NextApiResponse<{username: string, email: string} | Fetc
  */
 export default async function handler(_req: RegisterRequest, res: RegisterResponse) {
     // wrong request method
-    if (_req.method !== 'POST') {
+    if (_req.method !== 'GET') {
         return res.status(405).json({errors: { message: 'Given request method is not allowed here.' } });
     }
 
