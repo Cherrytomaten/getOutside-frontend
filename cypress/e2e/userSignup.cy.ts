@@ -63,7 +63,7 @@ describe('check signup form process', () => {
         }).as('registerUser');
 
         cy.get('#signup-username').type('cypressUser');
-        cy.get('#signup-email').type('neverbeforeusesemail@email.de');
+        cy.get('#signup-email').type('neverbeforeusesemail2@email.de');
         cy.get('#signup-password').type('imStrong123#');
         cy.get('#signup-password-confirm').type('imStrong123#');
 
