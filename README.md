@@ -17,8 +17,10 @@ To test our project locally instead on our deployed domain follow these steps:
 `$ git clone https://github.com/Cherrytomaten/getOutside-frontend`
 2. Once the repository is cloned, there will be a `package.json` file in the root of the project, containing all information regarding of the dependencies of this project.<br/> It should be noticed that this project requires [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable) to be runned, as we disabled npm by choice. For further information about the projects dependencies, take a look at the [package.json](https://github.com/Cherrytomaten/getOutside-frontend/blob/main/package.json).
 3. Navigate to the projects directory and run `yarn install` to install all necessary dependencies.
-4. Now the project can be launched with `yarn start`.
+4. Now the project can be launched with `yarn dev`. (this starts the development environment)
 5. The default url/port is `localhost:3000`
+
+To test the project in **production** mode, use `yarn build` first & then run `yarn start`.
 
 ### Deployment
 

@@ -67,7 +67,7 @@ class UserAuthRepo implements IUserAuthRepo {
 
   /**
    * Repo function to log in an existing user based on the cookie token that was found
-   * @returns the complete userdata with username etc. aswell as a JWT, refresh token & expiration date
+   * @returns the complete userdata with username etc. as well as a JWT, refresh token & expiration date
    */
   public async getUserByToken(): Promise<UserAuthProps> {
     return await axios.get('/api/auth/by-token')
@@ -178,7 +178,7 @@ class UserAuthRepo implements IUserAuthRepo {
           logger.log('Refresh token revoked successfully.');
         })
         .catch((_err: WrapperServerErrorResponse) => {
-          logger.log('Error while trying to revoke token:', _err.response.data.message);
+          logger.log('Error while trying to revoke token:', _err.response.data.errors.message);
         })
   }
 }
