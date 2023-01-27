@@ -586,16 +586,32 @@ function EditProfile(profileProps: EditProfileProps) {
               Change Personal Information
             </button>
             <div className="text-center">
-              {submitPDMsg.err !== '' && (
-                <p className="submit-error-text mt-1 text-danger">
-                  {submitPDMsg.err}
-                </p>
-              )}
-              {submitPDMsg.success !== '' && (
-                <p className="submit-success-text mt-1 text-bright-seaweed">
-                  {submitPDMsg.success}
-                </p>
-              )}
+              <AnimatePresence>
+                {submitPDMsg.err !== '' && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ ease: 'easeOut', duration: 0.2 }}
+                  >
+                    <p className="input-error-text mt-1 text-danger">
+                      {submitPDMsg.err}
+                    </p>
+                  </motion.div>
+                )}
+                {submitPDMsg.success !== '' && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ ease: 'easeOut', duration: 0.2 }}
+                  >
+                    <p className="submit-success-text mt-1 text-bright-seaweed">
+                      {submitPDMsg.success}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </section>
@@ -757,16 +773,32 @@ function EditProfile(profileProps: EditProfileProps) {
               Change Password
             </button>
             <div className="text-center">
-              {submitPWMsg.err !== '' && (
-                <p className="submit-error-text mt-1 text-danger">
-                  {submitPWMsg.err}
-                </p>
-              )}
-              {submitPWMsg.success !== '' && (
-                <p className="submit-success-text mt-1 text-bright-seaweed">
-                  {submitPWMsg.success}
-                </p>
-              )}
+              <AnimatePresence>
+                {submitPWMsg.err !== '' && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ ease: 'easeOut', duration: 0.2 }}
+                  >
+                    <p className="input-error-text mt-1 text-danger">
+                      {submitPWMsg.err}
+                    </p>
+                  </motion.div>
+                )}
+                {submitPWMsg.success !== '' && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ ease: 'easeOut', duration: 0.2 }}
+                  >
+                    <p className="submit-success-text mt-1 text-bright-seaweed">
+                      {submitPWMsg.success}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </section>
