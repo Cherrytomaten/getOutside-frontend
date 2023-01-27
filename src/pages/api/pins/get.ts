@@ -5,6 +5,8 @@ import { PinProps } from "@/types/Pins";
 import axios from 'axios';
 import { logger } from '@/util/logger';
 import { BackendErrorResponse } from '@/types/Backend/BackendErrorResponse';
+import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
+import { AUTH_TOKEN } from '@/types/constants';
 
 type PinsApiRequest = NextApiRequest & {
   query: {
@@ -25,8 +27,21 @@ export default async function handler(
   }
 
   try {
+    const authTokenString = _req.cookies[AUTH_TOKEN];
+    if (authTokenString === undefined || authTokenString === 'undefined') {
+      return res
+        .status(400)
+        .json({ errors: { message: 'Wrong token format.' } });
+    }
+
+    const authToken: TokenPayload = JSON.parse(authTokenString);
+
     return await axios
-      .get('https://cherrytomaten.herokuapp.com/api/mappoint')
+      .get('https://cherrytomaten.herokuapp.com/api/mappoint', {
+        headers: {
+          Authorization: 'Bearer ' + authToken.token,
+        },
+      })
       .then((_res: any) => {
         logger.log('Mappoints response data: ', _res.data);
         let pins: PinProps[] = _res.data;
@@ -55,7 +70,7 @@ export default async function handler(
           .json({ errors: { message: err.response.data.detail } });
       });
   } catch (_err) {
-    console.log('Error fetching mappoints: ', _err);
+    logger.log('Error fetching mappoints: ', _err);
     return res
       .status(400)
       .json({ errors: { message: 'Error fetching mappoints.' } });

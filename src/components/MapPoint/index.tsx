@@ -87,7 +87,7 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
   const handleSubmit = async (event: any) => {
     //clear textArea with ID ????
     event.preventDefault();
-    const mappointPin_id = props.uuid;
+    const mappointPin_id = props.id;
     if (comment)
       try {
         const text = comment;

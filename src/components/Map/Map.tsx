@@ -53,12 +53,12 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
 
             <div>
                 {fetchPinDataQueryState.context.pins.map((pinElemData: PinProps) => {
-                  //   if (
-                  //     pinElemData.category === null ||
-                  //     !categoryFilter.includes(pinElemData.category)
-                  //   ) {
-                  //     return null;
-                  //   }
+                    if (
+                      pinElemData.category === null ||
+                      !categoryFilter.includes(pinElemData.category)
+                    ) {
+                      return null;
+                    }
 
                   return (
                     <div key={pinElemData.id + '-marker-id'}>
