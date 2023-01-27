@@ -3,23 +3,13 @@ import { AUTH_TOKEN } from '@/types/constants';
 import axios, { AxiosResponse } from 'axios';
 import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
 import { BackendErrorResponse } from '@/types/Backend/BackendErrorResponse';
+import { Logger } from '@/util/logger';
 
-type UserDataChangeServerResponseProps = {
-  username: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-};
-
-type UserDataChangeServerResponse =
-  AxiosResponse<UserDataChangeServerResponseProps>;
-
-type ChangeDataRequest = NextApiRequest & {
+type ChangePasswordRequest = NextApiRequest & {
   body: {
-    username: string;
-    email: string;
-    first_name: string;
-    last_name: string;
+    password: string;
+    new_password: string;
+    new_password2: string;
   };
 };
 
@@ -30,7 +20,7 @@ type ChangeDataRequest = NextApiRequest & {
  * @param res returns OK status or error message
  */
 export default async function handler(
-  _req: ChangeDataRequest,
+  _req: ChangePasswordRequest,
   res: NextApiResponse
 ) {
   // wrong request method
@@ -52,12 +42,11 @@ export default async function handler(
 
     return await axios
       .put(
-        `https://cherrytomaten.herokuapp.com/authentication/user/data/${authToken.userId}/`,
+        `https://cherrytomaten.herokuapp.com/authentication/user/password/${authToken.userId}/`,
         {
-          username: _req.body.username,
-          email: _req.body.email,
-          first_name: _req.body.first_name,
-          last_name: _req.body.last_name,
+          old_password: _req.body.password,
+          password: _req.body.new_password,
+          password2: _req.body.new_password2,
         },
         {
           headers: {
@@ -65,11 +54,12 @@ export default async function handler(
           },
         }
       )
-      .then((_res: UserDataChangeServerResponse) => {
+      .then((_res: AxiosResponse) => {
         return res.status(_res.status).end();
       })
       .catch((err: BackendErrorResponse) => {
-        if (err.response?.data?.detail === undefined) {
+        Logger.log('error response:', err.response);
+        if (err.response?.data === undefined) {
           return res
             .status(err.response?.status ? err.response?.status : 500)
             .json({ errors: { message: 'A server error occured.' } });
@@ -81,6 +71,6 @@ export default async function handler(
   } catch (_err) {
     return res
       .status(400)
-      .json({ errors: { message: 'Could not update user data.' } });
+      .json({ errors: { message: 'Could not update user password.' } });
   }
 }

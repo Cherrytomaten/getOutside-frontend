@@ -46,7 +46,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         },
       })
       .then((_res: UserDataServerResponse) => {
-        Logger.log('resdata: ', _res.data);
+        Logger.log('page props from server: ', _res.data);
         return {
           props: {
             username: _res.data.username,
@@ -60,17 +60,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       .catch((_err: BackendErrorResponse) => {
         throw new Error('Internal Server Error.');
       });
-  } catch (err) {
-    console.log('Error requesting profile page: ', err);
+  } catch (err: any) {
+    Logger.log('Error requesting profile page:', err);
     return {
-      //notFound: true,
-      props: {
-        username: "username",
-        fname: "first_name",
-        lname: "last_name",
-        email: "email@adress",
-        pic: "picture_url",
-      },
+      notFound: true,
     };
   }
 }
@@ -80,7 +73,6 @@ function Profile({ ...userPayload }: ProfileProps) {
   const authenticationHook = useUserAuth();
   const { fetchUserAuthState } = useAuth();
 
-  /*
   useEffect(() => {
     if (!authenticationHook.authStatus) {
       router.push('/login');
@@ -90,8 +82,6 @@ function Profile({ ...userPayload }: ProfileProps) {
   if (fetchUserAuthState.context.user === null) {
     return <LoadingSpinner />;
   }
-
-   */
 
   return (
     <ProfilePage
