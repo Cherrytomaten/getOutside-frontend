@@ -10,7 +10,7 @@ type RevokeRequest = NextApiRequest & {
 }
 
 /**
- * Puts the cookied refresh token on a blacklist, so it becomes unusable
+ * Put the cookied refresh token on a blacklist, so it becomes unusable
  * @param _req expects a body with the auth refresh token inside.
  * @param res on success returns void.
  */

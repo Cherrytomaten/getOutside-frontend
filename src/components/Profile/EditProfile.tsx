@@ -1,6 +1,6 @@
 import { ValidateProps } from '@/types/Auth/ValidateProps';
 import { ProfileProps } from '@/types/Profile/ProfileProps';
-import { Logger } from '@/util/logger';
+import { logger } from '@/util/logger';
 import { validatePassword } from '@/util/passwordValidator';
 import axios, { AxiosResponse } from 'axios';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -305,7 +305,7 @@ function EditProfile(profileProps: EditProfileProps) {
           }
         })
         .catch((err: any) => {
-          Logger.log(
+          logger.log(
             'Submitting Error occured:',
             err.response.data.errors.message
           );
@@ -367,7 +367,7 @@ function EditProfile(profileProps: EditProfileProps) {
           }
         })
         .catch((err: any) => {
-          Logger.log(
+          logger.log(
             'Submitting Error occured:',
             err.response.data.errors.message
           );

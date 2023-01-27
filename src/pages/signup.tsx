@@ -124,15 +124,10 @@ function Signup() {
     return <LoadingSpinner />;
   }
 
-  // successfull sign up page render
-  if (
-    registerUserState.matches('success') &&
-    registerUserState.context.user?.username !== null
-  ) {
-    return (
-      <SuccessfullSignup username={registerUserState.context.user?.username} />
-    );
-  }
+    // successfull sign up page render
+    if (registerUserState.matches('success') && registerUserState.context.user?.username !== null && registerUserState.context.user?.email !== null) {
+        return (<SuccessfullSignup username={registerUserState.context.user.username} email={registerUserState.context.user.email} />);
+    }
 
   return (
     <main className="w-full h-full min-h-screen flex flex-col justify-start items-center overflow-x-hidden">

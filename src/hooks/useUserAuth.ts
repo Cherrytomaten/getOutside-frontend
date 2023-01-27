@@ -2,7 +2,7 @@ import { getCookie } from "@/util/cookieManager";
 import { AUTH_REFRESH_TOKEN, AUTH_TOKEN } from "@/types/constants";
 import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { Logger } from "@/util/logger";
+import { logger } from "@/util/logger";
 import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 
 
@@ -24,7 +24,7 @@ function useUserAuth() {
             return;
         }
 
-        Logger.log("trying to validate user...");
+        logger.log("trying to validate user...");
         const tokenCookie = getCookie(AUTH_TOKEN);
         if (tokenCookie !== null) {
             sendToUserAuthMachine({type: 'FETCH_AUTH_USER', payload: {byToken: true}});
@@ -62,7 +62,7 @@ function useUserAuth() {
             const refTokenString = getCookie(AUTH_REFRESH_TOKEN);
             if (refTokenString !== undefined && refTokenString !== null) {
                 const refToken: TokenPayload = JSON.parse(refTokenString);
-                Logger.log("Starting token watchExpiration. Days until exp:", Math.floor(refToken.expiration / (24 * 60 * 60 * 1000)));
+                logger.log("Starting token watchExpiration. Days until exp:", Math.floor(refToken.expiration / (24 * 60 * 60 * 1000)));
                 watchExpiration(refToken.expiration, refToken);
             }
 

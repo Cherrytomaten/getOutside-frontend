@@ -2,10 +2,11 @@ import { useUserAuth } from '@/hooks/useUserAuth';
 import Link from 'next/link';
 import { useState } from 'react';
 import axios from 'axios';
-import { Logger } from '@/util/logger';
+import { logger } from '@/util/logger';
 import { ContentPopup } from '@/components/ContentPopup';
 import { EditProfile } from '@/components/Profile/EditProfile';
 import { ProfileProps } from '@/types/Profile/ProfileProps';
+import { imgCompressor } from '@/util/imgCompressor';
 
 function ProfilePage({ ...props }: ProfileProps) {
   // Logout
@@ -33,7 +34,7 @@ function ProfilePage({ ...props }: ProfileProps) {
   });
   const [showEditPopup, setShowEditPopup] = useState<boolean>(false);
 
-  function handlePictureInputChange(e: any) {
+  async function handlePictureInputChange(e: any) {
     if (
       e === undefined ||
       e.target.files === undefined ||
@@ -43,16 +44,16 @@ function ProfilePage({ ...props }: ProfileProps) {
     }
 
     if (e.target.files[0].size > 3145720) {
-      Logger.log('file too big');
+      logger.log('file too big');
       setProfilePic('SizeError');
       setPPicMessage({ message: 'File is too big!', err: true });
       return;
     }
 
-    Logger.log(e.target.files[0]);
+    logger.log(e.target.files[0]);
 
     if (e.target.files.length > 1) {
-      Logger.log('You can only upload one Picture!');
+      logger.log('You can only upload one Picture!');
       setPPicMessage({
         message: 'You can only upload one Picture!',
         err: true,
@@ -60,7 +61,16 @@ function ProfilePage({ ...props }: ProfileProps) {
       return;
     }
 
-    setProfilePic(e.target.files[0]);
+    const compressedImage = await imgCompressor(e.target.files[0]);
+
+    if (compressedImage.size > 2097152) {
+      logger.log('file too big', compressedImage.size);
+      setProfilePic('SizeError');
+      setPPicMessage({ message: 'File is too big!', err: true });
+      return;
+    }
+
+    setProfilePic(compressedImage);
     setPPicMessage({ message: 'Picture saved in clipboard.', err: false });
   }
 
@@ -75,13 +85,13 @@ function ProfilePage({ ...props }: ProfileProps) {
       .then((_res: any) => {
         setProfilePic(null);
         setPPicMessage({ message: '', err: false });
-        Logger.log('Success');
+        logger.log('Success');
         // return Promise.resolve(res.data);
       })
       .catch((_err: any) => {
         setProfilePic(null);
         setPPicMessage({ message: '', err: false });
-        Logger.log('Upload Profile Pic Axios Error');
+        logger.log('Error');
         // return Promise.reject(err.response.data);
       });
   }

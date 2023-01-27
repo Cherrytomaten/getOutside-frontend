@@ -3,7 +3,7 @@ import { LatLngTuple } from 'leaflet';
 import getDistance from 'geolib/es/getDistance';
 import { PinProps } from "@/types/Pins";
 import axios from 'axios';
-import { Logger } from '@/util/logger';
+import { logger } from '@/util/logger';
 import { BackendErrorResponse } from '@/types/Backend/BackendErrorResponse';
 
 type PinsApiRequest = NextApiRequest & {
@@ -28,7 +28,7 @@ export default async function handler(
     return await axios
       .get('https://cherrytomaten.herokuapp.com/api/mappoint')
       .then((_res: any) => {
-        Logger.log('Mappoints response data: ', _res.data);
+        logger.log('Mappoints response data: ', _res.data);
         let pins: PinProps[] = _res.data;
 
         const pinsInRange: PinProps[] = pins.filter((pin) => {

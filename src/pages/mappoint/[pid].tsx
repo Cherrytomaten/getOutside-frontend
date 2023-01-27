@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useUserAuth } from '@/hooks/useUserAuth';
 import { useAuth } from '@/context/AuthContext';
-import { Logger } from '@/util/logger';
+import { logger } from '@/util/logger';
 import { GetServerSidePropsContext } from 'next';
 import { BackendErrorResponse } from '@/types/Backend/BackendErrorResponse';
 import { PinProps } from '@/types/Pins';
@@ -23,7 +23,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       // .get(`https://cherrytomaten.herokuapp.com/api/mappoint/${mappointId}`)
       .get('https://cherrytomaten.herokuapp.com/api/mappoint/1')
       .then((_res: any) => {
-        Logger.log('Mappoint Backend Data:', _res.data);
+        logger.log('Mappoint Backend Data:', _res.data);
         return {
           props: {
             uuid: _res.data.id,

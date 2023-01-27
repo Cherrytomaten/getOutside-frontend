@@ -3,7 +3,7 @@ import { AUTH_TOKEN } from '@/types/constants';
 import axios, { AxiosResponse } from 'axios';
 import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
 import { BackendErrorResponse } from '@/types/Backend/BackendErrorResponse';
-import { Logger } from '@/util/logger';
+import { logger } from '@/util/logger';
 
 type ChangePasswordRequest = NextApiRequest & {
   body: {
@@ -58,7 +58,7 @@ export default async function handler(
         return res.status(_res.status).end();
       })
       .catch((err: BackendErrorResponse) => {
-        Logger.log('error response:', err.response);
+        logger.log('error response:', err.response);
         if (err.response?.data === undefined) {
           return res
             .status(err.response?.status ? err.response?.status : 500)

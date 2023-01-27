@@ -27,17 +27,18 @@ type LoginServerResponse = AxiosResponse<LoginServerResponseData>;
  * @param res on success returns access & refresh token as strings.
  */
 export default async function handler(_req: LoginRequest, res: LoginResponse) {
-    return await axios
-      .post(
-        'https://cherrytomaten.herokuapp.com/authentication/token/obtain/',
-        {
-          username: _req.body.username,
-          password: _req.body.password,
-        }
-      )
-      .then((_res: LoginServerResponse) => {
-        const accessToken = tokenDecompiler(_res.data.access);
-        const refreshToken = tokenDecompiler(_res.data.refresh);
+    // wrong request method
+    if (_req.method !== 'POST') {
+        return res.status(405).json({errors: { message: 'Given request method is not allowed here.' } });
+    }
+
+    return await axios.post('https://cherrytomaten.herokuapp.com/authentication/token/obtain/', {
+        "username": _req.body.username,
+        "password": _req.body.password
+    })
+        .then((_res: LoginServerResponse) => {
+            const accessToken = tokenDecompiler(_res.data.access);
+            const refreshToken = tokenDecompiler(_res.data.refresh);
 
         if (accessToken === null || refreshToken === null) {
           return res
