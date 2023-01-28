@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios/index";
+import axios, { AxiosResponse } from "axios";
 import { WrapperServerErrorResponse } from "@/types/Server/WrapperServerErrorResponse";
 import { PersonalUserDataProps } from "@/types/User/PersonalUserDataProps";
 import { ChangePasswordProps } from "@/types/User/ChangePasswordProps";
