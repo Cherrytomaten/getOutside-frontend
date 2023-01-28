@@ -1,5 +1,5 @@
 type MapPointProps = {
-  uuid: string;
+  id: string;
   name: string;
   desc: string;
   address: string;

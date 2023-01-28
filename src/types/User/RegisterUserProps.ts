@@ -1,7 +1,7 @@
 type RegisterUserProps = {
-    username: string;
-    email: string;
-    password: string;
-}
+  username: string;
+  email: string;
+  password: string;
+};
 
 export type { RegisterUserProps };

@@ -1,4 +1,4 @@
-import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
+import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
 
 type UserAuthProps = {
   userId: string;

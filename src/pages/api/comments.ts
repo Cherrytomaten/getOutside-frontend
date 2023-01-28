@@ -6,10 +6,7 @@ type MapPointApiRequest = NextApiRequest & {
   };
 };
 
-export default function handler(
-  _req: MapPointApiRequest,
-  res: NextApiResponse
-) {
+export default function handler(_req: MapPointApiRequest, res: NextApiResponse) {
   try {
     setTimeout(async () => {
       return res.status(200);

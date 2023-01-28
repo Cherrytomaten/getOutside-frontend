@@ -1,12 +1,11 @@
-import { NextApiResponse } from "next";
+import { NextApiResponse } from 'next';
 
 type FetchUserAuthErrorResponseProps = {
-    response: NextApiResponse & {
-        data: {
-            message: string
-        }
-    }
-}
+  response: NextApiResponse & {
+    data: {
+      message: string;
+    };
+  };
+};
 
 export type { FetchUserAuthErrorResponseProps };
-

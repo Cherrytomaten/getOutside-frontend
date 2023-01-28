@@ -5,7 +5,7 @@ const withPWA = require("next-pwa")({
   dest: "public",
   register: true,
   skipWaiting: false,
-  runtimeCaching
+  runtimeCaching,
 });
 const nextConfig = withPWA({
   reactStrictMode: process.env.NODE_ENV === 'development'
