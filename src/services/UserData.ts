@@ -1,8 +1,8 @@
-import axios, { AxiosResponse } from "axios/index";
-import { WrapperServerErrorResponse } from "@/types/Server/WrapperServerErrorResponse";
-import { PersonalUserDataProps } from "@/types/User/PersonalUserDataProps";
-import { ChangePasswordProps } from "@/types/User/ChangePasswordProps";
-import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
+import axios, { AxiosResponse } from 'axios';
+import { WrapperServerErrorResponse } from '@/types/Server/WrapperServerErrorResponse';
+import { PersonalUserDataProps } from '@/types/User/PersonalUserDataProps';
+import { ChangePasswordProps } from '@/types/User/ChangePasswordProps';
+import { FetchServerErrorResponse } from '@/types/Server/FetchServerErrorResponse';
 
 type PersonalDataServerResponseProps = {
   username: string;
@@ -13,7 +13,8 @@ type PersonalDataServerResponseProps = {
 
 class UserData {
   async updatePersonalData(profileData: PersonalUserDataProps): Promise<PersonalUserDataProps> {
-    return await axios.put('/api/user/update-personal-data', {
+    return await axios
+      .put('/api/user/update-personal-data', {
         first_name: profileData.fname,
         last_name: profileData.lname,
         username: profileData.username,
@@ -24,7 +25,7 @@ class UserData {
           fname: res.data.first_name,
           lname: res.data.last_name,
           username: res.data.username,
-          email: res.data.email
+          email: res.data.email,
         });
       })
       .catch((err: WrapperServerErrorResponse) => {
@@ -33,7 +34,8 @@ class UserData {
   }
 
   async updateUserPassword(passwordData: ChangePasswordProps): Promise<void | FetchServerErrorResponse> {
-    return await axios.put('/api/user/update-password', {
+    return await axios
+      .put('/api/user/update-password', {
         password: passwordData.cPassword,
         new_password: passwordData.nPassword,
         new_password2: passwordData.n2Password,

@@ -5,10 +5,10 @@ import { validatePassword } from '@/util/passwordValidator';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { PasswordInput } from '../PasswordInput';
-import { userDataService } from "@/services/UserData";
-import { PersonalUserDataProps } from "@/types/User/PersonalUserDataProps";
-import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
-import { ChangePasswordProps } from "@/types/User/ChangePasswordProps";
+import { userDataService } from '@/services/UserData';
+import { PersonalUserDataProps } from '@/types/User/PersonalUserDataProps';
+import { FetchServerErrorResponse } from '@/types/Server/FetchServerErrorResponse';
+import { ChangePasswordProps } from '@/types/User/ChangePasswordProps';
 
 type EditProfileProps = EditPersonalProps & {
   setLocalProps: Dispatch<SetStateAction<ProfileProps>>;
@@ -263,7 +263,8 @@ function EditProfile(profileProps: EditProfileProps) {
     e.preventDefault();
 
     if (isFormErrorFree(profileInfoErr)) {
-      userDataService.updatePersonalData(profileInfoData)
+      userDataService
+        .updatePersonalData(profileInfoData)
         .then((res: PersonalUserDataProps) => {
           profileProps.setLocalProps({
             ...profileProps.localProps,
@@ -279,7 +280,7 @@ function EditProfile(profileProps: EditProfileProps) {
             success: '',
             err: 'An error occured: ' + err.errors.message,
           });
-        })
+        });
     } else {
       setSubmitPDMsg({
         success: '',
@@ -308,7 +309,8 @@ function EditProfile(profileProps: EditProfileProps) {
         err: 'Please make sure that the repeated password corresponds to the new one.',
       });
     } else {
-      userDataService.updateUserPassword(passwordData)
+      userDataService
+        .updateUserPassword(passwordData)
         .then((_res) => {
           setSubmitPWMsg({
             success: 'Password updated successfully.',
@@ -321,7 +323,7 @@ function EditProfile(profileProps: EditProfileProps) {
             success: '',
             err: 'An error occured: ' + err.errors.message,
           });
-        })
+        });
     }
   }
 

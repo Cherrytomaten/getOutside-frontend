@@ -4,4 +4,4 @@ type ChangePasswordProps = {
   n2Password: string; // new password repeat
 };
 
-export type { ChangePasswordProps }
+export type { ChangePasswordProps };
