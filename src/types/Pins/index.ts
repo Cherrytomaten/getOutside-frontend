@@ -19,7 +19,7 @@
 
 export type PinProps = MapPointProps & {
   category: string | null;
-  creator_id: any | null;
+  creator: string;
   longitude: number;
   latitude: number;
   notes: string | null;

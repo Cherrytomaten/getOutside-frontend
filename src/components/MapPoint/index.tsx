@@ -11,7 +11,7 @@ import { logger } from '@/util/logger';
 
 type MapPointPayloadProps = MapPointProps & {
   category: any | null;
-  creator_id: any | null;
+  creator: string;
   longitude: number;
   latitude: number;
 };
@@ -84,7 +84,7 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
   const handleSubmit = async (event: any) => {
     //clear textArea with ID ????
     event.preventDefault();
-    const mappointPin_id = props.id;
+    const mappointPin_id = props.uuid;
     if (comment)
       try {
         const text = comment;
@@ -128,7 +128,7 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
   }
 
   return (
-    <main id={'mappoint-id-' + props.id} className="relative w-full h-full min-h-screen flex justify-center p-5 mb-12 text-default-font">
+    <main id={'mappoint-id-' + props.uuid} className="relative w-full h-full min-h-screen flex justify-center p-5 mb-12 text-default-font">
       <div id="card-wrapper" className="min-w-0 max-w-sm">
         <div className="relative w-full mb-8 overflow-hidden rounded-t-3xl">
           <Image src={props.image.src} alt={props.image.alt} height={props.image.height} width={props.image.width} />
@@ -140,7 +140,7 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
         </div>
         <div id="lower-wrapper" className="flex flex-col justify-between align-center">
           <div className="mb-4 text-3xl text-center">
-            <h1>{props.name}</h1>
+            <h1>{props.title}</h1>
           </div>
           <div className="mb-[10%] text-center">
             <ul title={`Average Rating: ${props.rating.toString()}`}>
@@ -188,7 +188,7 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
                 }}
                 className={`ease via-dark-seaweed to-dark-sea mq-hover:hover:bg-pos-100 mq-hover:hover:shadow-darker-sea relative p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 hover:cursor-pointer group`}
                 onClick={() => setExpandDesc(!expandDesc)}>
-                <p id="desc-text-elem">{props.desc}</p>
+                <p id="desc-text-elem">{props.description}</p>
                 {descSize > 90.4 ? (
                   <motion.button
                     initial={{ rotate: 0 }}
@@ -221,31 +221,31 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
                 <ul>
                   <li>
                     <span className="text-bright-seaweed">Monday: </span>
-                    {props.opening.monday}
+                    {props.openingHours.monday}
                   </li>
                   <li>
                     <span className="text-bright-seaweed">Tuesday: </span>
-                    {props.opening.tuesday}
+                    {props.openingHours.tuesday}
                   </li>
                   <li>
                     <span className="text-bright-seaweed">Wednesday: </span>
-                    {props.opening.wednesday}
+                    {props.openingHours.wednesday}
                   </li>
                   <li>
                     <span className="text-bright-seaweed">Thursday: </span>
-                    {props.opening.thursday}
+                    {props.openingHours.thursday}
                   </li>
                   <li>
                     <span className="text-bright-seaweed">Friday: </span>
-                    {props.opening.friday}
+                    {props.openingHours.friday}
                   </li>
                   <li>
                     <span className="text-bright-seaweed">Saturday: </span>
-                    {props.opening.saturday}
+                    {props.openingHours.saturday}
                   </li>
                   <li>
                     <span className="text-bright-seaweed">Sunday: </span>
-                    {props.opening.sunday}
+                    {props.openingHours.sunday}
                   </li>
                 </ul>
               </div>

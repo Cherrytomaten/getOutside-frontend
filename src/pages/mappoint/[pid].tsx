@@ -70,16 +70,16 @@ function MapPointPage({ ...mapointPayload }: PinProps) {
   return (
     <>
       <MapPoint
-        id={mapointPayload.id}
-        name={mapointPayload.name}
-        desc={mapointPayload.desc}
+        uuid={mapointPayload.uuid}
+        title={mapointPayload.title}
+        description={mapointPayload.description}
         address={mapointPayload.address}
-        opening={mapointPayload.opening}
+        openingHours={mapointPayload.openingHours}
         rating={mapointPayload.rating}
         comments={mapointPayload.comments}
         image={mapointPayload.image}
         category={mapointPayload.category}
-        creator_id={mapointPayload.creator_id}
+        creator={mapointPayload.creator}
         longitude={mapointPayload.longitude}
         latitude={mapointPayload.latitude}
       />

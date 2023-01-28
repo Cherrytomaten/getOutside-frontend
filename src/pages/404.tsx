@@ -12,10 +12,7 @@ function NotFoundPage() {
         <h2 className="px-3 pb-3 text-3xl text-center text-bright-seaweed xs:text-5xl">Sorry!</h2>
         <h2 className="px-3 mb-10 text-2xl text-center text-white xs:text-3xl">We couldn&apos;t find the page you were looking for.</h2>
         <Link href="/">
-          <a className="block text-2xl text-center text-bright-seaweed underline underline-offset-3 cursor-pointer hover:text-hovered-seaweed">Homepage</a>
-        </Link>
-        <Link href="/login">
-          <a className="block mt-4 text-2xl text-center text-bright-seaweed underline underline-offset-3 cursor-pointer hover:text-hovered-seaweed">Login</a>
+          <a className="w-full max-w-xs p-2 px-8 mt-4 mb-2 text-xl text-dark-sea bg-bright-seaweed rounded-md transition-all cursor-pointer hover:bg-hovered-seaweed">Homepage</a>
         </Link>
       </div>
     </main>

@@ -59,7 +59,7 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
             }
 
             return (
-              <div key={pinElemData.id + '-marker-id'}>
+              <div key={pinElemData.uuid + '-marker-id'}>
                 <Marker alt="" position={[pinElemData.latitude, pinElemData.longitude]} icon={ActivityIcon}>
                   <MapPopup pin={pinElemData} />
                 </Marker>
