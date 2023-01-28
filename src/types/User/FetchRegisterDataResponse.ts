@@ -1,8 +1,8 @@
 type FetchRegisterDataResponse = {
-    data: {
-        username: string;
-        email: string;
-    }
-}
+  data: {
+    username: string;
+    email: string;
+  };
+};
 
 export type { FetchRegisterDataResponse };

@@ -86,6 +86,6 @@ function MapPointPage({ ...mapointPayload }: PinProps) {
     </>
   );
   // }
-};
+}
 
 export default MapPointPage;

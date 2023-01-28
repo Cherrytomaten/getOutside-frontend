@@ -13,12 +13,8 @@ function Navbar() {
       <nav className="w-full max-w-xs h-full bg-dark-sea lg:max-w-full lg:mr-2">
         <ul className="w-full h-full flex justify-between items-center px-6 lg:justify-end">
           <Link href="/favorites">
-            <li
-              onMouseEnter={() => setHoverHeart(true)}
-              onMouseLeave={() => setHoverHeart(false)}
-              className="cursor-pointer lg:mr-3 lg:order-2"
-            >
-              <HeartSvg width="32px" height="32px" fill={hoverHeart ? "#3ED598" : "#f0f0f0"} />
+            <li onMouseEnter={() => setHoverHeart(true)} onMouseLeave={() => setHoverHeart(false)} className="cursor-pointer lg:mr-3 lg:order-2">
+              <HeartSvg width="32px" height="32px" fill={hoverHeart ? '#3ED598' : '#f0f0f0'} />
             </li>
           </Link>
           <Link href="/home">
@@ -27,12 +23,8 @@ function Navbar() {
             </li>
           </Link>
           <Link href="/profile">
-            <li
-              onMouseEnter={() => setHoverProfile(true)}
-              onMouseLeave={() => setHoverProfile(false)}
-              className="cursor-pointer lg:order-3"
-            >
-              <ProfileSvg width="32 px" height="32px" fill={hoverProfile ? "#3ED598" : "#f0f0f0"} />
+            <li onMouseEnter={() => setHoverProfile(true)} onMouseLeave={() => setHoverProfile(false)} className="cursor-pointer lg:order-3">
+              <ProfileSvg width="32 px" height="32px" fill={hoverProfile ? '#3ED598' : '#f0f0f0'} />
             </li>
           </Link>
         </ul>

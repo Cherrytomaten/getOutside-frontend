@@ -19,10 +19,7 @@ type ChangePasswordRequest = NextApiRequest & {
  * username & email must be set and can't be an empty string.
  * @param res returns OK status or error message
  */
-export default async function handler(
-  _req: ChangePasswordRequest,
-  res: NextApiResponse
-) {
+export default async function handler(_req: ChangePasswordRequest, res: NextApiResponse) {
   // wrong request method
   if (_req.method !== 'PUT') {
     return res.status(405).json({
@@ -33,9 +30,7 @@ export default async function handler(
   try {
     const authTokenString = _req.cookies[AUTH_TOKEN];
     if (authTokenString === undefined || authTokenString === 'undefined') {
-      return res
-        .status(400)
-        .json({ errors: { message: 'Wrong token format.' } });
+      return res.status(400).json({ errors: { message: 'Wrong token format.' } });
     }
 
     const authToken: TokenPayload = JSON.parse(authTokenString);
@@ -60,17 +55,11 @@ export default async function handler(
       .catch((err: BackendErrorResponse) => {
         logger.log('error response:', err.response);
         if (err.response?.data === undefined) {
-          return res
-            .status(err.response?.status ? err.response?.status : 500)
-            .json({ errors: { message: 'A server error occured.' } });
+          return res.status(err.response?.status ? err.response?.status : 500).json({ errors: { message: 'A server error occured.' } });
         }
-        return res
-          .status(err.response.status)
-          .json({ errors: { message: err.response.data.detail } });
+        return res.status(err.response.status).json({ errors: { message: err.response.data.detail } });
       });
   } catch (_err) {
-    return res
-      .status(400)
-      .json({ errors: { message: 'Could not update user password.' } });
+    return res.status(400).json({ errors: { message: 'Could not update user password.' } });
   }
 }

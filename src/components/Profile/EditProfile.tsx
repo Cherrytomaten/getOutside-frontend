@@ -2,16 +2,13 @@ import { ValidateProps } from '@/types/Auth/ValidateProps';
 import { ProfileProps } from '@/types/Profile/ProfileProps';
 import { logger } from '@/util/logger';
 import { validatePassword } from '@/util/passwordValidator';
-import axios, { AxiosResponse } from 'axios';
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-  ChangeEvent,
-  Dispatch,
-  FormEvent,
-  SetStateAction,
-  useState,
-} from 'react';
+import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { PasswordInput } from '../PasswordInput';
+import { userDataService } from "@/services/UserData";
+import { PersonalUserDataProps } from "@/types/User/PersonalUserDataProps";
+import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
+import { ChangePasswordProps } from "@/types/User/ChangePasswordProps";
 
 type EditProfileProps = EditPersonalProps & {
   setLocalProps: Dispatch<SetStateAction<ProfileProps>>;
@@ -30,12 +27,6 @@ type EditPersonalErrProps = {
   lnameErr: string;
   usernameErr: string;
   emailErr: string;
-};
-
-type EditPwProps = {
-  cPassword: string; // current password
-  nPassword: string; // new password
-  n2Password: string; // new password repeat
 };
 
 type EditPwErrProps = {
@@ -62,7 +53,7 @@ function EditProfile(profileProps: EditProfileProps) {
     usernameErr: '',
     emailErr: '',
   });
-  const [passwordData, setPasswordData] = useState<EditPwProps>({
+  const [passwordData, setPasswordData] = useState<ChangePasswordProps>({
     cPassword: '',
     nPassword: '',
     n2Password: '',
@@ -99,6 +90,10 @@ function EditProfile(profileProps: EditProfileProps) {
 
   function isSame(input1: string, input2: string): boolean {
     return input1 === input2;
+  }
+
+  function isFormErrorFree(errors: EditPersonalErrProps): boolean {
+    return isEmpty(errors.fnameErr) && isEmpty(errors.lnameErr) && isEmpty(errors.usernameErr) && isEmpty(errors.emailErr);
   }
 
   // ######
@@ -171,9 +166,7 @@ function EditProfile(profileProps: EditProfileProps) {
         break;
 
       default:
-        console.log(
-          'Validating not possible. ID for requested input-field not found!'
-        );
+        console.log('Validating not possible. ID for requested input-field not found!');
         setSubmitPDMsg({
           success: '',
           err: 'Validating not possible. ID for requested input-field not found!',
@@ -206,9 +199,7 @@ function EditProfile(profileProps: EditProfileProps) {
             nPasswordErr: 'Something is not right about your new password.',
           });
         } else if (!isEmpty(passwordData.nPassword)) {
-          const { validated, message }: ValidateProps = validatePassword(
-            passwordData.nPassword
-          );
+          const { validated, message }: ValidateProps = validatePassword(passwordData.nPassword);
 
           if (!validated) {
             setPasswordErr({ ...passwordErr, nPasswordErr: message });
@@ -234,8 +225,7 @@ function EditProfile(profileProps: EditProfileProps) {
         if (isUndefined(passwordData.n2Password)) {
           setPasswordErr({
             ...passwordErr,
-            n2PasswordErr:
-              'Something is not right about your repeated password.',
+            n2PasswordErr: 'Something is not right about your repeated password.',
           });
         } else if (
           // ignore errors when both previous fields are empty
@@ -258,9 +248,7 @@ function EditProfile(profileProps: EditProfileProps) {
         break;
 
       default:
-        console.log(
-          'Validating not possible. ID for requested input-field not found!'
-        );
+        console.log('Validating not possible. ID for requested input-field not found!');
         setSubmitPWMsg({
           success: '',
           err: 'Validating not possible. ID for requested input-field not found!',
@@ -271,49 +259,27 @@ function EditProfile(profileProps: EditProfileProps) {
   // ######
   // handle Submit
   // ######
-  async function handlePersonalDataSubmit(
-    e: FormEvent<HTMLButtonElement>
-  ): Promise<void> {
+  async function handlePersonalDataSubmit(e: FormEvent<HTMLButtonElement>): Promise<void> {
     e.preventDefault();
 
-    if (
-      isEmpty(profileInfoErr.fnameErr) &&
-      isEmpty(profileInfoErr.lnameErr) &&
-      isEmpty(profileInfoErr.usernameErr) &&
-      isEmpty(profileInfoErr.emailErr)
-    ) {
-      return await axios
-        .put('/api/user/update-personal-data', {
-          first_name: profileInfoData.fname,
-          last_name: profileInfoData.lname,
-          username: profileInfoData.username,
-          email: profileInfoData.email,
+    if (isFormErrorFree(profileInfoErr)) {
+      userDataService.updatePersonalData(profileInfoData)
+        .then((res: PersonalUserDataProps) => {
+          profileProps.setLocalProps({
+            ...profileProps.localProps,
+            username: res.fname,
+            fname: res.fname,
+            lname: res.lname,
+            email: res.email,
+          });
         })
-        .then((res: AxiosResponse) => {
-          if (res.status === 200) {
-            profileProps.setLocalProps({
-              ...profileProps.localProps,
-              username: res.data.username,
-              fname: res.data.first_name,
-              lname: res.data.last_name,
-              email: res.data.email,
-            });
-            setSubmitPDMsg({
-              success: 'Profile updated successfully.',
-              err: '',
-            });
-          }
-        })
-        .catch((err: any) => {
-          logger.log(
-            'Submitting Error occured:',
-            err.response.data.errors.message
-          );
+        .catch((err: FetchServerErrorResponse) => {
+          logger.log(err.errors.message);
           setSubmitPDMsg({
             success: '',
-            err: 'An error occured: ' + err.response.data.errors.message,
+            err: 'An error occured: ' + err.errors.message,
           });
-        });
+        })
     } else {
       setSubmitPDMsg({
         success: '',
@@ -322,26 +288,16 @@ function EditProfile(profileProps: EditProfileProps) {
     }
   }
 
-  async function handlePasswordSubmit(
-    e: FormEvent<HTMLButtonElement>
-  ): Promise<void> {
+  async function handlePasswordSubmit(e: FormEvent<HTMLButtonElement>): Promise<void> {
     e.preventDefault();
 
     // Error handling at submit
-    if (
-      !isEmpty(passwordErr.cPasswordErr) ||
-      !isEmpty(passwordErr.nPasswordErr) ||
-      !isEmpty(passwordErr.n2PasswordErr)
-    ) {
+    if (!isEmpty(passwordErr.cPasswordErr) || !isEmpty(passwordErr.nPasswordErr) || !isEmpty(passwordErr.n2PasswordErr)) {
       setSubmitPWMsg({
         success: '',
         err: 'Please check the error messages and then try again.',
       });
-    } else if (
-      isEmpty(passwordData.cPassword) ||
-      isEmpty(passwordData.nPassword) ||
-      isEmpty(passwordData.n2Password)
-    ) {
+    } else if (isEmpty(passwordData.cPassword) || isEmpty(passwordData.nPassword) || isEmpty(passwordData.n2Password)) {
       setSubmitPWMsg({
         success: '',
         err: 'Please make sure that all input fields are filled in.',
@@ -352,30 +308,20 @@ function EditProfile(profileProps: EditProfileProps) {
         err: 'Please make sure that the repeated password corresponds to the new one.',
       });
     } else {
-      return await axios
-        .put('/api/user/update-password', {
-          password: passwordData.cPassword,
-          new_password: passwordData.nPassword,
-          new_password2: passwordData.n2Password,
+      userDataService.updateUserPassword(passwordData)
+        .then((_res) => {
+          setSubmitPWMsg({
+            success: 'Password updated successfully.',
+            err: '',
+          });
         })
-        .then((res: any) => {
-          if (res.status === 200) {
-            setSubmitPWMsg({
-              success: 'Password updated successfully.',
-              err: '',
-            });
-          }
-        })
-        .catch((err: any) => {
-          logger.log(
-            'Submitting Error occured:',
-            err.response.data.errors.message
-          );
+        .catch((err: FetchServerErrorResponse) => {
+          logger.log('Submitting Error occured:', err.errors.message);
           setSubmitPWMsg({
             success: '',
-            err: 'An error occured: ' + err.response.data.errors.message,
+            err: 'An error occured: ' + err.errors.message,
           });
-        });
+        })
     }
   }
 
@@ -384,19 +330,13 @@ function EditProfile(profileProps: EditProfileProps) {
   // ######
   return (
     <div className="hide-scrollbar w-full h-full flex flex-col justify-start items-center pt-20 overflow-y-scroll">
-      <form
-        id="edit_profile_form"
-        className="w-full flex flex-col items-center"
-      >
+      <form id="edit_profile_form" className="w-full flex flex-col items-center">
         <section className="w-full flex flex-col items-center">
-          <h2 className="mb-4 text-2xl text-bright-seaweed">
-            Change Personal Data
-          </h2>
+          <h2 className="mb-4 text-2xl text-bright-seaweed">Change Personal Data</h2>
           <div
             className={`${
               profileInfoErr.fnameErr !== '' ? 'mb-3' : ''
-            } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}
-          >
+            } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}>
             <label htmlFor="edit-fname" className="text-default-font/75">
               Firstname
             </label>
@@ -404,9 +344,7 @@ function EditProfile(profileProps: EditProfileProps) {
               type="text"
               id="edit-fname"
               className={`${
-                profileInfoErr.fnameErr !== ''
-                  ? 'border-danger'
-                  : 'border-bright-seaweed hover:border-hovered-seaweed'
+                profileInfoErr.fnameErr !== '' ? 'border-danger' : 'border-bright-seaweed hover:border-hovered-seaweed'
               } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
               defaultValue={profileInfoData.fname}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -425,15 +363,8 @@ function EditProfile(profileProps: EditProfileProps) {
             />
             <AnimatePresence>
               {profileInfoErr.fnameErr !== '' && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ ease: 'easeOut', duration: 0.2 }}
-                >
-                  <p className="input-error-text mt-1 text-danger">
-                    {profileInfoErr.fnameErr}
-                  </p>
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
+                  <p className="input-error-text mt-1 text-danger">{profileInfoErr.fnameErr}</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -441,8 +372,7 @@ function EditProfile(profileProps: EditProfileProps) {
           <div
             className={`${
               profileInfoErr.lnameErr !== '' ? 'mb-3' : ''
-            } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}
-          >
+            } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}>
             <label htmlFor="edit-lname" className="text-default-font/75">
               Lastname
             </label>
@@ -450,9 +380,7 @@ function EditProfile(profileProps: EditProfileProps) {
               type="text"
               id="edit-lname"
               className={`${
-                profileInfoErr.lnameErr !== ''
-                  ? 'border-danger'
-                  : 'border-bright-seaweed hover:border-hovered-seaweed'
+                profileInfoErr.lnameErr !== '' ? 'border-danger' : 'border-bright-seaweed hover:border-hovered-seaweed'
               } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
               defaultValue={profileInfoData.lname}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -471,15 +399,8 @@ function EditProfile(profileProps: EditProfileProps) {
             />
             <AnimatePresence>
               {profileInfoErr.lnameErr !== '' && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ ease: 'easeOut', duration: 0.2 }}
-                >
-                  <p className="input-error-text mt-1 text-danger">
-                    {profileInfoErr.lnameErr}
-                  </p>
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
+                  <p className="input-error-text mt-1 text-danger">{profileInfoErr.lnameErr}</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -487,8 +408,7 @@ function EditProfile(profileProps: EditProfileProps) {
           <div
             className={`${
               profileInfoErr.usernameErr !== '' ? 'mb-3' : ''
-            } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}
-          >
+            } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}>
             <label htmlFor="edit-username" className="text-default-font/75">
               Username
             </label>
@@ -496,9 +416,7 @@ function EditProfile(profileProps: EditProfileProps) {
               type="text"
               id="edit-username"
               className={`${
-                profileInfoErr.usernameErr !== ''
-                  ? 'border-danger'
-                  : 'border-bright-seaweed hover:border-hovered-seaweed'
+                profileInfoErr.usernameErr !== '' ? 'border-danger' : 'border-bright-seaweed hover:border-hovered-seaweed'
               } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
               defaultValue={profileInfoData.username}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -517,15 +435,8 @@ function EditProfile(profileProps: EditProfileProps) {
             />
             <AnimatePresence>
               {profileInfoErr.usernameErr !== '' && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ ease: 'easeOut', duration: 0.2 }}
-                >
-                  <p className="input-error-text mt-1 text-danger">
-                    {profileInfoErr.usernameErr}
-                  </p>
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
+                  <p className="input-error-text mt-1 text-danger">{profileInfoErr.usernameErr}</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -533,8 +444,7 @@ function EditProfile(profileProps: EditProfileProps) {
           <div
             className={`${
               profileInfoErr.emailErr !== '' ? 'mb-3' : ''
-            } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}
-          >
+            } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}>
             <label htmlFor="edit-email" className="text-default-font/75">
               Email
             </label>
@@ -542,9 +452,7 @@ function EditProfile(profileProps: EditProfileProps) {
               type="email"
               id="edit-email"
               className={`${
-                profileInfoErr.emailErr !== ''
-                  ? 'border-danger'
-                  : 'border-bright-seaweed hover:border-hovered-seaweed'
+                profileInfoErr.emailErr !== '' ? 'border-danger' : 'border-bright-seaweed hover:border-hovered-seaweed'
               } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
               defaultValue={profileInfoData.email}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -563,15 +471,8 @@ function EditProfile(profileProps: EditProfileProps) {
             />
             <AnimatePresence>
               {profileInfoErr.emailErr !== '' && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ ease: 'easeOut', duration: 0.2 }}
-                >
-                  <p className="input-error-text mt-1 text-danger">
-                    {profileInfoErr.emailErr}
-                  </p>
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
+                  <p className="input-error-text mt-1 text-danger">{profileInfoErr.emailErr}</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -581,34 +482,19 @@ function EditProfile(profileProps: EditProfileProps) {
               type="button"
               id="change_data_submit"
               onClick={(e) => handlePersonalDataSubmit(e)}
-              className="mq-hover:hover:bg-hovered-seaweed w-full max-w-xs p-2 mb-4 text-dark-sea bg-bright-seaweed rounded-md transition-colors cursor-pointer"
-            >
+              className="mq-hover:hover:bg-hovered-seaweed w-full max-w-xs p-2 mb-4 text-dark-sea bg-bright-seaweed rounded-md transition-colors cursor-pointer">
               Change Personal Information
             </button>
             <div className="text-center">
               <AnimatePresence>
                 {submitPDMsg.err !== '' && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ ease: 'easeOut', duration: 0.2 }}
-                  >
-                    <p className="input-error-text mt-1 text-danger">
-                      {submitPDMsg.err}
-                    </p>
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
+                    <p className="input-error-text mt-1 text-danger">{submitPDMsg.err}</p>
                   </motion.div>
                 )}
                 {submitPDMsg.success !== '' && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ ease: 'easeOut', duration: 0.2 }}
-                  >
-                    <p className="submit-success-text mt-1 text-bright-seaweed">
-                      {submitPDMsg.success}
-                    </p>
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
+                    <p className="submit-success-text mt-1 text-bright-seaweed">{submitPDMsg.success}</p>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -624,20 +510,14 @@ function EditProfile(profileProps: EditProfileProps) {
           <div
             className={`${
               passwordErr.cPasswordErr !== '' ? 'mb-3' : ''
-            } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}
-          >
-            <label
-              htmlFor="edit-current-password"
-              className="text-default-font/75"
-            >
+            } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}>
+            <label htmlFor="edit-current-password" className="text-default-font/75">
               Current Password
             </label>
             <PasswordInput
               id="edit-current-password"
               className={`${
-                passwordErr.cPasswordErr !== ''
-                  ? 'border-danger'
-                  : 'border-bright-seaweed hover:border-hovered-seaweed'
+                passwordErr.cPasswordErr !== '' ? 'border-danger' : 'border-bright-seaweed hover:border-hovered-seaweed'
               } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
               defaultValue={passwordData.cPassword}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -656,15 +536,8 @@ function EditProfile(profileProps: EditProfileProps) {
             />
             <AnimatePresence>
               {passwordErr.cPasswordErr !== '' && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ ease: 'easeOut', duration: 0.2 }}
-                >
-                  <p className="input-error-text mt-1 text-danger">
-                    {passwordErr.cPasswordErr}
-                  </p>
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
+                  <p className="input-error-text mt-1 text-danger">{passwordErr.cPasswordErr}</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -672,17 +545,14 @@ function EditProfile(profileProps: EditProfileProps) {
           <div
             className={`${
               passwordErr.nPasswordErr !== '' ? 'mb-3' : ''
-            } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}
-          >
+            } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}>
             <label htmlFor="edit-new-password" className="text-default-font/75">
               New Password
             </label>
             <PasswordInput
               id="edit-new-password"
               className={`${
-                passwordErr.nPasswordErr !== ''
-                  ? 'border-danger'
-                  : 'border-bright-seaweed hover:border-hovered-seaweed'
+                passwordErr.nPasswordErr !== '' ? 'border-danger' : 'border-bright-seaweed hover:border-hovered-seaweed'
               } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
               defaultValue={passwordData.nPassword}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -701,15 +571,8 @@ function EditProfile(profileProps: EditProfileProps) {
             />
             <AnimatePresence>
               {passwordErr.nPasswordErr !== '' && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ ease: 'easeOut', duration: 0.2 }}
-                >
-                  <p className="input-error-text mt-1 text-danger">
-                    {passwordErr.nPasswordErr}
-                  </p>
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
+                  <p className="input-error-text mt-1 text-danger">{passwordErr.nPasswordErr}</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -717,20 +580,14 @@ function EditProfile(profileProps: EditProfileProps) {
           <div
             className={`${
               passwordErr.n2PasswordErr !== '' ? 'mb-3' : ''
-            } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}
-          >
-            <label
-              htmlFor="edit-repeat-new-password"
-              className="text-default-font/75"
-            >
+            } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}>
+            <label htmlFor="edit-repeat-new-password" className="text-default-font/75">
               Confirm New Password
             </label>
             <PasswordInput
               id="edit-repeat-new-password"
               className={`${
-                passwordErr.n2PasswordErr !== ''
-                  ? 'border-danger'
-                  : 'border-bright-seaweed hover:border-hovered-seaweed'
+                passwordErr.n2PasswordErr !== '' ? 'border-danger' : 'border-bright-seaweed hover:border-hovered-seaweed'
               } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
               defaultValue={passwordData.n2Password}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -749,15 +606,8 @@ function EditProfile(profileProps: EditProfileProps) {
             />
             <AnimatePresence>
               {passwordErr.n2PasswordErr !== '' && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ ease: 'easeOut', duration: 0.2 }}
-                >
-                  <p className="input-error-text mt-1 text-danger">
-                    {passwordErr.n2PasswordErr}
-                  </p>
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
+                  <p className="input-error-text mt-1 text-danger">{passwordErr.n2PasswordErr}</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -768,34 +618,19 @@ function EditProfile(profileProps: EditProfileProps) {
               type="button"
               id="change_pw_submit"
               onClick={(e) => handlePasswordSubmit(e)}
-              className="mq-hover:hover:bg-hovered-seaweed w-full max-w-xs p-2 mb-4 text-dark-sea bg-bright-seaweed rounded-md transition-colors cursor-pointer"
-            >
+              className="mq-hover:hover:bg-hovered-seaweed w-full max-w-xs p-2 mb-4 text-dark-sea bg-bright-seaweed rounded-md transition-colors cursor-pointer">
               Change Password
             </button>
             <div className="text-center">
               <AnimatePresence>
                 {submitPWMsg.err !== '' && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ ease: 'easeOut', duration: 0.2 }}
-                  >
-                    <p className="input-error-text mt-1 text-danger">
-                      {submitPWMsg.err}
-                    </p>
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
+                    <p className="input-error-text mt-1 text-danger">{submitPWMsg.err}</p>
                   </motion.div>
                 )}
                 {submitPWMsg.success !== '' && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ ease: 'easeOut', duration: 0.2 }}
-                  >
-                    <p className="submit-success-text mt-1 text-bright-seaweed">
-                      {submitPWMsg.success}
-                    </p>
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
+                    <p className="submit-success-text mt-1 text-bright-seaweed">{submitPWMsg.success}</p>
                   </motion.div>
                 )}
               </AnimatePresence>

@@ -83,15 +83,7 @@ function Profile({ ...userPayload }: ProfileProps) {
     return <LoadingSpinner />;
   }
 
-  return (
-    <ProfilePage
-      username={userPayload.username}
-      fname={userPayload.fname}
-      lname={userPayload.lname}
-      email={userPayload.email}
-      pic={userPayload.pic}
-    />
-  );
+  return <ProfilePage username={userPayload.username} fname={userPayload.fname} lname={userPayload.lname} email={userPayload.email} pic={userPayload.pic} />;
 }
 
 export default Profile;

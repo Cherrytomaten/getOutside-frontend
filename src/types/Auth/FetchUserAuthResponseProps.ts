@@ -1,7 +1,7 @@
-import { UserAuthProps } from "@/types/User";
+import { UserAuthProps } from '@/types/User';
 
 type FetchUserAuthResponseProps = {
-    data: UserAuthProps;
-}
+  data: UserAuthProps;
+};
 
 export type { FetchUserAuthResponseProps };

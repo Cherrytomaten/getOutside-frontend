@@ -1,28 +1,27 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import LogoNew from "@/resources/svg/Logo_new";
-import { useAuth } from "@/context/AuthContext";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
-import Link from "next/link";
-import { PasswordInput } from "@/components/PasswordInput";
-import { AnimatePresence, motion } from "framer-motion";
-import { useAlreadyAuthRedirect } from "@/hooks/useAlreadyAuthRedirect";
-import { useRegisterMachineManager } from "@/hooks/useRegisterMachineManager";
-import { SuccessfullSignup } from "@/components/Signup/SuccessfullSignup";
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import LogoNew from '@/resources/svg/Logo_new';
+import { useAuth } from '@/context/AuthContext';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
+import Link from 'next/link';
+import { PasswordInput } from '@/components/PasswordInput';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useAlreadyAuthRedirect } from '@/hooks/useAlreadyAuthRedirect';
+import { useRegisterMachineManager } from '@/hooks/useRegisterMachineManager';
+import { SuccessfullSignup } from '@/components/Signup/SuccessfullSignup';
 import { validatePassword } from '@/util/passwordValidator';
-import { ValidateProps } from "@/types/Auth/ValidateProps";
+import { ValidateProps } from '@/types/Auth/ValidateProps';
 
 type SignUpFormProps = {
-    username: string,
-    email: string,
-    password: string,
-    cpassword: string
-}
+  username: string;
+  email: string;
+  password: string;
+  cpassword: string;
+};
 
 function Signup() {
   const { fetchUserAuthState } = useAuth();
   const isAlreadyAuthenticated = useAlreadyAuthRedirect(fetchUserAuthState);
-  const { registerUserState, sendToRegisterMachine } =
-    useRegisterMachineManager();
+  const { registerUserState, sendToRegisterMachine } = useRegisterMachineManager();
   const [formData, setFormData] = useState<SignUpFormProps>({
     username: '',
     email: '',
@@ -39,18 +38,14 @@ function Signup() {
   // Reset form on page load
   useEffect(() => {
     if (document) {
-      (
-        document.getElementById('signup-form-container') as HTMLFormElement
-      )?.reset();
+      (document.getElementById('signup-form-container') as HTMLFormElement)?.reset();
     }
   }, []);
 
   function validateForm(): boolean {
     let validator: boolean = true;
     let data = formData;
-    const { validated, message }: ValidateProps = validatePassword(
-      formData.password
-    );
+    const { validated, message }: ValidateProps = validatePassword(formData.password);
 
     if (formData.username === '') {
       data = { ...data, username: 'Please enter a username' };
@@ -70,7 +65,7 @@ function Signup() {
       validator = false;
     }
     // one uppercase, one digit, three lowercase, length of atleast 8
-    else if (validated === false) {
+    else if (!validated) {
       data = {
         ...data,
         password: message,
@@ -124,54 +119,38 @@ function Signup() {
     return <LoadingSpinner />;
   }
 
-    // successfull sign up page render
-    if (registerUserState.matches('success') && registerUserState.context.user?.username !== null && registerUserState.context.user?.email !== null) {
-        return (<SuccessfullSignup username={registerUserState.context.user.username} email={registerUserState.context.user.email} />);
-    }
+  // successfull sign up page render
+  if (registerUserState.matches('success') && registerUserState.context.user?.username !== null && registerUserState.context.user?.email !== null) {
+    return <SuccessfullSignup username={registerUserState.context.user.username} email={registerUserState.context.user.email} />;
+  }
 
   return (
     <main className="w-full h-full min-h-screen flex flex-col justify-start items-center overflow-x-hidden">
       <div className="w-full h-auto max-h-64 flex justify-center my-14">
         <LogoNew width="220px" height="auto" />
       </div>
-      <form
-        id="signup-form-container"
-        className="flex-auto w-4/5 max-w-md flex flex-col justify-start items-center px-5 pb-10"
-        onSubmit={(e) => handleSubmit(e)}
-      >
+      <form id="signup-form-container" className="flex-auto w-4/5 max-w-md flex flex-col justify-start items-center px-5 pb-10" onSubmit={(e) => handleSubmit(e)}>
         <div
           className={`${
             formErrors.username !== '' ? 'mb-3' : ''
-          } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}
-        >
+          } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}>
           <label htmlFor="signup-username" className="invisible w-0 h-0">
             Username
           </label>
           <input
             type="text"
             className={`${
-              formErrors.username !== ''
-                ? 'border-danger'
-                : 'border-bright-seaweed hover:border-hovered-seaweed'
+              formErrors.username !== '' ? 'border-danger' : 'border-bright-seaweed hover:border-hovered-seaweed'
             } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setFormData({ ...formData, username: e.target.value })
-            }
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, username: e.target.value })}
             onClick={() => setFormErrors({ ...formErrors, username: '' })}
             placeholder="Username"
             id="signup-username"
           />
           <AnimatePresence>
             {formErrors.username !== '' && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ ease: 'easeOut', duration: 0.2 }}
-              >
-                <p className="input-error-text mt-1 text-danger">
-                  {formErrors.username}
-                </p>
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
+                <p className="input-error-text mt-1 text-danger">{formErrors.username}</p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -180,21 +159,16 @@ function Signup() {
         <div
           className={`${
             formErrors.email !== '' ? 'mb-3' : ''
-          } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}
-        >
+          } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}>
           <label htmlFor="signup-email" className="invisible w-0 h-0">
             Email
           </label>
           <input
             type="email"
             className={`${
-              formErrors.email !== ''
-                ? 'border-danger'
-                : 'border-bright-seaweed hover:border-hovered-seaweed'
+              formErrors.email !== '' ? 'border-danger' : 'border-bright-seaweed hover:border-hovered-seaweed'
             } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, email: e.target.value })}
             onClick={() => setFormErrors({ ...formErrors, email: '' })}
             onFocus={() => setFormErrors({ ...formErrors, email: '' })}
             placeholder="Email"
@@ -202,15 +176,8 @@ function Signup() {
           />
           <AnimatePresence>
             {formErrors.email !== '' && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ ease: 'easeOut', duration: 0.2 }}
-              >
-                <p className="input-error-text mt-1 text-danger">
-                  {formErrors.email}
-                </p>
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
+                <p className="input-error-text mt-1 text-danger">{formErrors.email}</p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -219,20 +186,15 @@ function Signup() {
         <div
           className={`${
             formErrors.password !== '' ? 'mb-3' : ''
-          } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}
-        >
+          } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}>
           <label htmlFor="signup-password" className="invisible w-0 h-0">
             Password
           </label>
           <PasswordInput
             className={`${
-              formErrors.password !== ''
-                ? 'border-danger'
-                : 'border-bright-seaweed hover:border-hovered-seaweed'
+              formErrors.password !== '' ? 'border-danger' : 'border-bright-seaweed hover:border-hovered-seaweed'
             } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setFormData({ ...formData, password: e.target.value })
-            }
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, password: e.target.value })}
             onClick={() => setFormErrors({ ...formErrors, password: '' })}
             onFocus={() => setFormErrors({ ...formErrors, password: '' })}
             placeholder="Password"
@@ -240,15 +202,8 @@ function Signup() {
           />
           <AnimatePresence>
             {formErrors.password !== '' && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ ease: 'easeOut', duration: 0.2 }}
-              >
-                <p className="input-error-text mt-1 text-danger">
-                  {formErrors.password}
-                </p>
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
+                <p className="input-error-text mt-1 text-danger">{formErrors.password}</p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -257,23 +212,15 @@ function Signup() {
         <div
           className={`${
             formErrors.cpassword !== '' ? 'mb-3' : ''
-          } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}
-        >
-          <label
-            htmlFor="signup-password-confirm"
-            className="invisible w-0 h-0"
-          >
+          } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}>
+          <label htmlFor="signup-password-confirm" className="invisible w-0 h-0">
             Confirm password
           </label>
           <PasswordInput
             className={`${
-              formErrors.cpassword !== ''
-                ? 'border-danger'
-                : 'border-bright-seaweed hover:border-hovered-seaweed'
+              formErrors.cpassword !== '' ? 'border-danger' : 'border-bright-seaweed hover:border-hovered-seaweed'
             } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setFormData({ ...formData, cpassword: e.target.value })
-            }
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, cpassword: e.target.value })}
             onClick={() => setFormErrors({ ...formErrors, cpassword: '' })}
             onFocus={() => setFormErrors({ ...formErrors, cpassword: '' })}
             placeholder="Confirm password"
@@ -281,15 +228,8 @@ function Signup() {
           />
           <AnimatePresence>
             {formErrors.cpassword !== '' && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ ease: 'easeOut', duration: 0.2 }}
-              >
-                <p className="input-error-text mt-1 text-danger">
-                  {formErrors.cpassword}
-                </p>
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
+                <p className="input-error-text mt-1 text-danger">{formErrors.cpassword}</p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -306,17 +246,13 @@ function Signup() {
             <button
               type="button"
               id="already-signedup-btn"
-              className="w-full max-w-xs p-2 text-default-font border-solid border rounded-md border-bright-seaweed transition-all cursor-pointer hover:border-hovered-seaweed hover:ring-1 hover:ring-inset hover:ring-bright-seaweed"
-            >
+              className="w-full max-w-xs p-2 text-default-font border-solid border rounded-md border-bright-seaweed transition-all cursor-pointer hover:border-hovered-seaweed hover:ring-1 hover:ring-inset hover:ring-bright-seaweed">
               Already signed up?
             </button>
           </Link>
-          {!registerUserState.matches('pending') &&
-            registerUserState.context.err !== null && (
-              <p className="server-fetch-error-text mt-4 text-center text-danger">
-                {registerUserState.context.err.errors.message}
-              </p>
-            )}
+          {!registerUserState.matches('pending') && registerUserState.context.err !== null && (
+            <p className="server-fetch-error-text mt-4 text-center text-danger">{registerUserState.context.err.errors.message}</p>
+          )}
         </div>
         {registerUserState.matches('pending') && <LoadingSpinner />}
       </form>

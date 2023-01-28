@@ -1,7 +1,7 @@
-import type { UserAuthProps } from '@/types/User'
-import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
-import { WrapperServerErrorResponse } from "@/types/Server/WrapperServerErrorResponse";
-import { ResetPasswordProps } from "@/types/User/ResetPasswordProps";
+import type { UserAuthProps } from '@/types/User';
+import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
+import { WrapperServerErrorResponse } from '@/types/Server/WrapperServerErrorResponse';
+import { ResetPasswordProps } from '@/types/User/ResetPasswordProps';
 
 interface IUserAuthRepo {
   authUser(username: string, password: string): Promise<UserAuthProps>;

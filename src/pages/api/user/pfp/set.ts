@@ -12,14 +12,11 @@ type PicDataRequest = NextApiRequest & {
 
 export const config = {
   api: {
-    bodyParser: false
-  }
+    bodyParser: false,
+  },
 };
 
-export default async function handler(
-  _req: PicDataRequest,
-  res: NextApiResponse
-) {
+export default async function handler(_req: PicDataRequest, res: NextApiResponse) {
   // wrong request method
   if (_req.method !== 'PUT') {
     return res.status(405).json({
@@ -28,17 +25,13 @@ export default async function handler(
   }
 
   if (_req.body === null) {
-    return res
-      .status(400)
-      .json({ errors: { message: 'Given resource must not be null!' } });
+    return res.status(400).json({ errors: { message: 'Given resource must not be null!' } });
   }
 
   try {
     const authTokenString = _req.cookies[AUTH_TOKEN];
     if (authTokenString === undefined || authTokenString === 'undefined') {
-      return res
-        .status(400)
-        .json({ errors: { message: 'Wrong token format.' } });
+      return res.status(400).json({ errors: { message: 'Wrong token format.' } });
     }
 
     const authToken: TokenPayload = JSON.parse(authTokenString);
@@ -58,16 +51,18 @@ export default async function handler(
       });
     });
 
-    return await axios.put(`https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}`,
+    return await axios
+      .put(
+        `https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}`,
         {
-          name: "abd",
+          name: 'abd',
         },
         {
           headers: {
-            'Authorization': 'Bearer ' + authToken.token,
+            Authorization: 'Bearer ' + authToken.token,
           },
           maxContentLength: 100000000,
-          maxBodyLength: 1000000000
+          maxBodyLength: 1000000000,
         }
       )
       .then((_res: any) => {
@@ -75,9 +70,7 @@ export default async function handler(
       })
       .catch((err: any) => {
         console.log('Error: ', err);
-        return res
-          .status(err.response.status)
-          .json({ error: { message: err.message } });
+        return res.status(err.response.status).json({ error: { message: err.message } });
       });
   } catch (_err) {
     return res.status(400).json({

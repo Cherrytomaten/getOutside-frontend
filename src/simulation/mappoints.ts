@@ -1,73 +1,73 @@
-import { basketBallImg, skateparkImg, spaImg, tennisImg, volleyBallImg } from "@/simulation/images";
+import { basketBallImg, skateparkImg, spaImg, tennisImg, volleyBallImg } from '@/simulation/images';
 
 const opening1: OpeningProps = {
-    monday: '16.00-22.00',
-    tuesday: 'geschlossen',
-    wednesday: 'geschlossen',
-    thursday: '16.00-22.00',
-    friday: '12.00-24.00',
-    saturday: '12.00-24.00',
-    sunday: '12.00-22.00',
+  monday: '16.00-22.00',
+  tuesday: 'geschlossen',
+  wednesday: 'geschlossen',
+  thursday: '16.00-22.00',
+  friday: '12.00-24.00',
+  saturday: '12.00-24.00',
+  sunday: '12.00-22.00',
 };
 
 const opening2: OpeningProps = {
-    monday: '10.00-20.00',
-    tuesday: '08.00-18.00',
-    wednesday: '12.00-22.00',
-    thursday: '12.00-22.00',
-    friday: '12.00-20.00',
-    saturday: 'geschlossen',
-    sunday: 'geschlossen',
+  monday: '10.00-20.00',
+  tuesday: '08.00-18.00',
+  wednesday: '12.00-22.00',
+  thursday: '12.00-22.00',
+  friday: '12.00-20.00',
+  saturday: 'geschlossen',
+  sunday: 'geschlossen',
 };
 
 const comments1: CommentProps[] = [
-    {
-        author: 'Gerhard',
-        text: 'Das ist ein Kommentar, hahaha xD',
-    },
-    {
-        author: 'Sabine',
-        text: 'Sabines Kommmentar, der sehr sehr lang ist. Ja Sabine hat wirklich sehr viel Text geschrieben, um hier den Rahmen zu sprengen.',
-    },
-    {
-        author: 'Jean',
-        text: 'Hey! Wir suchen noch Leute zum Spielen, kommt 16:00 dazu!',
-    },
-    {
-        author: 'Friedi',
-        text: 'richtig frische Luft hier ;)',
-    },
+  {
+    author: 'Gerhard',
+    text: 'Das ist ein Kommentar, hahaha xD',
+  },
+  {
+    author: 'Sabine',
+    text: 'Sabines Kommmentar, der sehr sehr lang ist. Ja Sabine hat wirklich sehr viel Text geschrieben, um hier den Rahmen zu sprengen.',
+  },
+  {
+    author: 'Jean',
+    text: 'Hey! Wir suchen noch Leute zum Spielen, kommt 16:00 dazu!',
+  },
+  {
+    author: 'Friedi',
+    text: 'richtig frische Luft hier ;)',
+  },
 ];
 
 const comments2: CommentProps[] = [
-    {
-        author: 'Bertold B.',
-        text: 'Super Spot! Kann auch gut zum Parkour trainieren genutzt werden.',
-    },
-    {
-        author: 'Linus',
-        text: 'Leider immer etwas voll',
-    },
-    {
-        author: 'Viv',
-        text: 'Im Winter etwas glatt, im Sommer einfach beste!',
-    },
-    {
-        author: 'Jona',
-        text: 'Yeahh! Endlich rauskomm!',
-    },
-    {
-        author: 'Bertold B.',
-        text: 'Danke für den Tipp!',
-    },
-    {
-        author: 'Sabrina',
-        text: 'Nicht gut für Fußball spielen, sonst in Ordnung',
-    },
-    {
-        author: 'Bibi',
-        text: 'Einfach ZAUBERhaft!!!',
-    },
+  {
+    author: 'Bertold B.',
+    text: 'Super Spot! Kann auch gut zum Parkour trainieren genutzt werden.',
+  },
+  {
+    author: 'Linus',
+    text: 'Leider immer etwas voll',
+  },
+  {
+    author: 'Viv',
+    text: 'Im Winter etwas glatt, im Sommer einfach beste!',
+  },
+  {
+    author: 'Jona',
+    text: 'Yeahh! Endlich rauskomm!',
+  },
+  {
+    author: 'Bertold B.',
+    text: 'Danke für den Tipp!',
+  },
+  {
+    author: 'Sabrina',
+    text: 'Nicht gut für Fußball spielen, sonst in Ordnung',
+  },
+  {
+    author: 'Bibi',
+    text: 'Einfach ZAUBERhaft!!!',
+  },
 ];
 
 const mockMapPoints: MapPointProps[] = [

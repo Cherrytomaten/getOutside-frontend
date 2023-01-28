@@ -1,7 +1,7 @@
 type FetchServerErrorResponse = {
-    errors: {
-        message: string
-    }
-}
+  errors: {
+    message: string;
+  };
+};
 
 export type { FetchServerErrorResponse };

@@ -1,6 +1,6 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import Head from 'next/head'
+import Head from 'next/head';
 import { AuthProvider } from '@/context/AuthContext';
 import { Navbar } from '@/components/Navbar';
 import { useEffect, useState } from 'react';
@@ -31,10 +31,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <title>GetOutside</title>
 
         <link rel="manifest" href="/manifest.json" />
-        <link
-          rel="apple-touch-icon"
-          href="/pwaIcons/maskable_icon_x512.png"
-        ></link>
+        <link rel="apple-touch-icon" href="/pwaIcons/maskable_icon_x512.png"></link>
         <meta name="theme-color" content="#3ED598" />
       </Head>
       <AuthProvider>

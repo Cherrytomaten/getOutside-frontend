@@ -1,5 +1,5 @@
 type BackendErrorProps = {
-    detail: string;
-}
+  detail: string;
+};
 
 export type { BackendErrorProps };

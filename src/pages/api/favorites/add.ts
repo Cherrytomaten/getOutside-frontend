@@ -1,20 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import axios, { AxiosResponse } from "axios";
-import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
+import axios, { AxiosResponse } from 'axios';
+import { FetchServerErrorResponse } from '@/types/Server/FetchServerErrorResponse';
 
 type AddFavoriteRequest = NextApiRequest & {
-    body: { pinId: string };
+  body: { pinId: string };
 };
 
 type AddFavoriteResponseBody = {
-    uuid: string;
-    pin: string;
-    user: string;
-}
+  uuid: string;
+  pin: string;
+  user: string;
+};
 
 type AddFavoriteErrorResponse = {
-    response: AxiosResponse<{res: string}>
-}
+  response: AxiosResponse<{ res: string }>;
+};
 
 type AddFavoriteResponse = NextApiResponse<AddFavoriteResponseBody | FetchServerErrorResponse>;
 
@@ -24,23 +24,24 @@ type AddFavoriteResponse = NextApiResponse<AddFavoriteResponseBody | FetchServer
  * @param res Ids of the involded user / pin to confirm the success or error response
  */
 export default async function handler(_req: AddFavoriteRequest, res: AddFavoriteResponse) {
-    // wrong request method
-    if (_req.method !== 'POST') {
-        return res.status(405).json({errors: { message: 'Given request method is not allowed here.' } });
-    }
+  // wrong request method
+  if (_req.method !== 'POST') {
+    return res.status(405).json({ errors: { message: 'Given request method is not allowed here.' } });
+  }
 
-    return await axios.post('https://cherrytomaten.herokuapp.com/api/favorites/pin/', {
-        "pin": _req.body.pinId,
+  return await axios
+    .post('https://cherrytomaten.herokuapp.com/api/favorites/pin/', {
+      pin: _req.body.pinId,
     })
-        .then((_res: AxiosResponse<AddFavoriteResponseBody>) => {
-            return res.status(201).json(_res.data);
-        })
-        .catch((err: AddFavoriteErrorResponse) => {
-            if (err.response?.data?.res === undefined) {
-                return res.status(err.response.status).json({ errors: { message: "A server error occured." } });
-            }
-            return res.status(err.response.status).json({ errors: { message: err.response.data.res } });
-        })
+    .then((_res: AxiosResponse<AddFavoriteResponseBody>) => {
+      return res.status(201).json(_res.data);
+    })
+    .catch((err: AddFavoriteErrorResponse) => {
+      if (err.response?.data?.res === undefined) {
+        return res.status(err.response.status).json({ errors: { message: 'A server error occured.' } });
+      }
+      return res.status(err.response.status).json({ errors: { message: err.response.data.res } });
+    });
 }
 
 /*
