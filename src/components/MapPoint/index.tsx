@@ -288,7 +288,7 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
                           animate={{ y: 0, opacity: 1 }}
                           exit={{ y: -100, opacity: 0, position: 'absolute' }}>
                           <p className="text-white">{comment.text}</p>
-                          <p className="absolute right-5 bottom-2 font-light text-bright-seaweed">{comment.author}</p>
+                          <p className="absolute right-5 bottom-2 font-light text-bright-seaweed">{comment.author.username}</p>
                         </motion.div>
                       ))}
                     </AnimatePresence>

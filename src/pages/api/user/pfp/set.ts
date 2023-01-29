@@ -1,8 +1,7 @@
 import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
 import { AUTH_TOKEN } from '@/types/constants';
-import axios from 'axios';
-import formidable from 'formidable';
 import { NextApiRequest, NextApiResponse } from 'next';
+import httpProxyMiddleware from "next-http-proxy-middleware";
 
 type PicDataRequest = NextApiRequest & {
   body: {
@@ -24,10 +23,6 @@ export default async function handler(_req: PicDataRequest, res: NextApiResponse
     });
   }
 
-  if (_req.body === null) {
-    return res.status(400).json({ errors: { message: 'Given resource must not be null!' } });
-  }
-
   try {
     const authTokenString = _req.cookies[AUTH_TOKEN];
     if (authTokenString === undefined || authTokenString === 'undefined') {
@@ -36,14 +31,76 @@ export default async function handler(_req: PicDataRequest, res: NextApiResponse
 
     const authToken: TokenPayload = JSON.parse(authTokenString);
 
-    // const form = new formidable.IncomingForm();
-    // form.uploadDir = "./";
-    // form.keepExtensions = true;
-    // form.parse(_req, (err, fields, files) => {
-    //   console.log(files);
-    // });
+    await httpProxyMiddleware(_req, res, {
+      target: `https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}`,
+      headers: {
+        'Authorization': `Bearer ${authToken.token}`
+      }
+    });
+  } catch (_err) {
+    return res.status(400).json({
+      error: { message: 'Uploading the profile picture went wrong.' },
+    });
+  }
+}
 
-    const data = await new Promise(function (resolve, reject) {
+/*
+
+
+    const buffers: any[] = [];
+    _req.on('readable', () => {
+      const chunk = _req.read();
+      if (chunk !== null) {
+        buffers.push(chunk);
+      }
+    })
+      .on('end', async () => {
+        return await axios
+          .put(
+            `https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}`,
+              Buffer.concat(buffers),
+            {
+              headers: {
+                Authorization: 'Bearer ' + authToken.token,
+                'Content-Type': 'multipart/form-data'
+              },
+              maxContentLength: 100000000,
+              maxBodyLength: 1000000000,
+            }
+          )
+          .then((_res: any) => {
+            return res.status(_res.status);
+          })
+          .catch((err: any) => {
+            console.log(err);
+            return res.status(err.response.status).json({ error: { message: err.message } });
+          });
+
+
+        console.log("Buffer", Buffer.concat(buffers));
+        return fetch(`https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}`, {
+          method: 'PUT',
+          credentials: 'include',
+          mode: 'cors',
+          headers: {
+            'Authorization': 'Bearer ' + authToken.token,
+            'User-Agent': _req.headers['user-agent'] ?? '',
+          },
+          body: "test",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log('Success:', data);
+            return res.status(data.status);
+          })
+          .catch((err) => {
+            console.error('Error:', err);
+            return res.status(500).json({ error: { message: err } });
+          });
+      });
+
+      /*
+    const data: any = await new Promise(function (resolve, reject) {
       const form = new formidable.IncomingForm({ keepExtensions: true });
       form.parse(_req, function (err, fields, files) {
         if (err) return reject(err);
@@ -51,29 +108,28 @@ export default async function handler(_req: PicDataRequest, res: NextApiResponse
       });
     });
 
-    return await axios
-      .put(
-        `https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}`,
-        {
-          name: 'abd',
-        },
-        {
-          headers: {
-            Authorization: 'Bearer ' + authToken.token,
-          },
-          maxContentLength: 100000000,
-          maxBodyLength: 1000000000,
-        }
-      )
-      .then((_res: any) => {
-        return res.status(_res.status);
-      })
-      .catch((err: any) => {
-        return res.status(err.response.status).json({ error: { message: err.message } });
-      });
-  } catch (_err) {
-    return res.status(400).json({
-      error: { message: 'Uploading the profile picture went wrong.' },
-    });
-  }
-}
+       */
+
+/*
+return await axios
+  .post(
+    `https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}`,
+    {
+      name: 'abd',
+    },
+    {
+      headers: {
+        Authorization: 'Bearer ' + authToken.token,
+      },
+      maxContentLength: 100000000,
+      maxBodyLength: 1000000000,
+    }
+  )
+  .then((_res: any) => {
+    return res.status(_res.status);
+  })
+  .catch((err: any) => {
+    console.log(err);
+    return res.status(err.response.status).json({ error: { message: err.message } });
+  });
+*/

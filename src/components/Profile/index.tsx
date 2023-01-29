@@ -100,9 +100,9 @@ function ProfilePage({ ...props }: ProfileProps) {
             Welcome <span className="text-bright-seaweed">{localProps.username}</span>!
           </h1>
           <div className="relative flex flex-col justify-center items-center">
-            <div id="img-container" className="relative flex-auto w-48 min-w-[10rem] max-w-[14rem] h-48 min-h-[10rem] max-h-[14rem]">
+            <div id="img-container" className="relative flex-auto w-48 min-w-[10rem] max-w-[14rem] h-48 min-h-[10rem] max-h-[14rem] flex flex-col justify-center items-center overflow-hidden rounded-full">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={localProps.pic === null || localProps.pic === '' ? placeholderImage : 'https://cherrytomaten.herokuapp.com' + localProps.pic} alt="Profilbild" className="rounded-full" />
+              <img src={localProps.pic === null || localProps.pic === '' ? placeholderImage : 'https://cherrytomaten.herokuapp.com' + localProps.pic} alt="Profilbild" className="w-auto min-w-full max-w-[unset] min-h-full max-h-[unset]" />
             </div>
             <div id="btns-container" className="flex flex-row justify-center items-center transition-all">
               <input type="file" id="upload-profile-pic-btn" name="profile-pic-upload" title="Upload Profile Picture" className="hidden" accept="image/*" onChange={handlePictureInputChange} />
