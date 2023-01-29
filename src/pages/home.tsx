@@ -55,7 +55,6 @@ function Home({ ...cookiePayload }: MapCookiesPayload) {
     return <LoadingSpinner />;
   }
 
-  //h-[calc(100vh-56px)]
   return (
     <main className="fixed w-full h-[calc(100%-56px)] max-h-screen overflow-hidden lg:mt-14">
       <Map cookiedCategories={cookiePayload.activeCategories} cookiedRadius={cookiePayload.radius} />
