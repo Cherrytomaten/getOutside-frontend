@@ -35,7 +35,8 @@ class UserAuthRepo implements IUserAuthRepo {
         setCookies([
           {
             name: AUTH_TOKEN,
-            value: res.data.access,
+            //value: res.data.access,
+            value: "ABC",
             exp: accessTokenExp,
           },
           {
