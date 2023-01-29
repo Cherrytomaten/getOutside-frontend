@@ -10,6 +10,10 @@ import { WrapperServerErrorResponse } from '@/types/Server/WrapperServerErrorRes
 import { ResetPasswordProps } from '@/types/User/ResetPasswordProps';
 import { UserDataProps } from '@/types/User/UserDataProps';
 
+// Currently the token exp. dates are not correctly set, so they'll be set manually for now
+const accessTokenExp: number = 86400000; // 1 day
+const refreshTokenExp: number = 604800000; // 1 week
+
 /**
  * This class offers a general interface to access different functions from every file where this class
  * got instantiated. The functions are related to user authentication.
@@ -32,12 +36,12 @@ class UserAuthRepo implements IUserAuthRepo {
           {
             name: AUTH_TOKEN,
             value: res.data.access,
-            exp: res.data.access.expiration,
+            exp: accessTokenExp,
           },
           {
             name: AUTH_REFRESH_TOKEN,
             value: res.data.refresh,
-            exp: res.data.refresh.expiration,
+            exp: refreshTokenExp,
           },
         ]);
         return Promise.resolve(res.data);
@@ -74,12 +78,12 @@ class UserAuthRepo implements IUserAuthRepo {
           {
             name: AUTH_TOKEN,
             value: res.data.access,
-            exp: res.data.access.expiration,
+            exp: accessTokenExp,
           },
           {
             name: AUTH_REFRESH_TOKEN,
             value: res.data.refresh,
-            exp: res.data.refresh.expiration,
+            exp: refreshTokenExp,
           },
         ]);
         return Promise.resolve(res.data);
@@ -104,12 +108,12 @@ class UserAuthRepo implements IUserAuthRepo {
           {
             name: AUTH_TOKEN,
             value: res.data.access,
-            exp: res.data.access.expiration,
+            exp: accessTokenExp,
           },
           {
             name: AUTH_REFRESH_TOKEN,
             value: res.data.refresh,
-            exp: res.data.refresh.expiration,
+            exp: refreshTokenExp,
           },
         ]);
         return Promise.resolve(res.data);
