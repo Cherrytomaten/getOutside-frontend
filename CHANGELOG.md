@@ -31,3 +31,6 @@
 - Add password forgot
 - Add User email verification
 - bugfixes
+
+### v1.2.1
+- Fix iphone map scrolling
