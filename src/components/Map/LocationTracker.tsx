@@ -56,7 +56,7 @@ function LocationTracker({ setUserLocation, setLocationPref, locationPref }: Loc
       trackingWatcher();
       trackingWatcherStarted.current = true;
       // start interval
-      setInterval(trackingWatcher, 5000);
+      setInterval(trackingWatcher, 20000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
