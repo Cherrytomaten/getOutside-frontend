@@ -4,7 +4,7 @@ import { LatLngExpression } from 'leaflet';
 import { FilterMenu } from '@/components/Map/FilterMenu';
 import { PinProps } from '@/types/Pins';
 import { ActivityType } from '@/types/Pins/ActivityType';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from 'framer-motion';
 import { RadiusMenu } from '@/components/Map/RadiusMenu';
 import { Filter } from '@/resources/svg/Filter';
@@ -40,6 +40,10 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
     setAllCats: setAllCategories,
     locationPreference: locationPreference,
   });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const mapElem = useMemo(
     () => (
