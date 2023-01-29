@@ -20,12 +20,12 @@ function MapPopup({ ...props }: MapPopupProps) {
   return (
     <Popup>
       <div id="map-popup-container">
-        <h3 className="font-bold text-default-font text-md">{props.pin.name}</h3>
+        <h3 className="font-bold text-default-font text-md">{props.pin.title}</h3>
         <h4 className="mt-1 text-bright-seaweed">{props.pin.category}</h4>
         <p className="font-light text-default-font">
           <span className="font-normal text-bright-seaweed">Address:</span> {props.pin.address}
         </p>
-        <Link href={`/mappoint/${props.pin.id}`}>
+        <Link href={`/mappoint/${props.pin.uuid}`}>
           <a className="w-full block px-3 py-1 text-center bg-bright-seaweed rounded-full transition-colors xs:hover:bg-hovered-seaweed">Visit</a>
         </Link>
         <a

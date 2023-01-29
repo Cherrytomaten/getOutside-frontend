@@ -166,7 +166,7 @@ function EditProfile(profileProps: EditProfileProps) {
         break;
 
       default:
-        console.log('Validating not possible. ID for requested input-field not found!');
+        logger.log('Validating not possible. ID for requested input-field not found!');
         setSubmitPDMsg({
           success: '',
           err: 'Validating not possible. ID for requested input-field not found!',
@@ -248,7 +248,7 @@ function EditProfile(profileProps: EditProfileProps) {
         break;
 
       default:
-        console.log('Validating not possible. ID for requested input-field not found!');
+        logger.log('Validating not possible. ID for requested input-field not found!');
         setSubmitPWMsg({
           success: '',
           err: 'Validating not possible. ID for requested input-field not found!',

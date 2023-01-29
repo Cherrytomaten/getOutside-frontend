@@ -46,7 +46,6 @@ function ResetPassword() {
           })
           .catch((err: FetchServerErrorResponse) => {
             logger.log('Reset password request failed');
-            console.log(err);
             sendToMachine({ type: 'REJECT', data: null, err: err });
           });
       },

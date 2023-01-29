@@ -72,9 +72,9 @@ function ProfilePage({ ...props }: ProfileProps) {
 
   async function uploadProfilePic() {
     let form_data = new FormData();
-    console.log('profilePic: ', profilePic);
+    logger.log('profilePic: ', profilePic);
     form_data.append('file', profilePic);
-    console.log('formdata: ', form_data);
+    logger.log('formdata: ', form_data);
 
     return await axios
       .put('/api/user/pfp/set', form_data)

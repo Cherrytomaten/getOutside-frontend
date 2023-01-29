@@ -1,9 +1,9 @@
 type MapPointProps = {
-  id: string;
-  name: string;
-  desc: string;
+  uuid: string;
+  title: string;
+  description: string;
   address: string;
-  opening: OpeningProps;
+  openingHours: OpeningProps;
   rating: number;
   comments: CommentProps[];
   image: ImageProps;
