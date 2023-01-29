@@ -127,7 +127,7 @@ function Signup() {
   return (
     <main className="w-full h-full min-h-screen flex flex-col justify-start items-center overflow-x-hidden">
       <div className="w-full h-auto max-h-64 flex justify-center my-14">
-        <LogoNew width="220px" height="auto" />
+        <LogoNew width="220px" height="100%" />
       </div>
       <form id="signup-form-container" className="flex-auto w-4/5 max-w-md flex flex-col justify-start items-center px-5 pb-10" onSubmit={(e) => handleSubmit(e)}>
         <div

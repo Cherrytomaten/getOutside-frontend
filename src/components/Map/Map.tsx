@@ -87,7 +87,7 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
           aria-label="Category filter"
           title="Select categories"
           onClick={() => setShowCatFilter(true)}>
-          <Filter width="100%" height="auto" fill="#fff"></Filter>
+          <Filter width="100%" height="100%" fill="#fff"></Filter>
           <div className="z-10 absolute -right-2 -bottom-2 w-7 h-7 flex flex-col justify-center items-center bg-white rounded-full">
             <span className="text-xs">{categoryFilter.length}</span>
           </div>
@@ -99,7 +99,7 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
           aria-label="Filter filter"
           title="Select radius"
           onClick={() => setShowRadiusFilter(true)}>
-          <Radius width="100%" height="auto" fill="#fff"></Radius>
+          <Radius width="100%" height="100%" fill="#fff"></Radius>
         </div>
       </div>
 
