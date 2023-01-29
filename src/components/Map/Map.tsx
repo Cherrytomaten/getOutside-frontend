@@ -47,7 +47,7 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
 
   const mapElem = useMemo(
     () => (
-      <MapContainer className="w-screen h-[calc(100vh-56px)] lg:mt-14" center={userLocation} zoom={13} minZoom={7} maxZoom={20} scrollWheelZoom={true} preferCanvas={true}>
+      <MapContainer className="w-screen h-full lg:mt-14" center={userLocation} zoom={13} minZoom={7} maxZoom={20} scrollWheelZoom={true} preferCanvas={true}>
         <TileLayer
           attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org">OpenMapTiles</a>, &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
           url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
