@@ -12,7 +12,7 @@ function Home() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ ease: 'easeOut', duration: 0.3, delay: 0.3, opacity: { duration: 0.15 } }}
           className="w-full h-60 flex justify-center mb-2 -ml-2 drop-shadow-lg">
-          <LogoNew width="100%" height="auto" />
+          <LogoNew width="100%" height="100%" />
         </motion.div>
         <div className="z-10 relative w-full h-60 flex flex-col justify-center items-center -mt-24">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -29,14 +29,14 @@ function Home() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ ease: 'easeOut', duration: 0.25, delay: 1, opacity: { duration: 0.1 } }}
             className="absolute -top-20 -right-4 drop-shadow-lg xs:right-2">
-            <Pin width="45" height="auto" />
+            <Pin width="45" height="100%" />
           </motion.div>
           <motion.div
             initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ ease: 'easeOut', duration: 0.25, delay: 1.1, opacity: { duration: 0.1 } }}
             className="absolute right-24 bottom-4 drop-shadow-lg xs:right-32">
-            <Pin width="45" height="auto" />
+            <Pin width="45" height="100%" />
           </motion.div>
         </div>
         <div className="z-20 w-full h-60 flex flex-col justify-center items-center">

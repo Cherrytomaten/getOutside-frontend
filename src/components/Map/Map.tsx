@@ -47,7 +47,7 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
 
   const mapElem = useMemo(
     () => (
-      <MapContainer className="w-screen h-[calc(100vh-56px)] lg:mt-14" center={userLocation} zoom={13} minZoom={7} maxZoom={20} scrollWheelZoom={true} preferCanvas={true}>
+      <MapContainer className="w-screen h-full" center={userLocation} zoom={13} minZoom={7} maxZoom={20} scrollWheelZoom={true} preferCanvas={true}>
         <TileLayer
           attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org">OpenMapTiles</a>, &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
           url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
@@ -87,7 +87,7 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
           aria-label="Category filter"
           title="Select categories"
           onClick={() => setShowCatFilter(true)}>
-          <Filter width="100%" height="auto" fill="#fff"></Filter>
+          <Filter width="100%" height="100%" fill="#fff"></Filter>
           <div className="z-10 absolute -right-2 -bottom-2 w-7 h-7 flex flex-col justify-center items-center bg-white rounded-full">
             <span className="text-xs">{categoryFilter.length}</span>
           </div>
@@ -99,7 +99,7 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
           aria-label="Filter filter"
           title="Select radius"
           onClick={() => setShowRadiusFilter(true)}>
-          <Radius width="100%" height="auto" fill="#fff"></Radius>
+          <Radius width="100%" height="100%" fill="#fff"></Radius>
         </div>
       </div>
 

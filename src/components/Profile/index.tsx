@@ -93,7 +93,7 @@ function ProfilePage({ ...props }: ProfileProps) {
   }
 
   return (
-    <main id={'profile_page_' + localProps.username} className="relative w-full h-[calc(100vh-56px)] flex justify-center items-center text-white lg:mt-14">
+    <main id={'profile_page_' + localProps.username} className="relative w-full h-[calc(100%-56px)] flex justify-center items-center pb-12 text-white lg:mt-14">
       <div id="profile-wrapper" className="w-full h-full flex flex-col justify-start items-center">
         <section id="header-section" className="w-full flex flex-col justify-start items-center">
           <h1 className="py-14 text-4xl">

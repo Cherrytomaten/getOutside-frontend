@@ -64,7 +64,7 @@ function ForgotPassword() {
     return (
       <main className="w-full h-full min-h-screen flex flex-col justify-start items-center overflow-x-hidden">
         <div className="w-full h-auto max-h-64 flex justify-center my-14">
-          <LogoNew width="220px" height="auto" />
+          <LogoNew width="220px" height="100%" />
         </div>
         <h3 className="px-4 mb-6 text-xl text-center text-white">We&apos;ve sent you an email to reset your password.</h3>
         <Link href="/login">
@@ -79,7 +79,7 @@ function ForgotPassword() {
   return (
     <main className="w-full h-full min-h-screen flex flex-col justify-start items-center overflow-x-hidden">
       <div className="w-full h-auto max-h-64 flex justify-center my-14">
-        <LogoNew width="220px" height="auto" />
+        <LogoNew width="220px" height="100%" />
       </div>
       <form className="flex-auto w-4/5 max-w-md flex flex-col justify-start items-center px-5 pb-10" onSubmit={(e) => handleSubmit(e)}>
         <div className={`w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}>

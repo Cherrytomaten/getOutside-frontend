@@ -56,7 +56,7 @@ function Home({ ...cookiePayload }: MapCookiesPayload) {
   }
 
   return (
-    <main className="w-full h-full min-h-screen max-h-screen overflow-hidden">
+    <main className="fixed w-full h-[calc(100%-56px)] max-h-screen overflow-hidden lg:mt-14">
       <Map cookiedCategories={cookiePayload.activeCategories} cookiedRadius={cookiePayload.radius} />
     </main>
   );
