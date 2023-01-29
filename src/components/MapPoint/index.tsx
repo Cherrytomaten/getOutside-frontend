@@ -1,13 +1,21 @@
 import CloseSvg from '@/resources/svg/Close';
 import RenderStars from '@/components/MapPoint/StarRendering';
 import { useEffect, useState, useRef } from 'react';
-import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import ExpandSvg from '@/resources/svg/Expand';
 import Link from 'next/link';
+import axios from 'axios';
+import { UserRepoClass } from '@/repos/UserRepo';
+import { logger } from '@/util/logger';
 
-function MapPoint({ ...props }: MapPointProps) {
-  // Review
+type MapPointPayloadProps = MapPointProps & {
+  category: any | null;
+  creator: string;
+  longitude: number;
+  latitude: number;
+};
+
+function MapPoint({ ...props }: MapPointPayloadProps) {
   const allStars: JSX.Element[] = RenderStars(props.rating, '34', '34');
   const minimumComments: number = 2;
   const [counter, setCounter] = useState<number>(minimumComments); // Counter for number of shown comments
@@ -15,6 +23,9 @@ function MapPoint({ ...props }: MapPointProps) {
   const [expandDesc, setExpandDesc] = useState<boolean>(false); // boolean to open the description
   const [descSize, setDescSize] = useState<number>(0); // description size - workaround for the arrow to show right
   const [showRating, setShowRating] = useState<boolean>(false);
+  const [comments, setComments] = useState<number[]>([]);
+  const [comment, setComment] = useState('');
+  const commentArray: CommentProps[] = props.comments;
 
   // automatically scroll down if a new comment appears
   // neglect this behavior on first mounting of component
@@ -30,7 +41,7 @@ function MapPoint({ ...props }: MapPointProps) {
 
   // display a number of comments depending on the counter (Hook)
   function showComments(): CommentProps[] {
-    return props.comments.slice(0, counter);
+    return commentArray.slice(0, counter);
   }
 
   // calculates height of elem considering parents
@@ -60,8 +71,49 @@ function MapPoint({ ...props }: MapPointProps) {
     if (counter < props.comments.length) {
       setCounter(counter + 1);
     } else {
-      console.log('No more comments.');
+      logger.log('No more comments.');
     }
+  }
+
+  const handleChange = (event: any) => {
+    setComment(event.target.value);
+  };
+
+  const handleSubmit = async (event: any) => {
+    //clear textArea with ID ????
+    event.preventDefault();
+    const mappointPin_id = props.uuid;
+    if (comment)
+      try {
+        const text = comment;
+        addComment(text);
+        setComment('');
+        const response = await axios.post('/api/comments', {
+          text,
+          mappointPin_id,
+        });
+        logger.log(response.data);
+      } catch (err) {
+        logger.log(err);
+      }
+  };
+
+  function handleKeyDown(e: any) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  }
+
+  async function addComment(comment: string) {
+    await UserRepoClass.getUserData().then((res: any) => {
+      const messageObj: CommentProps = {
+        author: res.username,
+        text: comment,
+      };
+      const newCommentsArray = commentArray.unshift(messageObj);
+      setComments([newCommentsArray]);
+    });
   }
 
   // decrement counter
@@ -69,48 +121,39 @@ function MapPoint({ ...props }: MapPointProps) {
     if (counter > minimumComments) {
       setCounter(counter - 1);
     } else {
-      console.log('Can not show less comments.');
+      logger.log('Can not show less comments.');
     }
   }
 
   return (
-    <main
-      id={props.uuid}
-      className="relative w-full h-full min-h-screen flex justify-center p-5 mt-12 mb-12 text-default-font"
-    >
-      <div id="card-wrapper" className="min-w-0 max-w-sm">
+    <main id={'mappoint-id-' + props.uuid} className="relative w-full h-full min-h-screen flex justify-center p-5 mb-12 text-default-font lg:pt-14">
+      <div id="card-wrapper" className="min-w-0 max-w-xl lg:w-full lg:max-w-[unset] lg:flex lg:flex-col lg:justify-start lg:items-center">
         <div className="relative w-full mb-8 overflow-hidden rounded-t-3xl">
-          <Image
-            src={props.image.src}
-            alt={props.image.alt}
-            height={props.image.height}
-            width={props.image.width}
-          />
+          <div className="w-full h-80 flex flex-col justify-center items-center overflow-hidden lg:h-[450px]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={props.image.src ? props.image.src : '/assets/mappoint-placeholder.jpg'} alt={props.image.alt} className="w-auto min-w-full max-w-[unset] min-h-full max-h-[unset] lg:min-h-[unset]" />
+          </div>
           <Link href="/home">
             <button
-              id="close-button"
-              className="absolute top-2 right-2 bg-dark-sea/50 rounded-full hover:cursor-pointer"
-              title="Close"
-            >
-              <CloseSvg width="40px" height="40px" fill="#f0f0f0" />
+              className="z-[9999] modest-shadow absolute top-4 right-4 w-10 h-10 p-2 opacity-90 bg-bright-seaweed rounded-full transition-all hover:xs:opacity-100 hover:xs:bg-hovered-seaweed">
+              <CloseSvg width="100%" height="auto" fill="#fff" />
             </button>
           </Link>
         </div>
-        <div
-          id="lower-wrapper"
-          className="flex flex-col justify-between align-center"
-        >
+        <div id="lower-wrapper" className="max-w-xl flex flex-col justify-between align-center">
           <div className="mb-4 text-3xl text-center">
-            <h1>{props.name}</h1>
+            <h1>{props.title}</h1>
           </div>
           <div className="mb-[10%] text-center">
-            <ul title={`Average Rating: ${props.rating.toString()}`}>
-              {allStars.map((star, index) => (
-                <li key={index} className="inline">
-                  {star}
-                </li>
-              ))}
-            </ul>
+            {props.rating !== null &&
+              <ul title={`Average Rating: ${props.rating.toString()}`}>
+                {allStars.map((star, index) => (
+                  <li key={index} className="inline">
+                    {star}
+                  </li>
+                ))}
+              </ul>
+            }
             <div className="relative w-full h-9 mt-4">
               <motion.button
                 initial={{ opacity: 1 }}
@@ -121,8 +164,7 @@ function MapPoint({ ...props }: MapPointProps) {
                 }}
                 type="button"
                 className="absolute top-0 right-[50%] left-[50%] w-[7.75rem] h-9 translate-x-[-50%] text-default-font border-solid border-2 rounded-md border-dark-seaweed"
-                onClick={() => setShowRating(!showRating)}
-              >
+                onClick={() => setShowRating(!showRating)}>
                 Average Rating
               </motion.button>
               {showRating && (
@@ -136,27 +178,21 @@ function MapPoint({ ...props }: MapPointProps) {
                   exit={{ opacity: 0 }}
                   type="button"
                   className="absolute top-0 right-[50%] left-[50%] w-[7.75rem] h-9 translate-x-[-50%] text-default-font bg-dark-seaweed rounded-md"
-                  onClick={() => setShowRating(!showRating)}
-                >{`${props.rating} Stars`}</motion.button>
+                  onClick={() => setShowRating(!showRating)}>{`${props.rating} Stars`}</motion.button>
               )}
             </div>
           </div>
           <div className="flex-1">
             {/* Beschreibung */}
             <div className="mb-5">
-              <h3 className="mb-1 text-lg">Description:</h3>
+              <h3 className="mb-1 text-lg">Description</h3>
               <div
                 style={{
-                  maxHeight: expandDesc
-                    ? calcDescElemHeightToString(
-                        calcDescElemHeight('desc-text-elem')
-                      )
-                    : '5.65rem',
+                  maxHeight: expandDesc ? calcDescElemHeightToString(calcDescElemHeight('desc-text-elem')) : '5.65rem',
                 }}
                 className={`ease via-dark-seaweed to-dark-sea mq-hover:hover:bg-pos-100 mq-hover:hover:shadow-darker-sea relative p-3 overflow-hidden bg-gradient-to-br bg-size-200 bg-pos-0 from-dark-seaweed rounded-xl transition-all duration-200 hover:cursor-pointer group`}
-                onClick={() => setExpandDesc(!expandDesc)}
-              >
-                <p id="desc-text-elem">{props.desc}</p>
+                onClick={() => setExpandDesc(!expandDesc)}>
+                <p id="desc-text-elem">{props.description}</p>
                 {descSize > 90.4 ? (
                   <motion.button
                     initial={{ rotate: 0 }}
@@ -167,8 +203,7 @@ function MapPoint({ ...props }: MapPointProps) {
                       delay: 0,
                       stiffness: 70,
                     }}
-                    className="z-10 mq-hover:group-hover:bg-dark-sea-semi-transparent absolute right-[5px] bottom-[5px] bg-dark-seaweed rounded-full"
-                  >
+                    className="z-10 mq-hover:group-hover:bg-dark-sea-semi-transparent absolute right-[5px] bottom-[5px] bg-dark-seaweed rounded-full">
                     <ExpandSvg width="30" height="30" />
                   </motion.button>
                 ) : (
@@ -178,76 +213,82 @@ function MapPoint({ ...props }: MapPointProps) {
             </div>
             {/* Adresse */}
             <div className="mb-5">
-              <h3 className="mb-1 text-lg">Address:</h3>
+              <h3 className="mb-1 text-lg">Address</h3>
               <div className="flex p-3 bg-dark-seaweed rounded-xl">
                 <p>{props.address}</p>
               </div>
             </div>
             {/* Öffnungszeiten */}
             <div className="mb-5">
-              <h3 className="mb-1 text-lg">Opening Hours:</h3>
+              <h3 className="mb-1 text-lg">Opening Hours</h3>
               <div className="flex p-3 bg-dark-seaweed rounded-xl">
                 <ul>
                   <li>
                     <span className="text-bright-seaweed">Monday: </span>
-                    {props.opening.monday}
+                    {props.openingHours.monday}
                   </li>
                   <li>
                     <span className="text-bright-seaweed">Tuesday: </span>
-                    {props.opening.tuesday}
+                    {props.openingHours.tuesday}
                   </li>
                   <li>
                     <span className="text-bright-seaweed">Wednesday: </span>
-                    {props.opening.wednesday}
+                    {props.openingHours.wednesday}
                   </li>
                   <li>
                     <span className="text-bright-seaweed">Thursday: </span>
-                    {props.opening.thursday}
+                    {props.openingHours.thursday}
                   </li>
                   <li>
                     <span className="text-bright-seaweed">Friday: </span>
-                    {props.opening.friday}
+                    {props.openingHours.friday}
                   </li>
                   <li>
                     <span className="text-bright-seaweed">Saturday: </span>
-                    {props.opening.saturday}
+                    {props.openingHours.saturday}
                   </li>
                   <li>
                     <span className="text-bright-seaweed">Sunday: </span>
-                    {props.opening.sunday}
+                    {props.openingHours.sunday}
                   </li>
                 </ul>
               </div>
             </div>
             {/* Kommentare */}
             <div className="mb-5">
-              <h3 className="mb-1 text-lg">Comments:</h3>
+              <form onSubmit={handleSubmit}>
+                <h3 className="mb-.5 text-lg">Comments</h3>
+                <textarea
+                  id="commentsTextArea"
+                  value={comment}
+                  className="w-full px-3 py-2 mt-1 text-white bg-transparent border rounded-md border-lighter-sea"
+                  onChange={handleChange}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Add a comment..."
+                  // rows="1"
+                ></textarea>
+                <input
+                  type="submit"
+                  value="Post comment"
+                  id="signup-btn-submit"
+                  className="flex-auto w-full p-2 mt-1 mb-5 text-dark-sea bg-bright-seaweed rounded-md transition-colors cursor-pointer hover:bg-hovered-seaweed"
+                />
+              </form>
               <ul>
                 {props.comments.length === 0 ? (
-                  <p className="min-h-[65px] flex flex-col justify-around p-3 mb-3 bg-dark-seaweed rounded-xl">
-                    There are no existing comments yet...
-                  </p>
+                  <p className="min-h-[65px] flex flex-col justify-around p-3 mb-3 bg-dark-seaweed rounded-xl">There are no existing comments yet...</p>
                 ) : (
                   <>
                     <AnimatePresence>
                       {showComments().map((comment, index) => (
                         <motion.div
                           key={index}
-                          className="min-h-[65px] flex flex-col justify-around p-3 mb-3 bg-dark-seaweed rounded-xl"
+                          className="relative min-h-[65px] flex flex-col justify-around p-3 pb-9 mb-3 bg-dark-seaweed rounded-xl"
                           initial={{ y: -100, opacity: 0 }}
                           animate={{ y: 0, opacity: 1 }}
-                          exit={{ y: -100, opacity: 0, position: 'absolute' }}
-                        >
-                          <li className="flex-auto">
-                            <span className="text-bright-seaweed">Author:</span>{' '}
-                            {comment.author}
-                          </li>
-                          <li className="flex-auto">
-                            <span className="text-bright-seaweed">
-                              Message:
-                            </span>{' '}
-                            {comment.text}
-                          </li>
+                          exit={{ y: -100, opacity: 0, position: 'absolute' }}>
+                          <p className="text-white">{comment.text}</p>
+                          <p className="absolute right-5 bottom-2 font-light text-bright-seaweed">{comment.author}</p>
                         </motion.div>
                       ))}
                     </AnimatePresence>
@@ -257,25 +298,16 @@ function MapPoint({ ...props }: MapPointProps) {
                         className={` ${
                           counter < props.comments.length ? '' : 'hidden'
                         } flex-auto w-full h-full border-solid border rounded-full border-bright-seaweed transition-all mq-hover:hover:text-dark-sea mq-hover:hover:bg-bright-seaweed`}
-                        onClick={showMoreComments}
-                      >
+                        onClick={showMoreComments}>
                         Show More
                       </button>
-                      <div
-                        className={` ${
-                          counter > minimumComments &&
-                          counter < props.comments.length
-                            ? ''
-                            : 'hidden'
-                        }  h-full w-5`}
-                      ></div>
+                      <div className={` ${counter > minimumComments && counter < props.comments.length ? '' : 'hidden'}  h-full w-5`}></div>
                       <button
                         id="show-less-comments-btn"
                         className={` ${
                           counter > minimumComments ? '' : 'hidden'
                         } flex-auto w-full h-full border-solid border rounded-full border-bright-seaweed transition-all mq-hover:hover:text-dark-sea mq-hover:hover:bg-bright-seaweed`}
-                        onClick={showLessComments}
-                      >
+                        onClick={showLessComments}>
                         Show Less
                       </button>
                     </div>

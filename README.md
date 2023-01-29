@@ -17,8 +17,10 @@ To test our project locally instead on our deployed domain follow these steps:
 `$ git clone https://github.com/Cherrytomaten/getOutside-frontend`
 2. Once the repository is cloned, there will be a `package.json` file in the root of the project, containing all information regarding of the dependencies of this project.<br/> It should be noticed that this project requires [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable) to be runned, as we disabled npm by choice. For further information about the projects dependencies, take a look at the [package.json](https://github.com/Cherrytomaten/getOutside-frontend/blob/main/package.json).
 3. Navigate to the projects directory and run `yarn install` to install all necessary dependencies.
-4. Now the project can be launched with `yarn start`.
+4. Now the project can be launched with `yarn dev`. (this starts the development environment)
 5. The default url/port is `localhost:3000`
+
+To test the project in **production** mode, use `yarn build` first & then run `yarn start`.
 
 ### Deployment
 
@@ -49,10 +51,11 @@ Once a bigger feature is finished and all necessary feature branches are merged 
 - **Marlon**<br/>
    - Who is responsible for the frontend managing, which includes: distributing tasks, keeping in touch with the backend, plan on how to implement new features with the current code structure, reviewing pull-requests and maintaining the frontend repository.
    - Adds complex features like the authentication frame
-   - Adds API frontend proxy API routes ([Nextjs proxy API](https://nextjs.org/docs/api-routes/introduction))
+   - Adds & maintains API frontend proxy API routes ([Nextjs proxy API](https://nextjs.org/docs/api-routes/introduction))
    - polishes code structure
    - polishes design of components
    - Providing workshops / support for *nextJs/TypeScript/server data fetching* to the team
+   - Writing the proxy API documentation [(source)](https://app.swaggerhub.com/apis/Cherrytomaten_fe/getoutside_frontend_proxy/1.0.0#/)
 
 **All tasks are documented in our ticket system on linear [here](https://linear.app/cherrytomaten/project/getoutside-78a479cfd135)**
 

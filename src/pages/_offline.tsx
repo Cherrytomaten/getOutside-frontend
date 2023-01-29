@@ -1,7 +1,10 @@
 function Offline() {
-    return (
-        <p>Offline placeholder</p>
-    );
+  return (
+    <main className="flex flex-col justify-center items-center px-3">
+      <h2 className="mb-2 text-3xl text-white">Offline</h2>
+      <p className="text-lg text-white">Seems like you are currently offline.</p>
+    </main>
+  );
 }
 
 export default Offline;

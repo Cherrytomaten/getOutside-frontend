@@ -1,10 +1,9 @@
-import { getCookie } from "@/util/cookieManager";
-import { AUTH_REFRESH_TOKEN, AUTH_TOKEN } from "@/types/constants";
-import React, { useEffect, useRef, useState } from "react";
-import { useAuth } from "@/context/AuthContext";
-import { Logger } from "@/util/logger";
-import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
-
+import { getCookie } from '@/util/cookieManager';
+import { AUTH_REFRESH_TOKEN, AUTH_TOKEN } from '@/types/constants';
+import React, { useEffect, useRef, useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { logger } from '@/util/logger';
+import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
 
 /**
  * User authentication hook that runs on page load to check if the current
@@ -14,71 +13,70 @@ import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
  * Also provides a logout function.
  */
 function useUserAuth() {
-    const [authStatus, setAuthStatus] = useState<boolean>(true);
-    const {fetchUserAuthState, sendToUserAuthMachine} = useAuth();
-    const watcher: React.MutableRefObject<NodeJS.Timeout | null> = useRef(null);
+  const [authStatus, setAuthStatus] = useState<boolean>(true);
+  const { fetchUserAuthState, sendToUserAuthMachine } = useAuth();
+  const watcher: React.MutableRefObject<NodeJS.Timeout | null> = useRef(null);
 
-    // check if a token was cookied. If not redirect to login page, otherwise try to fetch userdata by token
-    function validateUser() {
-        if (fetchUserAuthState.matches('pending')) {
-            return;
-        }
-
-        Logger.log("trying to validate user...");
-        const tokenCookie = getCookie(AUTH_TOKEN);
-        if (tokenCookie !== null) {
-            sendToUserAuthMachine({type: 'FETCH_AUTH_USER', payload: {byToken: true}});
-        } else {
-            setAuthStatus(false);
-        }
+  // check if a token was cookied. If not redirect to login page, otherwise try to fetch userdata by token
+  function validateUser() {
+    if (fetchUserAuthState.matches('pending')) {
+      return;
     }
 
+    logger.log('trying to validate user...');
+    const tokenCookie = getCookie(AUTH_TOKEN);
+    if (tokenCookie !== null) {
+      sendToUserAuthMachine({ type: 'FETCH_AUTH_USER', payload: { byToken: true } });
+    } else {
+      setAuthStatus(false);
+    }
+  }
 
-    function logout() {
-        sendToUserAuthMachine({type: 'LOGOUT'});
+  function logout() {
+    sendToUserAuthMachine({ type: 'LOGOUT' });
+    setAuthStatus(false);
+  }
+
+  // on load auth check
+  useEffect(() => {
+    if (fetchUserAuthState.context.user === null) {
+      validateUser();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    // if token exists as cookie, but auth still failed, redirects to log in as well.
+    if (fetchUserAuthState.matches('failure')) {
+      if (!fetchUserAuthState.context.refreshAttempted) {
+        sendToUserAuthMachine({ type: 'RETRY', payload: { refreshToken: getCookie(AUTH_REFRESH_TOKEN) } });
+      } else {
         setAuthStatus(false);
+      }
     }
 
-    // on load auth check
-    useEffect(() => {
-        if (fetchUserAuthState.context.user === null) {
-            validateUser();
+    // start expiration watcher
+    if (fetchUserAuthState.matches('success')) {
+      const refTokenString = getCookie(AUTH_REFRESH_TOKEN);
+      if (refTokenString !== undefined && refTokenString !== null) {
+        const refToken: TokenPayload = JSON.parse(refTokenString);
+        logger.log('Starting token watchExpiration. Days until exp:', Math.floor(refToken.expiration / (24 * 60 * 60 * 1000)));
+        watchExpiration(refToken.expiration, refToken);
+      }
+
+      function watchExpiration(exp: number, refToken: TokenPayload) {
+        if (watcher.current !== null) {
+          clearTimeout(watcher.current);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        watcher.current = setTimeout(() => {
+          sendToUserAuthMachine({ type: 'RETRY', payload: { refreshToken: refToken } });
+          // 10s buffer before actual expiration.
+        }, exp - 10000);
+      }
+    }
+  }, [fetchUserAuthState, sendToUserAuthMachine]);
 
-    useEffect(() => {
-        // if token exists as cookie, but auth still failed, redirects to log in as well.
-        if (fetchUserAuthState.matches('failure')) {
-            if (!fetchUserAuthState.context.refreshAttempted) {
-                sendToUserAuthMachine({type: 'RETRY', payload: {refreshToken: getCookie(AUTH_REFRESH_TOKEN)}});
-            } else {
-                setAuthStatus(false);
-            }
-        }
-
-        // start expiration watcher
-        if (fetchUserAuthState.matches('success')) {
-            const refTokenString = getCookie(AUTH_REFRESH_TOKEN);
-            if (refTokenString !== undefined && refTokenString !== null) {
-                const refToken: TokenPayload = JSON.parse(refTokenString);
-                Logger.log("Starting token watchExpiration. Days until exp:", Math.floor(refToken.expiration / (24 * 60 * 60 * 1000)));
-                watchExpiration(refToken.expiration, refToken);
-            }
-
-            function watchExpiration(exp: number, refToken: TokenPayload) {
-                if (watcher.current !== null) {
-                    clearTimeout(watcher.current);
-                }
-                watcher.current = setTimeout(() => {
-                    sendToUserAuthMachine({type: 'RETRY', payload: {refreshToken: refToken}});
-                    // 10s buffer before actual expiration.
-                }, exp - 10000);
-            }
-        }
-    }, [fetchUserAuthState, sendToUserAuthMachine])
-
-    return {authStatus, setAuthStatus, logout};
+  return { authStatus, setAuthStatus, logout };
 }
 
 export { useUserAuth };

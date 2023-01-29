@@ -9,7 +9,7 @@ import { GetServerSidePropsContext } from 'next';
 import axios, { AxiosResponse } from 'axios';
 import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
 import { BackendErrorResponse } from '@/types/Backend/BackendErrorResponse';
-import { Logger } from '@/util/logger';
+import { logger } from '@/util/logger';
 
 type UserDataServerResponseProps = {
   username: string;
@@ -46,7 +46,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         },
       })
       .then((_res: UserDataServerResponse) => {
-        Logger.log('resdata: ', _res.data);
+        logger.log('page props from server: ', _res.data);
         return {
           props: {
             username: _res.data.username,
@@ -60,8 +60,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       .catch((_err: BackendErrorResponse) => {
         throw new Error('Internal Server Error.');
       });
-  } catch (err) {
-    console.log('Error requesting profile page: ', err);
+  } catch (err: any) {
+    logger.log('Error requesting profile page:', err);
     return {
       notFound: true,
     };
@@ -83,15 +83,7 @@ function Profile({ ...userPayload }: ProfileProps) {
     return <LoadingSpinner />;
   }
 
-  return (
-    <ProfilePage
-      username={userPayload.username}
-      fname={userPayload.fname}
-      lname={userPayload.lname}
-      email={userPayload.email}
-      pic={userPayload.pic}
-    />
-  );
+  return <ProfilePage username={userPayload.username} fname={userPayload.fname} lname={userPayload.lname} email={userPayload.email} pic={userPayload.pic} />;
 }
 
 export default Profile;

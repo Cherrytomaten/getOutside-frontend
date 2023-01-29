@@ -1,24 +1,73 @@
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { MapPoint } from '@/components/MapPoint';
-import axios from 'axios';
+import axios, { AxiosResponse } from "axios";
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { useUserAuth } from "@/hooks/useUserAuth";
-import { useAuth } from "@/context/AuthContext";
-import { Logger } from "@/util/logger";
+import { useEffect } from 'react';
+import { useUserAuth } from '@/hooks/useUserAuth';
+import { useAuth } from '@/context/AuthContext';
+import { logger } from '@/util/logger';
+import { GetServerSidePropsContext } from 'next';
+import { BackendErrorResponse } from '@/types/Backend/BackendErrorResponse';
+import { PinProps } from '@/types/Pins';
+import { AUTH_TOKEN } from "@/types/constants";
+import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 
-const MapPointPage = () => {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const mappointId: string | string[] | undefined = context.params?.pid;
+  const tokenData: string | undefined = context.req.cookies[AUTH_TOKEN];
+
+  try {
+    if (mappointId === undefined) {
+      throw new Error('MapPoint ID is undefined!');
+    }
+
+    if (tokenData === undefined || tokenData === 'undefined') {
+      throw new Error('TokenData is undefined!');
+    }
+
+    const authToken: TokenPayload = JSON.parse(tokenData);
+
+    return await axios
+      // .get(`https://cherrytomaten.herokuapp.com/api/mappoint/${mappointId}`)
+      .get('https://cherrytomaten.herokuapp.com/api/mappoint/24c045fa-4767-4e26-8c7f-b04d1307c2b4', {
+        headers: {
+          Authorization: 'Bearer ' + authToken.token,
+        },
+      })
+      .then((_res: AxiosResponse<PinProps>) => {
+        logger.log('Mappoint Backend Data:', _res.data);
+        return {
+          props: {
+            uuid: _res.data.uuid,
+            title: _res.data.title,
+            description: _res.data.description,
+            address: _res.data.address,
+            openingHours: _res.data.openingHours,
+            rating: null,
+            comments: _res.data.comments,
+            image: _res.data.image,
+            category: _res.data.category,
+            creator: _res.data.creator,
+            longitude: _res.data.longitude,
+            latitude: _res.data.latitude,
+          },
+        };
+      })
+      .catch((_err: BackendErrorResponse) => {
+        throw new Error('Internal Server Error.');
+      });
+  } catch (err) {
+    logger.log('Error requesting mappoint page: ', err);
+    return {
+      notFound: true,
+    };
+  }
+}
+
+function MapPointPage({ ...mapointPayload }: PinProps) {
   const router = useRouter();
-  const { pid } = router.query;
-  const [mapPointData, setMapPointData] = useState<MapPointProps>();
   const authenticationHook = useUserAuth();
   const { fetchUserAuthState } = useAuth();
-
-  useEffect(() => {
-    if (!router.isReady) return;
-    apiRequest();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.isReady]);
 
   useEffect(() => {
     if (!authenticationHook.authStatus) {
@@ -30,70 +79,25 @@ const MapPointPage = () => {
     return <LoadingSpinner />;
   }
 
-  async function apiRequest() {
-    const backendData = await axios.get('/api/mappoint/get', {
-      params: {
-        uuid: pid,
-      },
-    });
-    Logger.log('backendData: ', backendData.data);
-    setMapPointData(backendData.data);
-  }
-
-  const emptyOpening: OpeningProps = {
-    monday: '---',
-    tuesday: '---',
-    wednesday: '---',
-    thursday: '---',
-    friday: '---',
-    saturday: '---',
-    sunday: '---',
-  };
-
-  const img: ImageProps = {
-    src: '',
-    alt: 'Bild nicht gefunden',
-    width: 450,
-    height: 300,
-  };
-
-  if (mapPointData === undefined) {
-    return (
-      <>
-        <LoadingSpinner />
-      </>
-    );
-  } else if (mapPointData.uuid === undefined) {
-    return (
-      <>
-        <MapPoint
-          uuid="000"
-          name="Empty"
-          desc="Something went wrong. We could not find this MapPoint."
-          address="..."
-          opening={emptyOpening}
-          rating={0}
-          comments={[]}
-          image={img}
-        />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <MapPoint
-          uuid={mapPointData.uuid}
-          name={mapPointData.name}
-          desc={mapPointData.desc}
-          address={mapPointData.address}
-          opening={mapPointData.opening}
-          rating={mapPointData.rating}
-          comments={mapPointData.comments}
-          image={mapPointData.image}
-        />
-      </>
-    );
-  }
-};
+  return (
+    <>
+      <MapPoint
+        uuid={mapointPayload.uuid}
+        title={mapointPayload.title}
+        description={mapointPayload.description}
+        address={mapointPayload.address}
+        openingHours={mapointPayload.openingHours}
+        rating={mapointPayload.rating}
+        comments={mapointPayload.comments}
+        image={mapointPayload.image}
+        category={mapointPayload.category}
+        creator={mapointPayload.creator}
+        longitude={mapointPayload.longitude}
+        latitude={mapointPayload.latitude}
+      />
+    </>
+  );
+  // }
+}
 
 export default MapPointPage;

@@ -1,8 +1,8 @@
-import { AxiosResponse } from "axios";
-import { BackendErrorProps } from "@/types/Backend/BackendErrorProps";
+import { AxiosResponse } from 'axios';
+import { BackendErrorProps } from '@/types/Backend/BackendErrorProps';
 
 type BackendErrorResponse = {
-    response: AxiosResponse<BackendErrorProps>;
-}
+  response: AxiosResponse<BackendErrorProps>;
+};
 
 export type { BackendErrorResponse };
