@@ -69,7 +69,6 @@ export default async function handler(_req: PicDataRequest, res: NextApiResponse
         return res.status(_res.status);
       })
       .catch((err: any) => {
-        console.log('Error: ', err);
         return res.status(err.response.status).json({ error: { message: err.message } });
       });
   } catch (_err) {

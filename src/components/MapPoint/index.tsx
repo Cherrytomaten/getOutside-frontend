@@ -1,7 +1,6 @@
 import CloseSvg from '@/resources/svg/Close';
 import RenderStars from '@/components/MapPoint/StarRendering';
 import { useEffect, useState, useRef } from 'react';
-import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import ExpandSvg from '@/resources/svg/Expand';
 import Link from 'next/link';
@@ -17,7 +16,6 @@ type MapPointPayloadProps = MapPointProps & {
 };
 
 function MapPoint({ ...props }: MapPointPayloadProps) {
-  // Review
   const allStars: JSX.Element[] = RenderStars(props.rating, '34', '34');
   const minimumComments: number = 2;
   const [counter, setCounter] = useState<number>(minimumComments); // Counter for number of shown comments
@@ -73,7 +71,7 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
     if (counter < props.comments.length) {
       setCounter(counter + 1);
     } else {
-      console.log('No more comments.');
+      logger.log('No more comments.');
     }
   }
 
@@ -123,33 +121,39 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
     if (counter > minimumComments) {
       setCounter(counter - 1);
     } else {
-      console.log('Can not show less comments.');
+      logger.log('Can not show less comments.');
     }
   }
 
   return (
-    <main id={'mappoint-id-' + props.uuid} className="relative w-full h-full min-h-screen flex justify-center p-5 mb-12 text-default-font">
-      <div id="card-wrapper" className="min-w-0 max-w-sm">
+    <main id={'mappoint-id-' + props.uuid} className="relative w-full h-full min-h-screen flex justify-center p-5 mb-12 text-default-font lg:pt-14">
+      <div id="card-wrapper" className="min-w-0 max-w-xl lg:w-full lg:max-w-[unset] lg:flex lg:flex-col lg:justify-start lg:items-center">
         <div className="relative w-full mb-8 overflow-hidden rounded-t-3xl">
-          <Image src={props.image.src} alt={props.image.alt} height={props.image.height} width={props.image.width} />
+          <div className="w-full h-80 flex flex-col justify-center items-center overflow-hidden lg:h-[450px]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={props.image.src ? props.image.src : '/assets/mappoint-placeholder.jpg'} alt={props.image.alt} className="w-auto min-w-full max-w-[unset] min-h-full max-h-[unset] lg:min-h-[unset]" />
+          </div>
           <Link href="/home">
-            <button id="close-button" className="absolute top-2 right-2 bg-dark-sea/50 rounded-full hover:cursor-pointer" title="Close">
-              <CloseSvg width="40px" height="40px" fill="#f0f0f0" />
+            <button
+              className="z-[9999] modest-shadow absolute top-4 right-4 w-10 h-10 p-2 opacity-90 bg-bright-seaweed rounded-full transition-all hover:xs:opacity-100 hover:xs:bg-hovered-seaweed">
+              <CloseSvg width="100%" height="auto" fill="#fff" />
             </button>
           </Link>
         </div>
-        <div id="lower-wrapper" className="flex flex-col justify-between align-center">
+        <div id="lower-wrapper" className="max-w-xl flex flex-col justify-between align-center">
           <div className="mb-4 text-3xl text-center">
             <h1>{props.title}</h1>
           </div>
           <div className="mb-[10%] text-center">
-            <ul title={`Average Rating: ${props.rating.toString()}`}>
-              {allStars.map((star, index) => (
-                <li key={index} className="inline">
-                  {star}
-                </li>
-              ))}
-            </ul>
+            {props.rating !== null &&
+              <ul title={`Average Rating: ${props.rating.toString()}`}>
+                {allStars.map((star, index) => (
+                  <li key={index} className="inline">
+                    {star}
+                  </li>
+                ))}
+              </ul>
+            }
             <div className="relative w-full h-9 mt-4">
               <motion.button
                 initial={{ opacity: 1 }}
@@ -181,7 +185,7 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
           <div className="flex-1">
             {/* Beschreibung */}
             <div className="mb-5">
-              <h3 className="mb-1 text-lg">Description:</h3>
+              <h3 className="mb-1 text-lg">Description</h3>
               <div
                 style={{
                   maxHeight: expandDesc ? calcDescElemHeightToString(calcDescElemHeight('desc-text-elem')) : '5.65rem',
@@ -209,14 +213,14 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
             </div>
             {/* Adresse */}
             <div className="mb-5">
-              <h3 className="mb-1 text-lg">Address:</h3>
+              <h3 className="mb-1 text-lg">Address</h3>
               <div className="flex p-3 bg-dark-seaweed rounded-xl">
                 <p>{props.address}</p>
               </div>
             </div>
             {/* Öffnungszeiten */}
             <div className="mb-5">
-              <h3 className="mb-1 text-lg">Opening Hours:</h3>
+              <h3 className="mb-1 text-lg">Opening Hours</h3>
               <div className="flex p-3 bg-dark-seaweed rounded-xl">
                 <ul>
                   <li>
@@ -253,11 +257,11 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
             {/* Kommentare */}
             <div className="mb-5">
               <form onSubmit={handleSubmit}>
-                <h3 className="mb-.5 text-lg">Comments:</h3>
+                <h3 className="mb-.5 text-lg">Comments</h3>
                 <textarea
                   id="commentsTextArea"
                   value={comment}
-                  className="w-full p-1 mt-1 text-white bg-transparent border rounded-md"
+                  className="w-full px-3 py-2 mt-1 text-white bg-transparent border rounded-md border-lighter-sea"
                   onChange={handleChange}
                   onKeyDown={handleKeyDown}
                   placeholder="Add a comment..."
@@ -267,7 +271,7 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
                   type="submit"
                   value="Post comment"
                   id="signup-btn-submit"
-                  className="flex-auto w-full p-1 mt-1 mb-5 font-bold text-white bg-bright-seaweed border-solid border rounded-md transition-colors cursor-pointer"
+                  className="flex-auto w-full p-2 mt-1 mb-5 text-dark-sea bg-bright-seaweed rounded-md transition-colors cursor-pointer hover:bg-hovered-seaweed"
                 />
               </form>
               <ul>
@@ -279,16 +283,12 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
                       {showComments().map((comment, index) => (
                         <motion.div
                           key={index}
-                          className="min-h-[65px] flex flex-col justify-around p-3 mb-3 bg-dark-seaweed rounded-xl"
+                          className="relative min-h-[65px] flex flex-col justify-around p-3 pb-9 mb-3 bg-dark-seaweed rounded-xl"
                           initial={{ y: -100, opacity: 0 }}
                           animate={{ y: 0, opacity: 1 }}
                           exit={{ y: -100, opacity: 0, position: 'absolute' }}>
-                          <li className="flex-auto">
-                            <span className="text-bright-seaweed">Author:</span> {comment.author}
-                          </li>
-                          <li className="flex-auto">
-                            <span className="text-bright-seaweed">Message:</span> {comment.text}
-                          </li>
+                          <p className="text-white">{comment.text}</p>
+                          <p className="absolute right-5 bottom-2 font-light text-bright-seaweed">{comment.author}</p>
                         </motion.div>
                       ))}
                     </AnimatePresence>

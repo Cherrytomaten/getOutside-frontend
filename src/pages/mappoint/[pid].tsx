@@ -1,6 +1,6 @@
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { MapPoint } from '@/components/MapPoint';
-import axios from 'axios';
+import axios, { AxiosResponse } from "axios";
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useUserAuth } from '@/hooks/useUserAuth';
@@ -9,33 +9,45 @@ import { logger } from '@/util/logger';
 import { GetServerSidePropsContext } from 'next';
 import { BackendErrorResponse } from '@/types/Backend/BackendErrorResponse';
 import { PinProps } from '@/types/Pins';
+import { AUTH_TOKEN } from "@/types/constants";
+import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const mappointId: string | string[] | undefined = context.params?.pid;
+  const tokenData: string | undefined = context.req.cookies[AUTH_TOKEN];
 
   try {
     if (mappointId === undefined) {
       throw new Error('MapPoint ID is undefined!');
     }
 
+    if (tokenData === undefined || tokenData === 'undefined') {
+      throw new Error('TokenData is undefined!');
+    }
+
+    const authToken: TokenPayload = JSON.parse(tokenData);
+
     return await axios
-      // id s in url in frontend not match
       // .get(`https://cherrytomaten.herokuapp.com/api/mappoint/${mappointId}`)
-      .get('https://cherrytomaten.herokuapp.com/api/mappoint/1')
-      .then((_res: any) => {
+      .get('https://cherrytomaten.herokuapp.com/api/mappoint/24c045fa-4767-4e26-8c7f-b04d1307c2b4', {
+        headers: {
+          Authorization: 'Bearer ' + authToken.token,
+        },
+      })
+      .then((_res: AxiosResponse<PinProps>) => {
         logger.log('Mappoint Backend Data:', _res.data);
         return {
           props: {
-            uuid: _res.data.id,
-            name: _res.data.title,
-            desc: _res.data.description,
+            uuid: _res.data.uuid,
+            title: _res.data.title,
+            description: _res.data.description,
             address: _res.data.address,
-            opening: _res.data.openingHours,
-            rating: _res.data.ratings,
+            openingHours: _res.data.openingHours,
+            rating: null,
             comments: _res.data.comments,
             image: _res.data.image,
             category: _res.data.category,
-            creator_id: _res.data.creator_id,
+            creator: _res.data.creator,
             longitude: _res.data.longitude,
             latitude: _res.data.latitude,
           },
@@ -45,7 +57,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         throw new Error('Internal Server Error.');
       });
   } catch (err) {
-    console.log('Error requesting mappoint page: ', err);
+    logger.log('Error requesting mappoint page: ', err);
     return {
       notFound: true,
     };

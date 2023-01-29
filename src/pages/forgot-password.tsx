@@ -52,7 +52,6 @@ function ForgotPassword() {
   }, []);
 
   useEffect(() => {
-    console.log(inputData);
     const submitBtn: HTMLInputElement | null = document.getElementById('reset-password-submit') as HTMLInputElement;
     if (submitBtn !== null) {
       submitBtn.disabled = inputData.length === 0;

@@ -54,7 +54,6 @@ export default async function handler(_req: ResetPasswordRequest, res: ForgotPas
       return res.status(201).json(_res.data);
     })
     .catch((err: ResetPasswordErrorResponse) => {
-      console.log('ERR', err);
       if (err.response?.data?.error === undefined) {
         return res.status(err.response?.status || 500).json({ errors: { message: 'A server error occured.' } });
       }
