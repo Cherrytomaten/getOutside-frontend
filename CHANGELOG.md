@@ -24,3 +24,10 @@
 - Add license
 - Update Readme
 - remove unused libraries
+
+### v1.2.0
+- Add change profil data
+- Add live tracking
+- Add password forgot
+- Add User email verification
+- bugfixes
