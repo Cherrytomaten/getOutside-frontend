@@ -6,10 +6,12 @@ type FilterMenuProps = {
   allCategories: string[];
   categoryFilter: ActivityType[];
   setCatFilter: Dispatch<SetStateAction<string[]>>;
+  onlyShowFavs: boolean;
+  setOnlyShowFavs: Dispatch<SetStateAction<boolean>>;
   setTrigger: Dispatch<any>;
 };
 
-function FilterMenu({ allCategories, categoryFilter, setCatFilter, setTrigger }: FilterMenuProps) {
+function FilterMenu({ allCategories, categoryFilter, setCatFilter, setTrigger, setOnlyShowFavs, onlyShowFavs }: FilterMenuProps) {
   function changeHandler(event: ChangeEvent<HTMLInputElement>) {
     const {
       target: { value },
@@ -38,20 +40,23 @@ function FilterMenu({ allCategories, categoryFilter, setCatFilter, setTrigger }:
     <div className="hide-scrollbar w-full h-full flex flex-col justify-start items-center pt-20 overflow-y-scroll bg-dark-sea/95">
       <h3 className="mb-6 text-5xl text-white">Categories</h3>
       {allCategories.length !== 0 && (
-        <div className="w-full flex flex-row justify-center items-center py-3 mb-7">
-          <button
-            className="w-full max-w-[200px] px-6 py-1.5 mr-2 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-darker-sea disabled:hover:bg-darker-sea xs:hover:bg-hovered-seaweed"
-            onClick={selectAll}
-            disabled={allCategories.length === categoryFilter.length}>
-            Select all
-          </button>
-          <button
-            className="w-full max-w-[200px] px-6 py-1.5 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-darker-sea disabled:hover:bg-darker-sea xs:hover:bg-hovered-seaweed"
-            onClick={unselectAll}
-            disabled={categoryFilter.length === 0}>
-            Unselect all
-          </button>
-        </div>
+        <>
+          <button onClick={() => setOnlyShowFavs(!onlyShowFavs)}>fav</button>
+          <div className="w-full flex flex-row justify-center items-center py-3 mb-7">
+            <button
+              className="w-full max-w-[200px] px-6 py-1.5 mr-2 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-darker-sea disabled:hover:bg-darker-sea xs:hover:bg-hovered-seaweed"
+              onClick={selectAll}
+              disabled={allCategories.length === categoryFilter.length}>
+              Select all
+            </button>
+            <button
+              className="w-full max-w-[200px] px-6 py-1.5 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-darker-sea disabled:hover:bg-darker-sea xs:hover:bg-hovered-seaweed"
+              onClick={unselectAll}
+              disabled={categoryFilter.length === 0}>
+              Unselect all
+            </button>
+          </div>
+        </>
       )}
       <form>
         {allCategories.map((catElem: string) => {

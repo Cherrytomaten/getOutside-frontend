@@ -16,13 +16,15 @@ import { useManageMapData } from '@/hooks/useManageMapData';
 import { ActivityIcon } from '@/resources/leafletIcons/ActivityIcon';
 import { SmallSpinner } from '@/components/SmallSpinner';
 import { Radius } from '@/resources/svg/Radius';
+import { FavoritePinsList } from "@/types/Pins/FavoritePinsList";
 
 type MapProps = {
   cookiedCategories: string[];
   cookiedRadius: number;
+  favoritePinsList: FavoritePinsList
 };
 
-function Map({ cookiedCategories, cookiedRadius }: MapProps) {
+function Map({ cookiedCategories, cookiedRadius, favoritePinsList }: MapProps) {
   const [showCatFilter, setShowCatFilter] = useState<boolean>(false);
   const [showRadiusFilter, setShowRadiusFilter] = useState<boolean>(false);
 
@@ -31,6 +33,7 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
   const [radius, setRadius] = useState<number>(cookiedRadius);
   const [locationPreference, setLocationPreference] = useState<boolean | null>(null);
   const [userLocation, setUserLocation] = useState<LatLngExpression>(DEFAULT_POSITION);
+  const [onlyShowFavs, setOnlyShowFavs] = useState<boolean>(false);
   const { fetchPinDataQueryState } = useManageMapData({
     radius: radius,
     location: userLocation,
@@ -41,9 +44,9 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
     locationPreference: locationPreference,
   });
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  function isPinFavorite(pinId: string): boolean {
+    return favoritePinsList.some(favElem => favElem.pin.uuid === pinId);
+  }
 
   const mapElem = useMemo(
     () => (
@@ -61,6 +64,12 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
             if (pinElemData.category === null || !categoryFilter.includes(pinElemData.category)) {
               return null;
             }
+
+            if (onlyShowFavs && !isPinFavorite(pinElemData.uuid)) {
+              return null;
+            }
+            console.log(onlyShowFavs);
+            console.log(isPinFavorite(pinElemData.uuid))
 
             return (
               <div key={pinElemData.uuid + '-marker-id'}>
@@ -104,7 +113,7 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
       </div>
 
       <ContentPopup trigger={showCatFilter} setTrigger={setShowCatFilter}>
-        <FilterMenu allCategories={allCategories} categoryFilter={categoryFilter} setCatFilter={setCategoryFilter} setTrigger={setShowCatFilter} />
+        <FilterMenu allCategories={allCategories} categoryFilter={categoryFilter} setCatFilter={setCategoryFilter} setTrigger={setShowCatFilter} onlyShowFavs={onlyShowFavs} setOnlyShowFavs={setOnlyShowFavs} />
       </ContentPopup>
 
       <ContentPopup trigger={showRadiusFilter} setTrigger={setShowRadiusFilter}>

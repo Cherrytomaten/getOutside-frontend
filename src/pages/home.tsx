@@ -3,9 +3,13 @@ import { useRouter } from 'next/router';
 import { useUserAuth } from '@/hooks/useUserAuth';
 import { useAuth } from '@/context/AuthContext';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
-import { useEffect } from 'react';
+import { useEffect, useState } from "react";
 import { ACTIVE_CATEGORIES, RADIUS_FILTER, DEFAULT_RADIUS } from '@/types/constants';
 import { GetServerSidePropsContext } from 'next';
+import { favRepoClass } from "@/repos/FavRepo";
+import { FavoritePinsList } from "@/types/Pins/FavoritePinsList";
+import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
+import { logger } from "@/util/logger";
 
 type MapCookiesPayload = {
   radius: number;
@@ -44,6 +48,7 @@ function Home({ ...cookiePayload }: MapCookiesPayload) {
   const router = useRouter();
   const authenticationHook = useUserAuth();
   const { fetchUserAuthState } = useAuth();
+  const [favoritePinsList, setFavoritePinsList] = useState<FavoritePinsList>([]);
 
   useEffect(() => {
     if (!authenticationHook.authStatus) {
@@ -51,13 +56,25 @@ function Home({ ...cookiePayload }: MapCookiesPayload) {
     }
   }, [authenticationHook.authStatus, router]);
 
+  // refetch data on each page visit to be always have the latest data available
+  useEffect(() => {
+    favRepoClass.get()
+      .then((res: FavoritePinsList) => {
+        setFavoritePinsList(res);
+      })
+      .catch((err: FetchServerErrorResponse) => {
+        logger.warn(err);
+      })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (fetchUserAuthState.context.user === null) {
     return <LoadingSpinner />;
   }
 
   return (
     <main className="fixed w-full h-[calc(100%-56px)] max-h-screen overflow-hidden lg:mt-14">
-      <Map cookiedCategories={cookiePayload.activeCategories} cookiedRadius={cookiePayload.radius} />
+      <Map cookiedCategories={cookiePayload.activeCategories} cookiedRadius={cookiePayload.radius} favoritePinsList={favoritePinsList} />
     </main>
   );
 }
