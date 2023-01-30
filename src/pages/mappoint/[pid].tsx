@@ -28,8 +28,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     const authToken: TokenPayload = JSON.parse(tokenData);
 
     return await axios
-      // .get(`https://cherrytomaten.herokuapp.com/api/mappoint/${mappointId}`)
-      .get('https://cherrytomaten.herokuapp.com/api/mappoint/24c045fa-4767-4e26-8c7f-b04d1307c2b4', {
+      .get(`https://cherrytomaten.herokuapp.com/api/mappoint/${mappointId}`, {
         headers: {
           Authorization: 'Bearer ' + authToken.token,
         },

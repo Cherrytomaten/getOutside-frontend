@@ -11,7 +11,7 @@ import { ResetPasswordProps } from '@/types/User/ResetPasswordProps';
 import { UserDataProps } from '@/types/User/UserDataProps';
 
 // Currently the token exp. dates are not correctly set, so they'll be set manually for now
-const accessTokenExp: number = 86400000; // 1 day
+const accessTokenExp: number = 2880000; // 48 min
 const refreshTokenExp: number = 604800000; // 1 week
 
 /**

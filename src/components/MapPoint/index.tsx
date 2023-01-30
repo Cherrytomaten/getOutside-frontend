@@ -8,14 +8,22 @@ import axios from 'axios';
 import { UserRepoClass } from '@/repos/UserRepo';
 import { logger } from '@/util/logger';
 
-type MapPointPayloadProps = MapPointProps & {
+type MappointProps = {
   category: any | null;
   creator: string;
   longitude: number;
   latitude: number;
-};
+  uuid: string;
+  title: string;
+  description: string;
+  address: string;
+  openingHours: OpeningProps;
+  rating: number;
+  comments: CommentProps[];
+  image: ImageProps[];
+}
 
-function MapPoint({ ...props }: MapPointPayloadProps) {
+function MapPoint({ ...props }: MappointProps) {
   const allStars: JSX.Element[] = RenderStars(props.rating, '34', '34');
   const minimumComments: number = 2;
   const [counter, setCounter] = useState<number>(minimumComments); // Counter for number of shown comments
@@ -129,9 +137,9 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
     <main id={'mappoint-id-' + props.uuid} className="relative w-full h-full min-h-screen flex justify-center p-5 mb-12 text-default-font lg:pt-14">
       <div id="card-wrapper" className="min-w-0 max-w-xl lg:w-full lg:max-w-[unset] lg:flex lg:flex-col lg:justify-start lg:items-center">
         <div className="relative w-full mb-8 overflow-hidden rounded-t-3xl">
-          <div className="w-full h-80 flex flex-col justify-center items-center overflow-hidden lg:h-[450px]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={props.image.src ? props.image.src : '/assets/mappoint-placeholder.jpg'} alt={props.image.alt} className="w-auto min-w-full max-w-[unset] min-h-full max-h-[unset] lg:min-h-[unset]" />
+          <div
+            style={{ backgroundImage: `url('https://cherrytomaten.herokuapp.com${props.image[0].image}')` }}
+            className="w-full h-80 flex flex-col justify-center items-center overflow-hidden bg-no-repeat bg-center bg-cover lg:h-[450px]">
           </div>
           <Link href="/home">
             <button
@@ -140,7 +148,7 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
             </button>
           </Link>
         </div>
-        <div id="lower-wrapper" className="max-w-xl flex flex-col justify-between align-center">
+        <div id="lower-wrapper" className="w-full max-w-xl flex flex-col justify-between align-center">
           <div className="mb-4 text-3xl text-center">
             <h1>{props.title}</h1>
           </div>
@@ -280,7 +288,7 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
                 ) : (
                   <>
                     <AnimatePresence>
-                      {showComments().map((comment, index) => (
+                      {showComments().map((comment: CommentProps, index) => (
                         <motion.div
                           key={index}
                           className="relative min-h-[65px] flex flex-col justify-around p-3 pb-9 mb-3 bg-dark-seaweed rounded-xl"
@@ -288,7 +296,7 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
                           animate={{ y: 0, opacity: 1 }}
                           exit={{ y: -100, opacity: 0, position: 'absolute' }}>
                           <p className="text-white">{comment.text}</p>
-                          <p className="absolute right-5 bottom-2 font-light text-bright-seaweed">{comment.author}</p>
+                          <p className="absolute right-5 bottom-2 font-light text-bright-seaweed">{comment.author.username}</p>
                         </motion.div>
                       ))}
                     </AnimatePresence>

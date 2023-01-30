@@ -14,6 +14,20 @@ class FavRepo {
         return Promise.reject(err.response.data);
       });
   }
+
+  public async delete(pinId: string): Promise<boolean> {
+    return await axios.delete('/api/favorites/delete', {
+      data: {
+        pinId: pinId
+      }
+    })
+      .then((_res) => {
+        return Promise.resolve(true);
+      })
+      .catch((err: WrapperServerErrorResponse) => {
+        return Promise.reject(err.response.data);
+      })
+  }
 }
 
-export const FavRepoClass = new FavRepo();
+export const favRepoClass = new FavRepo();
