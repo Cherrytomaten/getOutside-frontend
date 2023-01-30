@@ -74,7 +74,6 @@ function ProfilePage({ ...props }: ProfileProps) {
     let form_data = new FormData();
     logger.log('profilePic: ', profilePic);
     form_data.append('file', profilePic);
-    logger.log('formdata: ', form_data);
 
     return await axios
       .put('/api/user/pfp/set', form_data)

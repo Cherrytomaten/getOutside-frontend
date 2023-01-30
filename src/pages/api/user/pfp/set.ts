@@ -32,9 +32,13 @@ export default async function handler(_req: PicDataRequest, res: NextApiResponse
     const authToken: TokenPayload = JSON.parse(authTokenString);
 
     await httpProxyMiddleware(_req, res, {
-      target: `https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}`,
+      target: `https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}/`,
+      changeOrigin: true,
+      pathRewrite: {
+        '^/api/user/pfp/set': '',
+      },
       headers: {
-        'Authorization': `Bearer ${authToken.token}`
+        'Authorization': `Bearer ${authToken.token}`,
       }
     });
   } catch (_err) {
