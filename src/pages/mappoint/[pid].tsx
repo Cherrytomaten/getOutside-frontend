@@ -8,9 +8,16 @@ import { useAuth } from '@/context/AuthContext';
 import { logger } from '@/util/logger';
 import { GetServerSidePropsContext } from 'next';
 import { BackendErrorResponse } from '@/types/Backend/BackendErrorResponse';
-import { PinProps } from '@/types/Pins';
-import { AUTH_TOKEN } from "@/types/constants";
-import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
+import { AUTH_TOKEN } from '@/types/constants';
+import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
+
+type MapPointPayloadProps = MapPointProps & {
+  category: any | null;
+  creator: string;
+  longitude: number;
+  latitude: number;
+  userId: string;
+};
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const mappointId: string | string[] | undefined = context.params?.pid;
@@ -28,13 +35,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     const authToken: TokenPayload = JSON.parse(tokenData);
 
     return await axios
-      // .get(`https://cherrytomaten.herokuapp.com/api/mappoint/${mappointId}`)
-      .get('https://cherrytomaten.herokuapp.com/api/mappoint/24c045fa-4767-4e26-8c7f-b04d1307c2b4', {
+      .get(`https://cherrytomaten.herokuapp.com/api/mappoint/${mappointId}`, {
         headers: {
           Authorization: 'Bearer ' + authToken.token,
         },
       })
-      .then((_res: AxiosResponse<PinProps>) => {
+      .then((_res: AxiosResponse<MapPointPayloadProps>) => {
         logger.log('Mappoint Backend Data:', _res.data);
         return {
           props: {
@@ -43,13 +49,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
             description: _res.data.description,
             address: _res.data.address,
             openingHours: _res.data.openingHours,
-            rating: null,
+            ratings: _res.data.ratings,
             comments: _res.data.comments,
             image: _res.data.image,
             category: _res.data.category,
             creator: _res.data.creator,
             longitude: _res.data.longitude,
             latitude: _res.data.latitude,
+            userId: authToken.userId,
           },
         };
       })
@@ -64,7 +71,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
-function MapPointPage({ ...mapointPayload }: PinProps) {
+function MapPointPage({ ...mapPointPayload }: MapPointPayloadProps) {
   const router = useRouter();
   const authenticationHook = useUserAuth();
   const { fetchUserAuthState } = useAuth();
@@ -82,18 +89,19 @@ function MapPointPage({ ...mapointPayload }: PinProps) {
   return (
     <>
       <MapPoint
-        uuid={mapointPayload.uuid}
-        title={mapointPayload.title}
-        description={mapointPayload.description}
-        address={mapointPayload.address}
-        openingHours={mapointPayload.openingHours}
-        rating={mapointPayload.rating}
-        comments={mapointPayload.comments}
-        image={mapointPayload.image}
-        category={mapointPayload.category}
-        creator={mapointPayload.creator}
-        longitude={mapointPayload.longitude}
-        latitude={mapointPayload.latitude}
+        uuid={mapPointPayload.uuid}
+        title={mapPointPayload.title}
+        description={mapPointPayload.description}
+        address={mapPointPayload.address}
+        openingHours={mapPointPayload.openingHours}
+        ratings={mapPointPayload.ratings}
+        comments={mapPointPayload.comments}
+        image={mapPointPayload.image}
+        category={mapPointPayload.category}
+        creator={mapPointPayload.creator}
+        longitude={mapPointPayload.longitude}
+        latitude={mapPointPayload.latitude}
+        userId={mapPointPayload.userId}
       />
     </>
   );
