@@ -1,5 +1,6 @@
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { ActivityType } from '@/types/Pins/ActivityType';
+import { capitalizeFirstLetter } from "@/util/capitalizeFirstLetter";
 
 type FilterMenuProps = {
   allCategories: string[];
@@ -9,13 +10,6 @@ type FilterMenuProps = {
 };
 
 function FilterMenu({ allCategories, categoryFilter, setCatFilter, setTrigger }: FilterMenuProps) {
-  function capitalizeFirstLetter(text: string) {
-    if (text.length === 0) {
-      return '';
-    }
-    return text.charAt(0).toUpperCase() + text.slice(1);
-  }
-
   function changeHandler(event: ChangeEvent<HTMLInputElement>) {
     const {
       target: { value },

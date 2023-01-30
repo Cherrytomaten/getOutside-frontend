@@ -15,9 +15,7 @@ import { FavoritePinsList } from "@/types/Pins/FavoritePinsList";
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 
 type FavoritePageProps = {
-  favorites: {
-    pin: PinProps
-  }[];
+  favorites: FavoritePinsList;
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -56,7 +54,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 function Favorites(props: FavoritePageProps) {
   const [favs, setFavs] = useState<FavoritePinsList>(props.favorites);
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [showFilterFav, setShowsFilterFav] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [initLoad, setInitLoad] = useState<boolean>(true);
 
@@ -64,7 +61,6 @@ function Favorites(props: FavoritePageProps) {
   useEffect(() => {
     favRepoClass.get()
       .then((res: FavoritePinsList) => {
-        console.log(res)
         setFavs(res);
         setInitLoad(false);
       })
@@ -102,7 +98,7 @@ function Favorites(props: FavoritePageProps) {
         <h2 className="pt-14 pb-1 text-4xl">Favorites</h2>
         <h3 className="pb-7 text-lg font-light text-bright-seaweed">All your favorite places in one spot</h3>
 
-        <div className="pb-10">
+        <div className="w-full flex flex-row justify-end items-center px-3 pb-10">
           {favs.length > 0 &&
             <EditButton triggerValue={editMode} setTrigger={setEditMode} />
           }
