@@ -7,6 +7,11 @@ import Link from 'next/link';
 import axios from 'axios';
 import { UserRepoClass } from '@/repos/UserRepo';
 import { logger } from '@/util/logger';
+import { Bookmark } from "@/resources/svg/Bookmark";
+import { BookmarkCrossed } from "@/resources/svg/BookmarkCrossed";
+import { favRepoClass } from "@/repos/FavRepo";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 
 type MappointProps = {
   category: any | null;
@@ -21,6 +26,7 @@ type MappointProps = {
   rating: number;
   comments: CommentProps[];
   image: ImageProps[];
+  isFavorite: boolean;
 }
 
 function MapPoint({ ...props }: MappointProps) {
@@ -33,6 +39,8 @@ function MapPoint({ ...props }: MappointProps) {
   const [showRating, setShowRating] = useState<boolean>(false);
   const [comments, setComments] = useState<number[]>([]);
   const [comment, setComment] = useState('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isFavorite, setIsFavorite] = useState<boolean>(props.isFavorite);
   const commentArray: CommentProps[] = props.comments;
 
   // automatically scroll down if a new comment appears
@@ -133,20 +141,78 @@ function MapPoint({ ...props }: MappointProps) {
     }
   }
 
+  function addToFavorites(pinId: string) {
+    if (isLoading || pinId === undefined) {
+      return;
+    }
+
+    setIsLoading(true);
+    favRepoClass.add(pinId)
+      .then((_res) => {
+        setIsLoading(false);
+        setIsFavorite(true);
+      })
+      .catch((_err) => {
+        setIsLoading(false);
+      })
+  }
+
+  function removeFromFavorites(pinId: string) {
+    if (isLoading || pinId === undefined) {
+      return;
+    }
+
+    setIsLoading(true);
+    favRepoClass.delete(pinId)
+      .then((_res) => {
+        setIsLoading(false);
+        setIsFavorite(false);
+      })
+      .catch((_err: FetchServerErrorResponse) => {
+        if (_err.errors.message === 'Object with id does not exists') {
+          setIsFavorite(false);
+        }
+        setIsLoading(false);
+      })
+  }
+
   return (
     <main id={'mappoint-id-' + props.uuid} className="relative w-full h-full min-h-screen flex justify-center p-5 mb-12 text-default-font lg:pt-14">
       <div id="card-wrapper" className="min-w-0 max-w-xl lg:w-full lg:max-w-[unset] lg:flex lg:flex-col lg:justify-start lg:items-center">
         <div className="relative w-full mb-8 overflow-hidden rounded-t-3xl">
           <div
-            style={{ backgroundImage: `url('https://cherrytomaten.herokuapp.com${props.image[0].image}')` }}
+            style={{ backgroundImage: `url('https://cherrytomaten.herokuapp.com${props?.image[0]?.image}')` }}
             className="w-full h-80 flex flex-col justify-center items-center overflow-hidden bg-no-repeat bg-center bg-cover lg:h-[450px]">
           </div>
           <Link href="/home">
             <button
-              className="z-[9999] modest-shadow absolute top-4 right-4 w-10 h-10 p-2 opacity-90 bg-bright-seaweed rounded-full transition-all hover:xs:opacity-100 hover:xs:bg-hovered-seaweed">
+              className="z-[99] modest-shadow absolute top-4 right-4 w-10 h-10 p-2 opacity-90 bg-bright-seaweed rounded-full transition-all hover:xs:opacity-100 hover:xs:bg-hovered-seaweed">
               <CloseSvg width="100%" height="100%" fill="#fff" />
             </button>
           </Link>
+          {isFavorite
+          ? (
+              <button
+                className="z-[99] modest-shadow absolute top-20 right-4 w-10 h-10 p-2 opacity-90 bg-bright-seaweed rounded-full transition-all hover:xs:opacity-100 hover:xs:bg-hovered-seaweed"
+                title="Add to favorites"
+                aria-label="Add point to your favorites"
+                onClick={() => removeFromFavorites(props.uuid)}
+              >
+                <BookmarkCrossed width="100%" height="100%" fill="#fff" />
+              </button>
+            )
+            : (
+              <button
+                className="z-[99] modest-shadow absolute top-20 right-4 w-10 h-10 p-2 opacity-90 bg-bright-seaweed rounded-full transition-all hover:xs:opacity-100 hover:xs:bg-hovered-seaweed"
+                title="Remove from favorites"
+                aria-label="Remove point from your favorites"
+                onClick={() => addToFavorites(props.uuid)}
+              >
+                <Bookmark width="100%" height="100%" fill="#fff" />
+              </button>
+            )
+          }
+
         </div>
         <div id="lower-wrapper" className="w-full max-w-xl flex flex-col justify-between align-center">
           <div className="mb-4 text-3xl text-center">
@@ -326,6 +392,9 @@ function MapPoint({ ...props }: MappointProps) {
           </div>
         </div>
       </div>
+      {isLoading &&
+        <LoadingSpinner />
+      }
     </main>
   );
 }

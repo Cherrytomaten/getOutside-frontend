@@ -1,8 +1,6 @@
 import { GetServerSidePropsContext } from "next";
 import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
-import axios, { AxiosResponse } from "axios";
 import { logger } from "@/util/logger";
-import { BackendErrorResponse } from "@/types/Backend/BackendErrorResponse";
 import { AUTH_TOKEN } from "@/types/constants";
 import { PinProps } from "@/types/Pins";
 import Link from "next/link";
@@ -12,6 +10,9 @@ import CloseSvg from "@/resources/svg/Close";
 import { AnimatePresence, motion } from "framer-motion";
 import { favRepoClass } from "@/repos/FavRepo";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { getUserFavorites } from "@/services/userFavorites";
+import { FavoritePinsList } from "@/types/Pins/FavoritePinsList";
+import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 
 type FavoritePageProps = {
   favorites: {
@@ -20,6 +21,7 @@ type FavoritePageProps = {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  context.res.setHeader('Cache-Control', 'no-store');
   const tokenData: string | undefined = context.req.cookies[AUTH_TOKEN];
 
   try {
@@ -29,22 +31,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     const authToken: TokenPayload = JSON.parse(tokenData);
 
-    return await axios
-      .get("https://cherrytomaten.herokuapp.com/api/favorites/pin/", {
-        headers: {
-          Authorization: "Bearer " + authToken.token,
-        },
-      })
-      .then((_res: AxiosResponse<PinProps>) => {
+    return await getUserFavorites(authToken)
+      .then((res: FavoritePinsList) => {
         return {
           props: {
-            favorites: _res.data,
-          },
-        };
+            favorites: res,
+          }
+        }
       })
-      .catch((_err: BackendErrorResponse) => {
+      .catch((_err: any) => {
         throw new Error("Internal Server Error.");
-      });
+      })
   } catch (err: any) {
     logger.log("Error requesting profile page:", err);
     return {
@@ -57,13 +54,23 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 function Favorites(props: FavoritePageProps) {
-  const [favs, setFavs] = useState<{ pin: PinProps }[]>(props.favorites);
+  const [favs, setFavs] = useState<FavoritePinsList>(props.favorites);
   const [editMode, setEditMode] = useState<boolean>(false);
   const [showFilterFav, setShowsFilterFav] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [initLoad, setInitLoad] = useState<boolean>(true);
 
+  // refetch data on each page visit to be always have the latest data available
   useEffect(() => {
-    setFavs(props.favorites);
+    favRepoClass.get()
+      .then((res: FavoritePinsList) => {
+        console.log(res)
+        setFavs(res);
+        setInitLoad(false);
+      })
+      .catch((err: FetchServerErrorResponse) => {
+        logger.warn(err);
+      })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -72,12 +79,20 @@ function Favorites(props: FavoritePageProps) {
     favRepoClass.delete(uuid)
       .then((_res) => {
         setIsLoading(false);
-        setFavs(favs.filter((favElem) => favElem.pin.uuid !== uuid));
+        const filteredFavs = favs.filter((favElem) => favElem.pin.uuid !== uuid);
+        setFavs(filteredFavs);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((_err) => {
         setIsLoading(false);
       })
+  }
+
+  if (initLoad) {
+    return (
+      <main className="relative w-full h-[calc(100%-56px)] flex justify-center items-center pb-20 text-white lg:pb-10 lg:mt-14">
+        <LoadingSpinner />
+      </main>
+    )
   }
 
   return (
@@ -85,13 +100,15 @@ function Favorites(props: FavoritePageProps) {
       className="relative w-full h-[calc(100%-56px)] flex justify-center items-center pb-20 text-white lg:pb-10 lg:mt-14">
       <div id="card-wrapper" className="w-full max-w-xl flex flex-col justify-start items-center lg:max-w-4xl">
         <h2 className="pt-14 pb-1 text-4xl">Favorites</h2>
-        <h3 className="pb-7 text-lg font-light text-bright-seaweed">All your favorites place on one spot</h3>
+        <h3 className="pb-7 text-lg font-light text-bright-seaweed">All your favorite places in one spot</h3>
 
         <div className="pb-10">
-          <EditButton triggerValue={editMode} setTrigger={setEditMode} />
+          {favs.length > 0 &&
+            <EditButton triggerValue={editMode} setTrigger={setEditMode} />
+          }
         </div>
 
-        {props.favorites.length === 0 &&
+        {favs.length === 0 &&
           <h3 className="px-3 text-xl text-bright-seaweed">Seems like you have no favorites yet</h3>
         }
 
