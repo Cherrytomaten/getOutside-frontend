@@ -1,15 +1,30 @@
 import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
 import { AUTH_TOKEN } from '@/types/constants';
 import { NextApiRequest, NextApiResponse } from 'next';
-import httpProxyMiddleware from "next-http-proxy-middleware";
+import axios, { AxiosResponse } from "axios";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
+type UploadPfpRequest = NextApiRequest & {
+  body: { url: string };
 };
 
-export default async function handler(_req: NextApiRequest, res: NextApiResponse) {
+type UploadPfpResponseBody = {
+  url: string;
+}
+
+type UploadPfpErrorResponseProps = {
+  error: string;
+};
+
+type UploadPfpErrorResponse = {
+  response: AxiosResponse<UploadPfpErrorResponseProps>;
+};
+
+/**
+ * Set a profile image
+ * @param _req contains the url of the picture
+ * @param res the url as confirmation of the now saved profile picture or an error response
+ */
+export default async function handler(_req: UploadPfpRequest, res: NextApiResponse) {
   // wrong request method
   if (_req.method !== 'PUT') {
     return res.status(405).json({
@@ -24,114 +39,28 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
     }
 
     const authToken: TokenPayload = JSON.parse(authTokenString);
-    console.log(_req);
 
-    await httpProxyMiddleware(_req, res, {
-      target: `https://cherrytomaten.herokuapp.com`,
-      changeOrigin: true,
-      pathRewrite: {
-        '^/api/user/pfp/set': `/authentication/user/upload/${authToken.userId}/`,
-      },
-      headers: {
-        'Authorization': `Bearer ${authToken.token}`,
-        ...(_req.headers['content-type'] ? {'content-type': _req.headers["content-type"]} : {}),
-        ...(_req.headers['content-length'] ? {'content-length': _req.headers["content-length"]} : {}),
-        ...(_req.headers['accept'] ? {'accept': _req.headers["accept"]} : {}),
-      }
-    });
+    return await axios
+      .put(`https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}/`, {
+        cloud_pic: _req.body.url
+      }, {
+        headers: {
+          Authorization: 'Bearer ' + authToken.token,
+        }
+      })
+      .then((_res: AxiosResponse<UploadPfpResponseBody>) => {
+        return res.status(201).json(_res.data);
+      })
+      .catch((err: UploadPfpErrorResponse) => {
+        if (err.response?.data?.error === undefined) {
+          return res.status(err.response.status).json({ errors: { message: 'A server error occured.' } });
+        }
+        return res.status(err.response.status).json({ errors: { message: err.response.data.error } });
+      });
+
   } catch (_err) {
     return res.status(400).json({
       error: { message: 'Uploading the profile picture went wrong.' },
     });
   }
 }
-
-/*
-
-
-    const buffers: any[] = [];
-    _req.on('readable', () => {
-      const chunk = _req.read();
-      if (chunk !== null) {
-        buffers.push(chunk);
-      }
-    })
-      .on('end', async () => {
-        return await axios
-          .put(
-            `https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}`,
-              Buffer.concat(buffers),
-            {
-              headers: {
-                Authorization: 'Bearer ' + authToken.token,
-                'Content-Type': 'multipart/form-data'
-              },
-              maxContentLength: 100000000,
-              maxBodyLength: 1000000000,
-            }
-          )
-          .then((_res: any) => {
-            return res.status(_res.status);
-          })
-          .catch((err: any) => {
-            console.log(err);
-            return res.status(err.response.status).json({ error: { message: err.message } });
-          });
-
-
-        console.log("Buffer", Buffer.concat(buffers));
-        return fetch(`https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}`, {
-          method: 'PUT',
-          credentials: 'include',
-          mode: 'cors',
-          headers: {
-            'Authorization': 'Bearer ' + authToken.token,
-            'User-Agent': _req.headers['user-agent'] ?? '',
-          },
-          body: "test",
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log('Success:', data);
-            return res.status(data.status);
-          })
-          .catch((err) => {
-            console.error('Error:', err);
-            return res.status(500).json({ error: { message: err } });
-          });
-      });
-
-      /*
-    const data: any = await new Promise(function (resolve, reject) {
-      const form = new formidable.IncomingForm({ keepExtensions: true });
-      form.parse(_req, function (err, fields, files) {
-        if (err) return reject(err);
-        resolve({ fields, files });
-      });
-    });
-
-       */
-
-/*
-return await axios
-  .post(
-    `https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}`,
-    {
-      name: 'abd',
-    },
-    {
-      headers: {
-        Authorization: 'Bearer ' + authToken.token,
-      },
-      maxContentLength: 100000000,
-      maxBodyLength: 1000000000,
-    }
-  )
-  .then((_res: any) => {
-    return res.status(_res.status);
-  })
-  .catch((err: any) => {
-    console.log(err);
-    return res.status(err.response.status).json({ error: { message: err.message } });
-  });
-*/
