@@ -41,7 +41,10 @@ function FilterMenu({ allCategories, categoryFilter, setCatFilter, setTrigger, s
       <h3 className="mb-6 text-5xl text-white">Categories</h3>
       {allCategories.length !== 0 && (
         <>
-          <button onClick={() => setOnlyShowFavs(!onlyShowFavs)}>fav</button>
+          <button
+            className={`w-full max-w-[400px] px-6 py-1.5 mt-1 mb-3 whitespace-nowrap text-bright-seaweed border rounded-full transition-colors ${onlyShowFavs ? 'bg-warning border-warning text-dark-sea' : 'bg-transparent border-bright-seaweed'}`}
+            onClick={() => setOnlyShowFavs(!onlyShowFavs)}
+          >Only show favorite pins</button>
           <div className="w-full flex flex-row justify-center items-center py-3 mb-7">
             <button
               className="w-full max-w-[200px] px-6 py-1.5 mr-2 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-darker-sea disabled:hover:bg-darker-sea xs:hover:bg-hovered-seaweed"

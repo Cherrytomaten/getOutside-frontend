@@ -4,7 +4,7 @@ import { LatLngExpression } from 'leaflet';
 import { FilterMenu } from '@/components/Map/FilterMenu';
 import { PinProps } from '@/types/Pins';
 import { ActivityType } from '@/types/Pins/ActivityType';
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from 'framer-motion';
 import { RadiusMenu } from '@/components/Map/RadiusMenu';
 import { Filter } from '@/resources/svg/Filter';
@@ -21,10 +21,12 @@ import { FavoritePinsList } from "@/types/Pins/FavoritePinsList";
 type MapProps = {
   cookiedCategories: string[];
   cookiedRadius: number;
+  cookiedShowOnlyFav: boolean;
   favoritePinsList: FavoritePinsList
 };
 
-function Map({ cookiedCategories, cookiedRadius, favoritePinsList }: MapProps) {
+function Map({ cookiedCategories, cookiedRadius, cookiedShowOnlyFav, favoritePinsList }: MapProps) {
+  console.log(cookiedShowOnlyFav)
   const [showCatFilter, setShowCatFilter] = useState<boolean>(false);
   const [showRadiusFilter, setShowRadiusFilter] = useState<boolean>(false);
 
@@ -33,7 +35,7 @@ function Map({ cookiedCategories, cookiedRadius, favoritePinsList }: MapProps) {
   const [radius, setRadius] = useState<number>(cookiedRadius);
   const [locationPreference, setLocationPreference] = useState<boolean | null>(null);
   const [userLocation, setUserLocation] = useState<LatLngExpression>(DEFAULT_POSITION);
-  const [onlyShowFavs, setOnlyShowFavs] = useState<boolean>(false);
+  const [onlyShowFavs, setOnlyShowFavs] = useState<boolean>(cookiedShowOnlyFav ?? false);
   const { fetchPinDataQueryState } = useManageMapData({
     radius: radius,
     location: userLocation,
@@ -42,6 +44,7 @@ function Map({ cookiedCategories, cookiedRadius, favoritePinsList }: MapProps) {
     allCats: allCategories,
     setAllCats: setAllCategories,
     locationPreference: locationPreference,
+    showOnlyFav: onlyShowFavs
   });
 
   function isPinFavorite(pinId: string): boolean {
@@ -65,11 +68,10 @@ function Map({ cookiedCategories, cookiedRadius, favoritePinsList }: MapProps) {
               return null;
             }
 
+            // don't show pin if only favs should be shown and the current pin isn't one of them
             if (onlyShowFavs && !isPinFavorite(pinElemData.uuid)) {
               return null;
             }
-            console.log(onlyShowFavs);
-            console.log(isPinFavorite(pinElemData.uuid))
 
             return (
               <div key={pinElemData.uuid + '-marker-id'}>
@@ -82,7 +84,7 @@ function Map({ cookiedCategories, cookiedRadius, favoritePinsList }: MapProps) {
         </div>
       </MapContainer>
     ),
-    [categoryFilter, fetchPinDataQueryState.context.pins, locationPreference, radius, userLocation]
+    [categoryFilter, fetchPinDataQueryState.context.pins, locationPreference, radius, userLocation, onlyShowFavs]
   );
 
   return (

@@ -6,7 +6,7 @@ import { PinRepoClass } from '@/repos/PinRepo';
 import { PinProps } from '@/types/Pins';
 import { FetchServerErrorResponse } from '@/types/Server/FetchServerErrorResponse';
 import { setCookie } from '@/util/cookieManager';
-import { ACTIVE_CATEGORIES, RADIUS_FILTER } from '@/types/constants';
+import { ACTIVE_CATEGORIES, RADIUS_FILTER, SHOW_ONLY_FAV } from "@/types/constants";
 import { ActivityType } from '@/types/Pins/ActivityType';
 import { logger } from '@/util/logger';
 
@@ -18,9 +18,10 @@ type useManageMapDataProps = {
   locationPreference: boolean | null;
   allCats: string[];
   setAllCats: Dispatch<SetStateAction<string[]>>;
+  showOnlyFav: boolean;
 };
 
-function useManageMapData({ radius, location, allCats, categoryFilter, setCatFilter, setAllCats, locationPreference }: useManageMapDataProps) {
+function useManageMapData({ radius, location, allCats, categoryFilter, setCatFilter, setAllCats, locationPreference, showOnlyFav }: useManageMapDataProps) {
   const [fetchPinDataQueryState, sendToPinQueryMachine] = useMachine(fetchPinsMachine, {
     actions: {
       fetchPins: (ctx, event: { type: 'FETCH_PINS'; payload: { location: LatLngExpression; radius: number } }) => {
@@ -67,6 +68,11 @@ function useManageMapData({ radius, location, allCats, categoryFilter, setCatFil
   useEffect(() => {
     setCookie({ name: RADIUS_FILTER, value: { radius: radius }, exp: 14400000 });
   }, [radius]);
+
+  // update onlyFav cookie
+  useEffect(() => {
+    setCookie({ name: SHOW_ONLY_FAV, value: showOnlyFav, exp: 14400000 });
+  }, [showOnlyFav]);
 
   // update category list cookie
   useEffect(() => {
