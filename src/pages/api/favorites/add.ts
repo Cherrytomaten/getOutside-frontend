@@ -23,7 +23,7 @@ type AddFavoriteResponse = NextApiResponse<AddFavoriteResponseBody | FetchServer
 /**
  * Add a mappoint to the current users favorite list
  * @param _req containing the pinId in the body
- * @param res Ids of the involded user / pin to confirm the success or error response
+ * @param res returns ids of the involded user / pin to confirm the success and the uuid of the database entry for the favorite pin entry or an error response.
  */
 export default async function handler(_req: AddFavoriteRequest, res: AddFavoriteResponse) {
   // wrong request method
@@ -48,6 +48,7 @@ export default async function handler(_req: AddFavoriteRequest, res: AddFavorite
         },
       })
       .then((_res: AxiosResponse<AddFavoriteResponseBody>) => {
+        console.log(_res.data)
         return res.status(201).json(_res.data);
       })
       .catch((err: AddFavoriteErrorResponse) => {

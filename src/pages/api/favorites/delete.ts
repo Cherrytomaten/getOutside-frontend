@@ -19,9 +19,9 @@ type DeleteFavoriteErrorResponse = {
 type DeleteFavoriteResponse = NextApiResponse<DeleteFavoriteResponseBody | FetchServerErrorResponse>;
 
 /**
- * Add a mappoint to the current users favorite list
+ * Delete a mappoint from the current users favorite list
  * @param _req containing the pinId in the body
- * @param res Ids of the involded user / pin to confirm the success or error response
+ * @param res returns a short success message or an error response
  */
 export default async function handler(_req: DeleteFavoriteRequest, res: DeleteFavoriteResponse) {
   // wrong request method
