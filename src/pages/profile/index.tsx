@@ -16,7 +16,7 @@ type UserDataServerResponseProps = {
   first_name: string;
   last_name: string;
   email: string;
-  profile_picture: string | null;
+  cloud_pic: string | null;
 };
 
 type UserDataServerResponse = AxiosResponse<UserDataServerResponseProps>;
@@ -53,7 +53,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
             fname: _res.data.first_name,
             lname: _res.data.last_name,
             email: _res.data.email,
-            pic: _res.data.profile_picture,
+            pic: _res.data.cloud_pic,
           },
         };
       })

@@ -26,7 +26,6 @@ type MapProps = {
 };
 
 function Map({ cookiedCategories, cookiedRadius, cookiedShowOnlyFav, favoritePinsList }: MapProps) {
-  console.log(cookiedShowOnlyFav);
   const [showCatFilter, setShowCatFilter] = useState<boolean>(false);
   const [showRadiusFilter, setShowRadiusFilter] = useState<boolean>(false);
   const [allCategories, setAllCategories] = useState<string[]>([]);
