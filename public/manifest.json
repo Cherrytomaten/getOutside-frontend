@@ -6,7 +6,7 @@
   "start_url" : "/",
   "name" : "GetOutside",
   "description": "The app for outside adventures!",
-  "short_name" : "GO",
+  "short_name" : "GetOutside",
   "orientation": "portrait",
   "icons": [
     {

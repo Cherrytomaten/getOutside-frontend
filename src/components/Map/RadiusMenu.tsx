@@ -4,8 +4,8 @@ import { PinQueryStateMachine } from '@/types/Pins/MapPinQueryMachine';
 import { ChevronDown } from '@/resources/svg/ChevronDown';
 
 type RadiusMenuProps = {
-  radius: number;
-  updateRadius: Dispatch<SetStateAction<number>>;
+  radius: number | undefined;
+  updateRadius: Dispatch<SetStateAction<number | undefined>>;
   mapDataFetchState: PinQueryStateMachine;
   toggleMenu: Dispatch<SetStateAction<boolean>>;
 };
@@ -18,6 +18,14 @@ function RadiusMenu({ radius, updateRadius, mapDataFetchState, toggleMenu }: Rad
     if (valueKm !== radius) {
       updateRadius(valueKm);
       toggleMenu(false);
+    }
+  }
+
+  function getRadiusInLKm(_radius: number | undefined): number {
+    if (_radius === undefined) {
+      return 0;
+    } else {
+      return _radius / 1000;
     }
   }
 
@@ -36,7 +44,7 @@ function RadiusMenu({ radius, updateRadius, mapDataFetchState, toggleMenu }: Rad
               mapDataFetchState.value === 'pending' ? 'bg-gray-500' : ' bg-gray-200'
             }`}>
             <span className="block truncate">
-              Selected range : <span className="ml-3 font-bold text-bright-seaweed">{radius / 1000} km</span>
+              Selected range : <span className="ml-3 font-bold text-bright-seaweed">{getRadiusInLKm(radius)} km</span>
             </span>
             <span className="absolute inset-y-0 right-0 flex items-center pr-6 pointer-events-none">
               <ChevronDown width="20px" height="20px" fill="#a2a2a2" />
