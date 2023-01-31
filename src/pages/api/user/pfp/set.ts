@@ -3,19 +3,13 @@ import { AUTH_TOKEN } from '@/types/constants';
 import { NextApiRequest, NextApiResponse } from 'next';
 import httpProxyMiddleware from "next-http-proxy-middleware";
 
-type PicDataRequest = NextApiRequest & {
-  body: {
-    form_data: any;
-  };
-};
-
 export const config = {
   api: {
     bodyParser: false,
   },
 };
 
-export default async function handler(_req: PicDataRequest, res: NextApiResponse) {
+export default async function handler(_req: NextApiRequest, res: NextApiResponse) {
   // wrong request method
   if (_req.method !== 'PUT') {
     return res.status(405).json({
@@ -30,15 +24,19 @@ export default async function handler(_req: PicDataRequest, res: NextApiResponse
     }
 
     const authToken: TokenPayload = JSON.parse(authTokenString);
+    console.log(_req);
 
     await httpProxyMiddleware(_req, res, {
-      target: `https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}/`,
+      target: `https://cherrytomaten.herokuapp.com`,
       changeOrigin: true,
       pathRewrite: {
-        '^/api/user/pfp/set': '',
+        '^/api/user/pfp/set': `/authentication/user/upload/${authToken.userId}/`,
       },
       headers: {
         'Authorization': `Bearer ${authToken.token}`,
+        ...(_req.headers['content-type'] ? {'content-type': _req.headers["content-type"]} : {}),
+        ...(_req.headers['content-length'] ? {'content-length': _req.headers["content-length"]} : {}),
+        ...(_req.headers['accept'] ? {'accept': _req.headers["accept"]} : {}),
       }
     });
   } catch (_err) {
