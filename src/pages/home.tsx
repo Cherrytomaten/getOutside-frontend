@@ -3,47 +3,25 @@ import { useRouter } from 'next/router';
 import { useUserAuth } from '@/hooks/useUserAuth';
 import { useAuth } from '@/context/AuthContext';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
-import { useEffect } from 'react';
-import { ACTIVE_CATEGORIES, RADIUS_FILTER, DEFAULT_RADIUS } from '@/types/constants';
-import { GetServerSidePropsContext } from 'next';
+import { useEffect, useState } from "react";
+import { favRepoClass } from "@/repos/FavRepo";
+import { FavoritePinsList } from "@/types/Pins/FavoritePinsList";
+import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
+import { logger } from "@/util/logger";
+import { getMapCookies } from "@/util/getMapCookies";
 
 type MapCookiesPayload = {
-  radius: number;
-  activeCategories: string[];
+  radius: number | undefined;
+  activeCategories: string[] | undefined;
+  onlyShowFavorites: boolean | undefined;
 };
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  let _radius: number | undefined = undefined;
-  let _activeCategories: string[] | undefined = undefined;
-
-  try {
-    if (context.req.cookies[RADIUS_FILTER]) {
-      _radius = JSON.parse(context.req.cookies[RADIUS_FILTER]).radius;
-    }
-  } catch (_err) {
-    console.error('An error occured while getting the radius cookie.');
-  }
-
-  try {
-    if (context.req.cookies[ACTIVE_CATEGORIES]) {
-      _activeCategories = JSON.parse(context.req.cookies[ACTIVE_CATEGORIES]).activeCats.split(',');
-    }
-  } catch (_err) {
-    console.error('An error occured while getting the active categories cookie.');
-  }
-
-  return {
-    props: {
-      radius: _radius ? _radius : DEFAULT_RADIUS,
-      activeCategories: _activeCategories ? _activeCategories : [],
-    },
-  };
-}
-
-function Home({ ...cookiePayload }: MapCookiesPayload) {
+function Home() {
   const router = useRouter();
   const authenticationHook = useUserAuth();
   const { fetchUserAuthState } = useAuth();
+  const [favoritePinsList, setFavoritePinsList] = useState<FavoritePinsList>([]);
+  const [mapCookies, setMapCookies] = useState<MapCookiesPayload>({ radius: undefined, activeCategories: undefined, onlyShowFavorites: undefined });
 
   useEffect(() => {
     if (!authenticationHook.authStatus) {
@@ -51,13 +29,31 @@ function Home({ ...cookiePayload }: MapCookiesPayload) {
     }
   }, [authenticationHook.authStatus, router]);
 
+  // refetch data on each page visit to be always have the latest data available
+  useEffect(() => {
+    // get favs
+    favRepoClass.get()
+      .then((res: FavoritePinsList) => {
+        setFavoritePinsList(res);
+      })
+      .catch((err: FetchServerErrorResponse) => {
+        logger.warn(err);
+      })
+
+    // get cookies
+    const newMapCookies: MapCookiesPayload = getMapCookies();
+    setMapCookies(newMapCookies);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (fetchUserAuthState.context.user === null) {
     return <LoadingSpinner />;
   }
 
   return (
     <main className="fixed w-full h-[calc(100%-56px)] max-h-screen overflow-hidden lg:mt-14">
-      <Map cookiedCategories={cookiePayload.activeCategories} cookiedRadius={cookiePayload.radius} />
+      <Map cookiedCategories={mapCookies.activeCategories} cookiedRadius={mapCookies.radius}
+           favoritePinsList={favoritePinsList} cookiedShowOnlyFav={mapCookies.onlyShowFavorites} />
     </main>
   );
 }

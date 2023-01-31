@@ -126,7 +126,7 @@
 }
 
 .leaflet-popup .leaflet-popup-content-wrapper {
-    @apply bg-dark-sea;
+    @apply bg-dark-sea min-w-[190px];
 }
 
 .leaflet-container a.leaflet-popup-close-button {

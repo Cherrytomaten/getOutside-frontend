@@ -2,7 +2,7 @@ import { IUserAuthRepo } from '@/types/Repo/IUserAuthRepo';
 import axios from 'axios';
 import { FetchUserAuthResponseProps } from '@/types/Auth/FetchUserAuthResponseProps';
 import { deleteCookies, getCookie, setCookies } from '@/util/cookieManager';
-import { ACTIVE_CATEGORIES, AUTH_REFRESH_TOKEN, AUTH_TOKEN, RADIUS_FILTER } from '@/types/constants';
+import { ACTIVE_CATEGORIES, AUTH_REFRESH_TOKEN, AUTH_TOKEN, RADIUS_FILTER, SHOW_ONLY_FAV } from "@/types/constants";
 import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
 import { UserAuthProps } from '@/types/User';
 import { logger } from '@/util/logger';
@@ -11,7 +11,7 @@ import { ResetPasswordProps } from '@/types/User/ResetPasswordProps';
 import { UserDataProps } from '@/types/User/UserDataProps';
 
 // Currently the token exp. dates are not correctly set, so they'll be set manually for now
-const accessTokenExp: number = 86400000; // 1 day
+const accessTokenExp: number = 2880000; // 48 min
 const refreshTokenExp: number = 604800000; // 1 week
 
 /**
@@ -173,7 +173,7 @@ class UserAuthRepo implements IUserAuthRepo {
    */
   public logout() {
     const refToken = getCookie(AUTH_REFRESH_TOKEN);
-    deleteCookies([AUTH_TOKEN, AUTH_REFRESH_TOKEN, ACTIVE_CATEGORIES, RADIUS_FILTER]);
+    deleteCookies([AUTH_TOKEN, AUTH_REFRESH_TOKEN, ACTIVE_CATEGORIES, RADIUS_FILTER, SHOW_ONLY_FAV]);
 
     axios
       .post('/api/auth/revoke', {

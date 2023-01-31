@@ -4,30 +4,28 @@ import { FetchServerErrorResponse } from '@/types/Server/FetchServerErrorRespons
 import { AUTH_TOKEN } from "@/types/constants";
 import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 
-type AddFavoriteRequest = NextApiRequest & {
+type DeleteFavoriteRequest = NextApiRequest & {
   body: { pinId: string };
 };
 
-type AddFavoriteResponseBody = {
-  uuid: string;
-  pin: string;
-  user: string;
+type DeleteFavoriteResponseBody = {
+  res: string;
 };
 
-type AddFavoriteErrorResponse = {
+type DeleteFavoriteErrorResponse = {
   response: AxiosResponse<{ res: string }>;
 };
 
-type AddFavoriteResponse = NextApiResponse<AddFavoriteResponseBody | FetchServerErrorResponse>;
+type DeleteFavoriteResponse = NextApiResponse<DeleteFavoriteResponseBody | FetchServerErrorResponse>;
 
 /**
  * Add a mappoint to the current users favorite list
  * @param _req containing the pinId in the body
  * @param res Ids of the involded user / pin to confirm the success or error response
  */
-export default async function handler(_req: AddFavoriteRequest, res: AddFavoriteResponse) {
+export default async function handler(_req: DeleteFavoriteRequest, res: DeleteFavoriteResponse) {
   // wrong request method
-  if (_req.method !== 'POST') {
+  if (_req.method !== 'DELETE') {
     return res.status(405).json({ errors: { message: 'Given request method is not allowed here.' } });
   }
 
@@ -40,17 +38,16 @@ export default async function handler(_req: AddFavoriteRequest, res: AddFavorite
     const authToken: TokenPayload = JSON.parse(authTokenString);
 
     return await axios
-      .post('https://cherrytomaten.herokuapp.com/api/favorites/pin/', {
-        pin: _req.body.pinId,
-      }, {
+      .delete('https://cherrytomaten.herokuapp.com/api/favorites/pin/', {
         headers: {
           Authorization: 'Bearer ' + authToken.token,
         },
+        data: { pin: _req.body.pinId }
       })
-      .then((_res: AxiosResponse<AddFavoriteResponseBody>) => {
+      .then((_res: AxiosResponse<DeleteFavoriteResponseBody>) => {
         return res.status(201).json(_res.data);
       })
-      .catch((err: AddFavoriteErrorResponse) => {
+      .catch((err: DeleteFavoriteErrorResponse) => {
         if (err.response?.data?.res === undefined) {
           return res.status(err.response.status).json({ errors: { message: 'A server error occured.' } });
         }
@@ -61,13 +58,11 @@ export default async function handler(_req: AddFavoriteRequest, res: AddFavorite
   }
 }
 
+
 /*
-err:
-   server crash
-err duplicate:
-    res: string
 success:
-  "uuid": "055b232c-70c0-45e0-88f1-286b01dfc4fc",
-  "pin": "16170359-5830-412a-b0ec-dc7d2831723f",
-  "user": "0e5ed6b9-d5b7-47f0-a4fa-202973061946"
+  res: string
+
+error:
+  res: string
  */
