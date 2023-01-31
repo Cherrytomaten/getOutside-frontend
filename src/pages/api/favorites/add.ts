@@ -48,7 +48,6 @@ export default async function handler(_req: AddFavoriteRequest, res: AddFavorite
         },
       })
       .then((_res: AxiosResponse<AddFavoriteResponseBody>) => {
-        console.log(_res.data)
         return res.status(201).json(_res.data);
       })
       .catch((err: AddFavoriteErrorResponse) => {

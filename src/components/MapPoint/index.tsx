@@ -176,12 +176,15 @@ function MapPoint({ ...props }: MappointProps) {
       })
   }
 
+  function getBgImg() {
+    return (props.image[0]?.cloud_pic === undefined || props?.image[0].cloud_pic === "") ? '/assets/mappoint-placeholder-img.jpg' : props?.image[0].cloud_pic;
+  }
   return (
     <main id={'mappoint-id-' + props.uuid} className="relative w-full h-full min-h-screen flex justify-center p-5 mb-12 text-default-font lg:pt-14">
-      <div id="card-wrapper" className="min-w-0 max-w-xl lg:w-full lg:max-w-[unset] lg:flex lg:flex-col lg:justify-start lg:items-center">
+      <div id="card-wrapper" className="min-w-0 max-w-xl lg:w-full lg:max-w-4xl lg:flex lg:flex-col lg:justify-start lg:items-center">
         <div className="relative w-full mb-8 overflow-hidden rounded-t-3xl">
           <div
-            style={{ backgroundImage: `url('https://cherrytomaten.herokuapp.com${props?.image[0]?.image}')` }}
+            style={{ backgroundImage: `url('${getBgImg()}')` }}
             className="w-full h-80 flex flex-col justify-center items-center overflow-hidden bg-no-repeat bg-center bg-cover lg:h-[450px]">
           </div>
           <Link href="/home">
