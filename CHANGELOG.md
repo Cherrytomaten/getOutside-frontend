@@ -34,3 +34,9 @@
 
 ### v1.2.1
 - Fix iphone map scrolling
+
+### v1.3.0
+- Add favorite page
+- Allow to filter by favorites on map
+- Fix a inconsisten data bug caused by getServerSideProps
+- Add bookmark (favorite) function on mappoints

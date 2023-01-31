@@ -12,9 +12,9 @@ type GetFavoriteErrorResponse = {
 type GetFavoriteResponse = NextApiResponse<FavoritePinsList | FetchServerErrorResponse>;
 
 /**
- * Add a mappoint to the current users favorite list
- * @param _req containing the pinId in the body
- * @param res Ids of the involded user / pin to confirm the success or error response
+ * Get all favorite mappoints from a user
+ * @param _req containing an access token in the header
+ * @param res List of all favorites or an error response
  */
 export default async function handler(_req: NextApiRequest, res: GetFavoriteResponse) {
   // wrong request method
