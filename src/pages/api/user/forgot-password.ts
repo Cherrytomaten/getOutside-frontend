@@ -32,7 +32,7 @@ export default async function handler(_req: ForgotPasswordRequest, res: ForgotPa
   }
 
   return await axios
-    .post('https://cherrytomaten.herokuapp.com/authentication/user/password/reset/', {
+    .post('https://cherrytomaten.herokuapp.com/authentication/user/password/sendMail', {
       email: _req.body.email,
     })
     .then((_res: AxiosResponse<ForgotPasswordResponseBody>) => {

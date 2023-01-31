@@ -153,7 +153,7 @@ class UserAuthRepo implements IUserAuthRepo {
    */
   public async resetPassword({ user_id, user_mail, confirmation_token, password, password2 }: ResetPasswordProps): Promise<void | WrapperServerErrorResponse> {
     return await axios
-      .put('/api/user/reset-password', {
+      .post('/api/user/reset-password', {
         user_id: user_id,
         user_mail: user_mail,
         confirmation_token: confirmation_token,

@@ -24,7 +24,7 @@ function Navbar() {
           </Link>
           <Link href="/profile">
             <li onMouseEnter={() => setHoverProfile(true)} onMouseLeave={() => setHoverProfile(false)} className="cursor-pointer lg:order-3">
-              <ProfileSvg width="32 px" height="32px" fill={hoverProfile ? '#3ED598' : '#f0f0f0'} />
+              <ProfileSvg width="32px" height="32px" fill={hoverProfile ? '#3ED598' : '#f0f0f0'} />
             </li>
           </Link>
         </ul>
