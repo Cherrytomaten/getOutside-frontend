@@ -4,15 +4,19 @@ import { capitalizeFirstLetter } from "@/util/capitalizeFirstLetter";
 
 type FilterMenuProps = {
   allCategories: string[];
-  categoryFilter: ActivityType[];
-  setCatFilter: Dispatch<SetStateAction<string[]>>;
-  onlyShowFavs: boolean;
-  setOnlyShowFavs: Dispatch<SetStateAction<boolean>>;
+  categoryFilter: ActivityType[] | undefined;
+  setCatFilter: Dispatch<SetStateAction<ActivityType[] | undefined>>;
+  onlyShowFavs: boolean | undefined;
+  setOnlyShowFavs: Dispatch<SetStateAction<boolean | undefined>>;
   setTrigger: Dispatch<any>;
 };
 
 function FilterMenu({ allCategories, categoryFilter, setCatFilter, setTrigger, setOnlyShowFavs, onlyShowFavs }: FilterMenuProps) {
   function changeHandler(event: ChangeEvent<HTMLInputElement>) {
+    if (categoryFilter === undefined) {
+      return;
+    }
+
     const {
       target: { value },
     } = event;
@@ -49,13 +53,13 @@ function FilterMenu({ allCategories, categoryFilter, setCatFilter, setTrigger, s
             <button
               className="w-full max-w-[200px] px-6 py-1.5 mr-2 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-darker-sea disabled:hover:bg-darker-sea xs:hover:bg-hovered-seaweed"
               onClick={selectAll}
-              disabled={allCategories.length === categoryFilter.length}>
+              disabled={allCategories.length === categoryFilter?.length}>
               Select all
             </button>
             <button
               className="w-full max-w-[200px] px-6 py-1.5 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-darker-sea disabled:hover:bg-darker-sea xs:hover:bg-hovered-seaweed"
               onClick={unselectAll}
-              disabled={categoryFilter.length === 0}>
+              disabled={categoryFilter?.length === 0}>
               Unselect all
             </button>
           </div>
@@ -65,7 +69,7 @@ function FilterMenu({ allCategories, categoryFilter, setCatFilter, setTrigger, s
         {allCategories.map((catElem: string) => {
           return (
             <div key={catElem + '-key'} className="mb-3 cursor-pointer">
-              <input type="checkbox" id={catElem + '-id'} value={catElem} className="hidden" aria-hidden="true" checked={categoryFilter.includes(catElem)} onChange={changeHandler} />
+              <input type="checkbox" id={catElem + '-id'} value={catElem} className="hidden" aria-hidden="true" checked={categoryFilter?.includes(catElem)} onChange={changeHandler} />
               <label htmlFor={catElem + '-id'} className="checkbox-label flex flex-row justify-start items-center mr-2 text-lg font-light text-white transition-colors cursor-pointer select-none">
                 <div className="checkbox-custom-input w-4 h-4 mt-0.5 mr-2 bg-transparent border rounded-full border-bright-seaweed transition-colors"></div>
                 {capitalizeFirstLetter(catElem)}

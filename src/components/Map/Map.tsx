@@ -4,7 +4,7 @@ import { LatLngExpression } from 'leaflet';
 import { FilterMenu } from '@/components/Map/FilterMenu';
 import { PinProps } from '@/types/Pins';
 import { ActivityType } from '@/types/Pins/ActivityType';
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from 'framer-motion';
 import { RadiusMenu } from '@/components/Map/RadiusMenu';
 import { Filter } from '@/resources/svg/Filter';
@@ -19,23 +19,22 @@ import { Radius } from '@/resources/svg/Radius';
 import { FavoritePinsList } from "@/types/Pins/FavoritePinsList";
 
 type MapProps = {
-  cookiedCategories: string[];
-  cookiedRadius: number;
-  cookiedShowOnlyFav: boolean;
+  cookiedCategories: string[] | undefined;
+  cookiedRadius: number | undefined;
+  cookiedShowOnlyFav: boolean | undefined;
   favoritePinsList: FavoritePinsList
 };
 
 function Map({ cookiedCategories, cookiedRadius, cookiedShowOnlyFav, favoritePinsList }: MapProps) {
-  console.log(cookiedShowOnlyFav)
+  console.log(cookiedShowOnlyFav);
   const [showCatFilter, setShowCatFilter] = useState<boolean>(false);
   const [showRadiusFilter, setShowRadiusFilter] = useState<boolean>(false);
-
   const [allCategories, setAllCategories] = useState<string[]>([]);
-  const [categoryFilter, setCategoryFilter] = useState<ActivityType[]>(cookiedCategories);
-  const [radius, setRadius] = useState<number>(cookiedRadius);
+  const [categoryFilter, setCategoryFilter] = useState<ActivityType[] | undefined>(cookiedCategories);
+  const [radius, setRadius] = useState<number | undefined>(cookiedRadius);
   const [locationPreference, setLocationPreference] = useState<boolean | null>(null);
   const [userLocation, setUserLocation] = useState<LatLngExpression>(DEFAULT_POSITION);
-  const [onlyShowFavs, setOnlyShowFavs] = useState<boolean>(cookiedShowOnlyFav ?? false);
+  const [onlyShowFavs, setOnlyShowFavs] = useState<boolean | undefined>(cookiedShowOnlyFav);
   const { fetchPinDataQueryState } = useManageMapData({
     radius: radius,
     location: userLocation,
@@ -46,6 +45,22 @@ function Map({ cookiedCategories, cookiedRadius, cookiedShowOnlyFav, favoritePin
     locationPreference: locationPreference,
     showOnlyFav: onlyShowFavs
   });
+
+  // update fav filter
+  useEffect(() => {
+    setOnlyShowFavs(cookiedShowOnlyFav)
+  }, [cookiedShowOnlyFav]);
+
+  // update radius filter
+  useEffect(() => {
+    setRadius(cookiedRadius)
+  }, [cookiedRadius]);
+
+  // update category filter
+  useEffect(() => {
+    setCategoryFilter(cookiedCategories)
+  }, [cookiedCategories]);
+
 
   function isPinFavorite(pinId: string): boolean {
     return favoritePinsList.some(favElem => favElem.pin.uuid === pinId);
@@ -60,11 +75,11 @@ function Map({ cookiedCategories, cookiedRadius, cookiedShowOnlyFav, favoritePin
         />
 
         <LocationTracker setUserLocation={setUserLocation} locationPref={locationPreference} setLocationPref={setLocationPreference} />
-        <Circle center={userLocation} radius={radius} pathOptions={{ color: '#3ED598', weight: 2, opacity: 0.8, fillColor: '#82e7bd', fillOpacity: 0.05 }} />
+        <Circle center={userLocation} radius={radius ?? 0} pathOptions={{ color: '#3ED598', weight: 2, opacity: 0.8, fillColor: '#82e7bd', fillOpacity: 0.05 }} />
 
         <div>
           {fetchPinDataQueryState.context.pins.map((pinElemData: PinProps) => {
-            if (pinElemData.category === null || !categoryFilter.includes(pinElemData.category)) {
+            if (pinElemData.category === null || (categoryFilter !== undefined && !categoryFilter.includes(pinElemData.category))) {
               return null;
             }
 
@@ -84,6 +99,7 @@ function Map({ cookiedCategories, cookiedRadius, cookiedShowOnlyFav, favoritePin
         </div>
       </MapContainer>
     ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [categoryFilter, fetchPinDataQueryState.context.pins, locationPreference, radius, userLocation, onlyShowFavs]
   );
 
@@ -100,7 +116,7 @@ function Map({ cookiedCategories, cookiedRadius, cookiedShowOnlyFav, favoritePin
           onClick={() => setShowCatFilter(true)}>
           <Filter width="100%" height="100%" fill="#fff"></Filter>
           <div className="z-10 absolute -right-2 -bottom-2 w-7 h-7 flex flex-col justify-center items-center bg-white rounded-full">
-            <span className="text-xs">{categoryFilter.length}</span>
+            <span className="text-xs">{categoryFilter?.length ?? 0}</span>
           </div>
         </div>
 
