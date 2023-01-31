@@ -1,18 +1,11 @@
 import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
-import { BackendErrorProps } from '@/types/Backend/BackendErrorProps';
 import { BackendErrorResponse } from '@/types/Backend/BackendErrorResponse';
 import { AUTH_TOKEN } from '@/types/constants';
 import { logger } from '@/util/logger';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-type MapPointApiRequest = NextApiRequest & {
-  query: {
-    mapPointUuid: string;
-  };
-};
-
-export default async function handler(_req: MapPointApiRequest, res: NextApiResponse) {
+export default async function handler(_req: NextApiRequest, res: NextApiResponse) {
   // wrong request method
   if (_req.method !== 'POST') {
     return res.status(405).json({
@@ -32,23 +25,31 @@ export default async function handler(_req: MapPointApiRequest, res: NextApiResp
     }
 
     return await axios
-      .post(`http://cherrytomaten.herokuapp.com/api/mappoint/detail/comments`, {
-        mappointPin: _req.body.mappointId,
-        author: authToken.userId,
-        text: _req.body.text,
-      })
+      .post(
+        `http://cherrytomaten.herokuapp.com/api/mappoint/detail/comments`,
+        {
+          mappointID: _req.body.mappointId,
+          text: _req.body.text,
+        },
+        {
+          headers: {
+            Authorization: 'Bearer ' + authToken.token,
+          },
+        }
+      )
       .then((_res: any) => {
-        return _res;
+        logger.log('api res data:', _res.data);
+        return res.status(_res.status).json(_res.data);
       })
       .catch((err: BackendErrorResponse) => {
-        logger.log('add comment error: ', err);
+        logger.log('api add comment error: ', err);
         if (err.response?.data === undefined) {
           return res.status(err.response?.status ? err.response?.status : 500).json({ errors: { message: 'A server error occured.' } });
         }
         return res.status(err.response.status).json({ errors: { message: err.response.data } });
       });
   } catch (err) {
-    logger.log('Error adding comment:', err);
+    logger.log('api Error adding comment:', err);
     return res.status(400).json({ errors: { message: 'Error adding comment.' } });
   }
 }
