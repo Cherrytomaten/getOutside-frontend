@@ -3,13 +3,16 @@ import { ProfilePage } from '@/components/Profile';
 import { useAuth } from '@/context/AuthContext';
 import { useUserAuth } from '@/hooks/useUserAuth';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from "react";
 import { AUTH_TOKEN } from '@/types/constants';
 import { GetServerSidePropsContext } from 'next';
 import axios, { AxiosResponse } from 'axios';
 import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
 import { BackendErrorResponse } from '@/types/Backend/BackendErrorResponse';
 import { logger } from '@/util/logger';
+import { UserRepoClass } from "@/repos/UserRepo";
+import { UserDataProps } from "@/types/User/UserDataProps";
+import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 
 type UserDataServerResponseProps = {
   username: string;
@@ -20,14 +23,6 @@ type UserDataServerResponseProps = {
 };
 
 type UserDataServerResponse = AxiosResponse<UserDataServerResponseProps>;
-
-type ProfileProps = {
-  username: string;
-  fname: string;
-  lname: string;
-  email: string;
-  pic: string | null;
-};
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const tokenData: string | undefined = context.req.cookies[AUTH_TOKEN];
@@ -68,10 +63,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
-function Profile({ ...userPayload }: ProfileProps) {
+function Profile({ ...userPayload }: UserDataProps) {
   const router = useRouter();
   const authenticationHook = useUserAuth();
   const { fetchUserAuthState } = useAuth();
+  const [userData, setUserData] = useState<UserDataProps>(userPayload);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (!authenticationHook.authStatus) {
@@ -79,11 +76,31 @@ function Profile({ ...userPayload }: ProfileProps) {
     }
   }, [authenticationHook.authStatus, router]);
 
-  if (fetchUserAuthState.context.user === null) {
+  useEffect(() => {
+    setIsLoading(true);
+    UserRepoClass.getUserData()
+      .then((res: UserDataProps) => {
+        setUserData(res);
+        setIsLoading(false);
+      })
+      .catch((err: FetchServerErrorResponse) => {
+        logger.log(err.errors.message);
+        setUserData({
+          username: '',
+          fname: '',
+          lname: '',
+          email: '',
+          pfp: '',
+        })
+        setIsLoading(false);
+      })
+  }, []);
+
+  if (fetchUserAuthState.context.user === null || isLoading) {
     return <LoadingSpinner />;
   }
 
-  return <ProfilePage username={userPayload.username} fname={userPayload.fname} lname={userPayload.lname} email={userPayload.email} pic={userPayload.pic} />;
+  return <ProfilePage username={userData.username} fname={userData.fname} lname={userData.lname} email={userData.email} pic={userData.pfp} />;
 }
 
 export default Profile;

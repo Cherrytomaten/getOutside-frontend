@@ -16,6 +16,7 @@ import { FavoritePinsList } from "@/types/Pins/FavoritePinsList";
 
 type MappointProps = PinProps & {
   isFavorite: boolean;
+  userId: string;
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -62,14 +63,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         description: mappointData.description,
         address: mappointData.address,
         openingHours: mappointData.openingHours,
-        rating: null,
+        ratings: mappointData.ratings,
         comments: mappointData.comments,
         image: mappointData.image,
         category: mappointData.category,
         creator: mappointData.creator,
         longitude: mappointData.longitude,
         latitude: mappointData.latitude,
-        isFavorite: isFavorite
+        isFavorite: isFavorite,
+        userId: authToken.userId,
       },
     };
   } catch (err) {
@@ -103,7 +105,7 @@ function MapPointPage({ ...mapointPayload }: MappointProps) {
         description={mapointPayload.description}
         address={mapointPayload.address}
         openingHours={mapointPayload.openingHours}
-        rating={mapointPayload.rating}
+        ratings={mapointPayload.ratings}
         comments={mapointPayload.comments}
         image={mapointPayload.image}
         category={mapointPayload.category}
@@ -111,6 +113,7 @@ function MapPointPage({ ...mapointPayload }: MappointProps) {
         longitude={mapointPayload.longitude}
         latitude={mapointPayload.latitude}
         isFavorite={mapointPayload.isFavorite}
+        userId={mapointPayload.userId}
       />
     </>
   );

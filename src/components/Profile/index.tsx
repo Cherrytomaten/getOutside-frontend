@@ -127,9 +127,9 @@ function ProfilePage({ ...props }: ProfileProps) {
             Welcome <span className="text-bright-seaweed">{localProps.username}</span>!
           </h1>
           <div className="relative flex flex-col justify-center items-center">
-            <div id="img-container" className="relative flex-auto w-48 min-w-[10rem] max-w-[14rem] h-48 min-h-[10rem] max-h-[14rem] flex flex-col justify-center items-center overflow-hidden rounded-full">
+            <div id="img-container" className="relative w-48 h-48 flex flex-col justify-center items-center overflow-hidden rounded-full md:w-64 md:h-64 lg:w-80 lg:h-80">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={localProps.pic === null || localProps.pic === '' ? placeholderImage : localProps.pic} alt="" className="w-auto min-w-full max-w-[unset] min-h-full max-h-[unset]" />
+              <img src={localProps.pic === null || localProps.pic === '' ? placeholderImage : localProps.pic} alt="Profilepicture" />
             </div>
             <div id="btns-container" className="flex flex-row justify-center items-center transition-all">
               <input type="file" id="upload-profile-pic-btn" name="profile-pic-upload" title="Upload Profile Picture" className="hidden" accept="image/*" onChange={handlePictureInputChange} />
@@ -207,9 +207,7 @@ function ProfilePage({ ...props }: ProfileProps) {
           </div>
         </section>
       </div>
-      {isLoading &&
-        <LoadingSpinner />
-      }
+      {isLoading && <LoadingSpinner />}
     </main>
   );
 }

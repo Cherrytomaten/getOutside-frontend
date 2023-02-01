@@ -9,7 +9,7 @@
 - pages are connected correctly
 
 ### v1.0.0
-- profil page
+- profile page
 - updated map page + features
 - navbar
 - auth is connected to backend
@@ -26,7 +26,7 @@
 - remove unused libraries
 
 ### v1.2.0
-- Add change profil data
+- Add change profile data
 - Add live tracking
 - Add password forgot
 - Add User email verification
@@ -35,8 +35,12 @@
 ### v1.2.1
 - Fix iphone map scrolling
 
-### v1.3.0
+### v2.0.0
 - Add favorite page
+- Add Image upload for user profile
 - Allow to filter by favorites on map
-- Fix a inconsisten data bug caused by getServerSideProps
+- Fix an inconsisten data bug caused by getServerSideProps on map & profile page
 - Add bookmark (favorite) function on mappoints
+- Adding & deleting comments
+- Rating a mappoint
+- Show a profile picture on each comment
