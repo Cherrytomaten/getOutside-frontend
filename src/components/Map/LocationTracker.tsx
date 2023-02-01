@@ -20,6 +20,9 @@ function LocationTracker({ setUserLocation, setLocationPref, locationPref }: Loc
   const initialTrack = useRef(true);
 
   const map = useMapEvents({
+    click(e) {
+      console.log("E", e.latlng);
+    },
     locationfound(e: LocationEvent) {
       if (userPos !== undefined) {
         const latDist = e.latlng.lat - Number(userPos[0]);

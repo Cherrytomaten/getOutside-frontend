@@ -80,7 +80,7 @@ function FilterMenu({ allCategories, categoryFilter, setCatFilter, setTrigger, s
       </form>
       {allCategories.length !== 0 ? (
         <button
-          className="w-full max-w-[200px] px-6 py-1.5 mt-8 mb-4 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-darker-sea disabled:hover:bg-darker-sea xs:hover:bg-hovered-seaweed"
+          className="w-full max-w-[200px] px-6 py-1.5 mt-8 mb-16 whitespace-nowrap bg-bright-seaweed border-none rounded-full transition-colors disabled:text-dark-seaweed disabled:bg-darker-sea disabled:hover:bg-darker-sea xs:hover:bg-hovered-seaweed"
           onClick={() => setTrigger(false)}>
           Apply
         </button>
