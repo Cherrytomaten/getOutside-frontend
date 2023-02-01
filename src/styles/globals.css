@@ -148,3 +148,15 @@
 .leaflet-control-attribution {
     @apply text-[7px] md:text-xs;
 }
+
+.swiper-button-prev {
+    @apply text-orange-sun !important;
+}
+
+.swiper-button-next {
+    @apply text-orange-sun !important;
+}
+
+.swiper-pagination-bullet {
+    @apply bg-orange-sun !important;
+}
