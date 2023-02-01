@@ -1,16 +1,16 @@
 import CloseSvg from '@/resources/svg/Close';
-import { RenderStars, calcAverage } from '@/components/MapPoint/StarRendering';
+import { RenderStars, calcAverage, getUserRating } from '@/components/MapPoint/StarRendering';
 import { useEffect, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import ExpandSvg from '@/resources/svg/Expand';
 import Link from 'next/link';
 import { UserRepoClass } from '@/repos/UserRepo';
 import { logger } from '@/util/logger';
-import { Bookmark } from "@/resources/svg/Bookmark";
-import { BookmarkCrossed } from "@/resources/svg/BookmarkCrossed";
-import { favRepoClass } from "@/repos/FavRepo";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
+import { Bookmark } from '@/resources/svg/Bookmark';
+import { BookmarkCrossed } from '@/resources/svg/BookmarkCrossed';
+import { favRepoClass } from '@/repos/FavRepo';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { FetchServerErrorResponse } from '@/types/Server/FetchServerErrorResponse';
 import { commentsService } from '@/services/Comments';
 import DeleteSvg from '@/resources/svg/Delete';
 import { InfoPopup } from '@/components/InfoPopup';
@@ -36,6 +36,7 @@ type MappointProps = {
 function MapPoint({ ...props }: MappointProps) {
   const [allStars, setAllStars] = useState<JSX.Element[]>(RenderStars(props.ratings, '34', '34'));
   const [averageRating, setAverageRating] = useState<number>(calcAverage(props.ratings));
+  const [userRating, setUserRating] = useState<number>(getUserRating(props.ratings, props.userId));
   const minimumComments: number = 2;
   const [counter, setCounter] = useState<number>(minimumComments); // Counter for number of shown comments
   const [comment, setComment] = useState<string>('');
@@ -45,7 +46,6 @@ function MapPoint({ ...props }: MappointProps) {
   const isMounted = useRef(false); // used to check if the component did mount for the first time
   const [expandDesc, setExpandDesc] = useState<boolean>(false); // boolean to open the description
   const [descSize, setDescSize] = useState<number>(0); // description size - workaround for the arrow to show right
-  const [showRating, setShowRating] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFavorite, setIsFavorite] = useState<boolean>(props.isFavorite);
 
@@ -89,13 +89,16 @@ function MapPoint({ ...props }: MappointProps) {
         throw new Error('Rating Index must not be null!');
       }
 
+      const userRating: number = index + 1; // index starts with 0
+
       ratingService
-        .postNewRating(index + 1, props.uuid) // index starts with 0
+        .postNewRating(userRating, props.uuid)
         .then((res: any) => {
           logger.log('Rating successful.');
           logger.log('res-rating:', res.data.rating);
           setAverageRating(calcAverage(props.ratings, res.data.rating, res.data.creator));
           setAllStars(RenderStars(props.ratings, '34', '34', res.data.rating, res.data.creator));
+          setUserRating(getUserRating(props.ratings, props.userId, res.data.rating));
         })
         .catch((err: FetchServerErrorResponse) => {
           logger.log('Error occured by rating:', err.errors.message);
@@ -223,7 +226,7 @@ function MapPoint({ ...props }: MappointProps) {
   }
 
   function getUserImage(url: string | null) {
-    return (url === null || url === '') ? '/assets/ProfilePictureDefault.png' : url
+    return url === null || url === '' ? '/assets/ProfilePictureDefault.png' : url;
   }
 
   function addToFavorites(pinId: string) {
@@ -232,14 +235,15 @@ function MapPoint({ ...props }: MappointProps) {
     }
 
     setIsLoading(true);
-    favRepoClass.add(pinId)
+    favRepoClass
+      .add(pinId)
       .then((_res) => {
         setIsLoading(false);
         setIsFavorite(true);
       })
       .catch((_err) => {
         setIsLoading(false);
-      })
+      });
   }
 
   function removeFromFavorites(pinId: string) {
@@ -248,7 +252,8 @@ function MapPoint({ ...props }: MappointProps) {
     }
 
     setIsLoading(true);
-    favRepoClass.delete(pinId)
+    favRepoClass
+      .delete(pinId)
       .then((_res) => {
         setIsLoading(false);
         setIsFavorite(false);
@@ -258,99 +263,68 @@ function MapPoint({ ...props }: MappointProps) {
           setIsFavorite(false);
         }
         setIsLoading(false);
-      })
+      });
   }
 
   function getBgImg() {
-    return (props.image[0]?.cloud_pic === undefined || props?.image[0].cloud_pic === "") ? '/assets/mappoint-placeholder-img.jpg' : props?.image[0].cloud_pic;
+    return props.image[0]?.cloud_pic === undefined || props?.image[0].cloud_pic === '' ? '/assets/mappoint-placeholder-img.jpg' : props?.image[0].cloud_pic;
   }
-  
+
   return (
     <main id={'mappoint-id-' + props.uuid} className="relative w-full h-full min-h-screen flex justify-center p-5 mb-12 text-default-font lg:pt-14">
       <div id="card-wrapper" className="min-w-0 max-w-xl lg:w-full lg:max-w-4xl lg:flex lg:flex-col lg:justify-start lg:items-center">
         <div className="relative w-full mb-8 overflow-hidden rounded-t-3xl">
-          <div
-            style={{ backgroundImage: `url('${getBgImg()}')` }}
-            className="w-full h-80 flex flex-col justify-center items-center overflow-hidden bg-no-repeat bg-center bg-cover lg:h-[450px]">
-          </div>
+          <div style={{ backgroundImage: `url('${getBgImg()}')` }} className="w-full h-80 flex flex-col justify-center items-center overflow-hidden bg-no-repeat bg-center bg-cover lg:h-[450px]"></div>
           <Link href="/home">
-            <button
-              className="z-[99] modest-shadow absolute top-4 right-4 w-10 h-10 p-2 opacity-90 bg-bright-seaweed rounded-full transition-all hover:xs:opacity-100 hover:xs:bg-hovered-seaweed">
+            <button className="z-[99] modest-shadow absolute top-4 right-4 w-10 h-10 p-2 opacity-90 bg-bright-seaweed rounded-full transition-all hover:xs:opacity-100 hover:xs:bg-hovered-seaweed">
               <CloseSvg width="100%" height="100%" fill="#fff" />
             </button>
           </Link>
-          {isFavorite
-          ? (
-              <button
-                className="z-[99] modest-shadow absolute top-20 right-4 w-10 h-10 p-2 opacity-90 bg-bright-seaweed rounded-full transition-all hover:xs:opacity-100 hover:xs:bg-hovered-seaweed"
-                title="Add to favorites"
-                aria-label="Add point to your favorites"
-                onClick={() => removeFromFavorites(props.uuid)}
-              >
-                <BookmarkCrossed width="100%" height="100%" fill="#fff" />
-              </button>
-            )
-            : (
-              <button
-                className="z-[99] modest-shadow absolute top-20 right-4 w-10 h-10 p-2 opacity-90 bg-bright-seaweed rounded-full transition-all hover:xs:opacity-100 hover:xs:bg-hovered-seaweed"
-                title="Remove from favorites"
-                aria-label="Remove point from your favorites"
-                onClick={() => addToFavorites(props.uuid)}
-              >
-                <Bookmark width="100%" height="100%" fill="#fff" />
-              </button>
-            )
-          }
-
+          {isFavorite ? (
+            <button
+              className="z-[99] modest-shadow absolute top-20 right-4 w-10 h-10 p-2 opacity-90 bg-bright-seaweed rounded-full transition-all hover:xs:opacity-100 hover:xs:bg-hovered-seaweed"
+              title="Add to favorites"
+              aria-label="Add point to your favorites"
+              onClick={() => removeFromFavorites(props.uuid)}>
+              <BookmarkCrossed width="100%" height="100%" fill="#fff" />
+            </button>
+          ) : (
+            <button
+              className="z-[99] modest-shadow absolute top-20 right-4 w-10 h-10 p-2 opacity-90 bg-bright-seaweed rounded-full transition-all hover:xs:opacity-100 hover:xs:bg-hovered-seaweed"
+              title="Remove from favorites"
+              aria-label="Remove point from your favorites"
+              onClick={() => addToFavorites(props.uuid)}>
+              <Bookmark width="100%" height="100%" fill="#fff" />
+            </button>
+          )}
         </div>
         <div id="lower-wrapper" className="w-full max-w-xl flex flex-col justify-between align-center">
           <div className="mb-4 text-3xl text-center">
             <h1>{props.title}</h1>
           </div>
           <div className="box-border mb-[10%] text-center">
-            {props.ratings === null ? (
+            {props.ratings === null || props.ratings === undefined ? (
               <ul title="Unrated">
-                {allStars.map((star, index) => (
-                  <li key={index} className="inline">
-                    {star}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <ul title={`Average Rating: ${averageRating !== undefined ? averageRating.toString() : ""}`}>
                 {allStars.map((star, index) => (
                   <li key={index} className="inline-block cursor-pointer hover:mb-[-2px] hover:border-b-star-color hover:border-b-2" onClick={() => handleRating(index)}>
                     {star}
                   </li>
                 ))}
               </ul>
+            ) : (
+              <ul title={`Average Rating: ${averageRating.toString()}`}>
+                {allStars.map((star, index) => (
+                  <li
+                    key={index}
+                    className={`inline-block cursor-pointer hover:mb-[-2px] hover:border-b-star-color hover:border-b-2 ${userRating === index + 1 && 'mb-[-2px] border-b-star-color border-b-2'}`}
+                    onClick={() => handleRating(index)}>
+                    {star}
+                  </li>
+                ))}
+              </ul>
             )}
-            <div className="relative w-full h-9 mt-4">
-              <motion.button
-                initial={{ opacity: 1 }}
-                animate={showRating ? { opacity: 0 } : { opacity: 1 }}
-                transition={{
-                  ease: 'easeOut',
-                  duration: 0.2,
-                }}
-                type="button"
-                className="absolute top-0 right-[50%] left-[50%] w-[7.75rem] h-9 translate-x-[-50%] text-default-font border-solid border-2 rounded-md border-dark-seaweed"
-                onClick={() => setShowRating(!showRating)}>
-                Average Rating
-              </motion.button>
-              {showRating && (
-                <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={showRating ? { opacity: 1 } : { opacity: 0 }}
-                  transition={{
-                    ease: 'easeOut',
-                    duration: 0.2,
-                  }}
-                  exit={{ opacity: 0 }}
-                  type="button"
-                  className="absolute top-0 right-[50%] left-[50%] w-[7.75rem] h-9 translate-x-[-50%] text-default-font bg-dark-seaweed rounded-md"
-                  onClick={() => setShowRating(!showRating)}>{`${averageRating} Stars`}</motion.button>
-              )}
+            <div className="flex justify-center mt-4">
+              <div className="px-4 py-2 text-default-font bg-dark-seaweed rounded-xl">{`Average Rating: ${averageRating} Stars`}</div>
             </div>
           </div>
           <div className="flex-1">
@@ -459,7 +433,7 @@ function MapPoint({ ...props }: MappointProps) {
                     <AnimatePresence>
                       {showComments().map((comment: CommentProps) => (
                         <motion.div
-                          key={"comment-" + comment.uuid}
+                          key={'comment-' + comment.uuid}
                           className="relative min-h-[65px] flex flex-col justify-around p-3 pb-9 mb-3 bg-dark-seaweed rounded-xl"
                           initial={{ y: -100, opacity: 0 }}
                           animate={{ y: 0, opacity: 1 }}
@@ -468,8 +442,7 @@ function MapPoint({ ...props }: MappointProps) {
                           <p className="absolute right-12 bottom-2 font-light text-bright-seaweed">{comment.author.username}</p>
                           <div
                             style={{ backgroundImage: `url('${getUserImage(comment.author.cloud_pic)}')` }}
-                            className="full absolute right-5 bottom-2.5 w-5 h-5 bg-no-repeat bg-center bg-cover rounded-full">
-                          </div>
+                            className="full absolute right-5 bottom-2.5 w-5 h-5 bg-no-repeat bg-center bg-cover rounded-full"></div>
                           {comment.author.uuid === props.userId && (
                             <p className="absolute bottom-2 left-2 cursor-pointer" onClick={() => handleDeleteSubmit(comment.uuid)}>
                               <DeleteSvg width="auto" height="1.3rem" fill="#DD4352"></DeleteSvg>
@@ -512,9 +485,7 @@ function MapPoint({ ...props }: MappointProps) {
           </div>
         </div>
       </div>
-      {isLoading &&
-        <LoadingSpinner />
-      }
+      {isLoading && <LoadingSpinner />}
     </main>
   );
 }

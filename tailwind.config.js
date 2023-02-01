@@ -2,18 +2,13 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    './src/pages/**/*.{js,ts,jsx,tsx}',
-    './src/pages/*.{js,ts,jsx,tsx}',
-    './src/components/**/*.{js,ts,jsx,tsx}',
-    './src/components/*.{js,ts,jsx,tsx}',
-  ],
+  content: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/pages/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}', './src/components/*.{js,ts,jsx,tsx}'],
   theme: {
     fontFamily: {
       lato: ['Lato', 'sans-serif'],
     },
     screens: {
-      'xs': '380px',
+      xs: '380px',
       'mq-hover': { raw: '(hover: hover)' },
       ...defaultTheme.screens,
     },
@@ -29,9 +24,9 @@ module.exports = {
         'orange-sun': '#FF5C00',
         'default-font': '#F0F0F0',
         'star-color': '#FFE000',
-        'danger': '#D41C2D',
+        danger: '#D41C2D',
         'lighter-danger': '#DD4352',
-        'warning': '#FFC107',
+        warning: '#FFC107',
       },
       boxShadow: {
         'shadow-darker-sea': '2px 2px 10px 7px #1D2C33',
@@ -55,11 +50,11 @@ module.exports = {
       keyframes: {
         'c-bounce': {
           '0%, 100%': {
-            'transform': 'translateY(-100%)',
+            transform: 'translateY(-100%)',
             'animation-timing-function': 'cubic-bezier(0.8, 0, 1, 1)',
           },
           '50%': {
-            'transform': 'translateY(0)',
+            transform: 'translateY(0)',
             'animation-timing-function': 'cubic-bezier(0, 0, 0.2, 1)',
           },
         },

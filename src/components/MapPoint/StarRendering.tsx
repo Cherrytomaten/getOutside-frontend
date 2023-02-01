@@ -79,13 +79,20 @@ function calcAverage(ratings: RatingProps[] | null, newRating?: number, creator?
 
     let sum: number = 0;
     let length: number = 0;
+    let userRatingConsidered: boolean = false;
 
     for (let rating of ratings) {
       if (rating.creator !== creator) {
         sum += rating.rating;
       } else {
         sum += newRating;
+        userRatingConsidered = true;
       }
+      length++;
+    }
+
+    if (userRatingConsidered === false) {
+      sum += newRating;
       length++;
     }
 
@@ -94,4 +101,21 @@ function calcAverage(ratings: RatingProps[] | null, newRating?: number, creator?
   }
 }
 
-export { RenderStars, calcAverage };
+function getUserRating(ratings: RatingProps[], creator: string, newRating?: number): number {
+  if (newRating === undefined || newRating === null) {
+    if (ratings === null || ratings === undefined || ratings.length < 1) {
+      return -1;
+    }
+
+    for (let rating of ratings) {
+      if (rating.creator === creator) {
+        return rating.rating;
+      }
+    }
+    return -1;
+  } else {
+    return newRating;
+  }
+}
+
+export { RenderStars, calcAverage, getUserRating };
