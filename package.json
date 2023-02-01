@@ -49,6 +49,7 @@
     "react-device-detect": "^2.2.2",
     "react-dom": "18.2.0",
     "react-leaflet": "^4.1.0",
+    "swiper": "^9.0.0",
     "xstate": "^4.34.0"
   },
   "devDependencies": {

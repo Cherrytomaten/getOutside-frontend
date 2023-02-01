@@ -15,6 +15,7 @@ import { commentsService } from '@/services/Comments';
 import DeleteSvg from '@/resources/svg/Delete';
 import { InfoPopup } from '@/components/InfoPopup';
 import { ratingService } from '@/services/Ratings';
+import { SwiperModule } from './Swiper';
 
 type MappointProps = {
   category: any | null;
@@ -270,11 +271,23 @@ function MapPoint({ ...props }: MappointProps) {
     return props.image[0]?.cloud_pic === undefined || props?.image[0].cloud_pic === '' ? '/assets/mappoint-placeholder-img.jpg' : props?.image[0].cloud_pic;
   }
 
+  function useSwiper(): boolean {
+    return props.image.length > 1;
+  }
+
   return (
     <main id={'mappoint-id-' + props.uuid} className="relative w-full h-full min-h-screen flex justify-center p-5 mb-12 text-default-font lg:pt-14">
       <div id="card-wrapper" className="min-w-0 max-w-xl lg:w-full lg:max-w-4xl lg:flex lg:flex-col lg:justify-start lg:items-center">
         <div className="relative w-full mb-8 overflow-hidden rounded-t-3xl">
-          <div style={{ backgroundImage: `url('${getBgImg()}')` }} className="w-full h-80 flex flex-col justify-center items-center overflow-hidden bg-no-repeat bg-center bg-cover lg:h-[450px]"></div>
+          {useSwiper() ? (
+            <div className="w-full h-80 lg:h-[450px]">
+              <SwiperModule pictures={props.image} />
+            </div>
+          ) : (
+            <div
+              style={{ backgroundImage: `url('${getBgImg()}')` }}
+              className="w-full h-80 flex flex-col justify-center items-center overflow-hidden bg-no-repeat bg-center bg-cover lg:h-[450px]"></div>
+          )}
           <Link href="/home">
             <button className="z-[99] modest-shadow absolute top-4 right-4 w-10 h-10 p-2 opacity-90 bg-bright-seaweed rounded-full transition-all hover:xs:opacity-100 hover:xs:bg-hovered-seaweed">
               <CloseSvg width="100%" height="100%" fill="#fff" />

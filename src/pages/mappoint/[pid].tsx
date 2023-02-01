@@ -41,7 +41,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         },
       })
       .then((_res: AxiosResponse<PinProps>) => {
-        //logger.log('Mappoint Backend Data:', _res.data);
         return _res.data;
       })
       .catch((_err: BackendErrorResponse) => {
@@ -50,11 +49,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     const isFavorite = await getUserFavorites(authToken)
       .then((res: FavoritePinsList) => {
-        return res.some(favElem => favElem.pin.uuid === mappointData.uuid);
+        return res.some((favElem) => favElem.pin.uuid === mappointData.uuid);
       })
       .catch((_err: any) => {
         return false;
-      })
+      });
 
     return {
       props: {
@@ -98,26 +97,23 @@ function MapPointPage({ ...mapointPayload }: MappointProps) {
   }
 
   return (
-    <>
-      <MapPoint
-        uuid={mapointPayload.uuid}
-        title={mapointPayload.title}
-        description={mapointPayload.description}
-        address={mapointPayload.address}
-        openingHours={mapointPayload.openingHours}
-        ratings={mapointPayload.ratings}
-        comments={mapointPayload.comments}
-        image={mapointPayload.image}
-        category={mapointPayload.category}
-        creator={mapointPayload.creator}
-        longitude={mapointPayload.longitude}
-        latitude={mapointPayload.latitude}
-        isFavorite={mapointPayload.isFavorite}
-        userId={mapointPayload.userId}
-      />
-    </>
+    <MapPoint
+      uuid={mapointPayload.uuid}
+      title={mapointPayload.title}
+      description={mapointPayload.description}
+      address={mapointPayload.address}
+      openingHours={mapointPayload.openingHours}
+      ratings={mapointPayload.ratings}
+      comments={mapointPayload.comments}
+      image={mapointPayload.image}
+      category={mapointPayload.category}
+      creator={mapointPayload.creator}
+      longitude={mapointPayload.longitude}
+      latitude={mapointPayload.latitude}
+      isFavorite={mapointPayload.isFavorite}
+      userId={mapointPayload.userId}
+    />
   );
-  // }
 }
 
 export default MapPointPage;
