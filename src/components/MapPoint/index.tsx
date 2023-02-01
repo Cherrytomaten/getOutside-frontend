@@ -1,10 +1,9 @@
 import CloseSvg from '@/resources/svg/Close';
-import RenderStars from '@/components/MapPoint/StarRendering';
+import { RenderStars, calcAverage } from '@/components/MapPoint/StarRendering';
 import { useEffect, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import ExpandSvg from '@/resources/svg/Expand';
 import Link from 'next/link';
-import axios from 'axios';
 import { UserRepoClass } from '@/repos/UserRepo';
 import { logger } from '@/util/logger';
 import { Bookmark } from "@/resources/svg/Bookmark";
@@ -12,6 +11,10 @@ import { BookmarkCrossed } from "@/resources/svg/BookmarkCrossed";
 import { favRepoClass } from "@/repos/FavRepo";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
+import { commentsService } from '@/services/Comments';
+import DeleteSvg from '@/resources/svg/Delete';
+import { InfoPopup } from '@/components/InfoPopup';
+import { ratingService } from '@/services/Ratings';
 
 type MappointProps = {
   category: any | null;
@@ -23,25 +26,28 @@ type MappointProps = {
   description: string;
   address: string;
   openingHours: OpeningProps;
-  rating: number;
+  ratings: RatingProps[];
   comments: CommentProps[];
   image: ImageProps[];
   isFavorite: boolean;
-}
+  userId: string;
+};
 
 function MapPoint({ ...props }: MappointProps) {
-  const allStars: JSX.Element[] = RenderStars(props.rating, '34', '34');
+  const [allStars, setAllStars] = useState<JSX.Element[]>(RenderStars(props.ratings, '34', '34'));
+  const [averageRating, setAverageRating] = useState<number>(calcAverage(props.ratings));
   const minimumComments: number = 2;
   const [counter, setCounter] = useState<number>(minimumComments); // Counter for number of shown comments
+  const [comment, setComment] = useState<string>('');
+  const [commentAddErr, setCommentAddErr] = useState<string>('');
+  const [commentDelErr, setCommentDelErr] = useState<string>('');
+  const [commentArray, setCommentArray] = useState<CommentProps[]>(props.comments);
   const isMounted = useRef(false); // used to check if the component did mount for the first time
   const [expandDesc, setExpandDesc] = useState<boolean>(false); // boolean to open the description
   const [descSize, setDescSize] = useState<number>(0); // description size - workaround for the arrow to show right
   const [showRating, setShowRating] = useState<boolean>(false);
-  const [comments, setComments] = useState<number[]>([]);
-  const [comment, setComment] = useState('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFavorite, setIsFavorite] = useState<boolean>(props.isFavorite);
-  const commentArray: CommentProps[] = props.comments;
 
   // automatically scroll down if a new comment appears
   // neglect this behavior on first mounting of component
@@ -54,11 +60,6 @@ function MapPoint({ ...props }: MappointProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [counter]);
-
-  // display a number of comments depending on the counter (Hook)
-  function showComments(): CommentProps[] {
-    return commentArray.slice(0, counter);
-  }
 
   // calculates height of elem considering parents
   function calcDescElemHeight(id: string): number {
@@ -82,6 +83,33 @@ function MapPoint({ ...props }: MappointProps) {
     }
   }
 
+  function handleRating(index: number) {
+    try {
+      if (index === undefined || index === null) {
+        throw new Error('Rating Index must not be null!');
+      }
+
+      ratingService
+        .postNewRating(index + 1, props.uuid) // index starts with 0
+        .then((res: any) => {
+          logger.log('Rating successful.');
+          logger.log('res-rating:', res.data.rating);
+          setAverageRating(calcAverage(props.ratings, res.data.rating, res.data.creator));
+          setAllStars(RenderStars(props.ratings, '34', '34', res.data.rating, res.data.creator));
+        })
+        .catch((err: FetchServerErrorResponse) => {
+          logger.log('Error occured by rating:', err.errors.message);
+        });
+    } catch (err: any) {
+      logger.log('Error occured by rating:', err);
+    }
+  }
+
+  // display a number of comments depending on the counter (Hook)
+  function showComments(): CommentProps[] {
+    return commentArray.slice(0, counter);
+  }
+
   // increment counter
   function showMoreComments(): void {
     if (counter < props.comments.length) {
@@ -91,47 +119,6 @@ function MapPoint({ ...props }: MappointProps) {
     }
   }
 
-  const handleChange = (event: any) => {
-    setComment(event.target.value);
-  };
-
-  const handleSubmit = async (event: any) => {
-    //clear textArea with ID ????
-    event.preventDefault();
-    const mappointPin_id = props.uuid;
-    if (comment)
-      try {
-        const text = comment;
-        addComment(text);
-        setComment('');
-        const response = await axios.post('/api/comments', {
-          text,
-          mappointPin_id,
-        });
-        logger.log(response.data);
-      } catch (err) {
-        logger.log(err);
-      }
-  };
-
-  function handleKeyDown(e: any) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit(e);
-    }
-  }
-
-  async function addComment(comment: string) {
-    await UserRepoClass.getUserData().then((res: any) => {
-      const messageObj: CommentProps = {
-        author: res.username,
-        text: comment,
-      };
-      const newCommentsArray = commentArray.unshift(messageObj);
-      setComments([newCommentsArray]);
-    });
-  }
-
   // decrement counter
   function showLessComments(): void {
     if (counter > minimumComments) {
@@ -139,6 +126,104 @@ function MapPoint({ ...props }: MappointProps) {
     } else {
       logger.log('Can not show less comments.');
     }
+  }
+
+  // handle comment input change
+  const handleChange = (event: any) => {
+    if (event.target.value.length > 255) {
+      setCommentAddErr('Comment can not be longer than 255 characters!');
+      setComment(event.target.value);
+    } else {
+      setCommentAddErr('');
+      setComment(event.target.value);
+    }
+  };
+
+  // handle post comment submit
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    const mappointId = props.uuid;
+
+    if (comment && commentAddErr === '')
+      try {
+        if (comment.length > 255) {
+          setCommentAddErr('Comment can not be longer than 255 Characters!');
+          throw new Error('Comment can not be longer than 255 Characters.');
+        }
+
+        commentsService
+          .postNewComment({ mappointId: mappointId, text: comment })
+          .then((res: any) => {
+            logger.log('New comment created.');
+            addComment(res.data.text, res.data.author, res.data.uuid);
+          })
+          .catch((err: FetchServerErrorResponse) => {
+            logger.log('Error occured by adding comment:', err.errors.message);
+            setCommentAddErr(JSON.stringify(err.errors.message));
+          });
+      } catch (err) {
+        logger.log('Could not add new comment:', err);
+      }
+  };
+
+  // handle posting comments by pressing enter
+  function handleKeyDown(e: any) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  }
+
+  // add comment in frontend
+  async function addComment(comment: string, authorId: string, commentId: string) {
+    await UserRepoClass.getUserData().then((res: any) => {
+      const messageObj: CommentProps = {
+        author: {
+          username: res.username,
+          uuid: authorId,
+          cloud_pic: res.pfp,
+        },
+        text: comment,
+        uuid: commentId,
+      };
+      commentArray.unshift(messageObj);
+      setComment('');
+    });
+  }
+
+  // handle comment delete
+  async function handleDeleteSubmit(commentId: string) {
+    setCommentDelErr('');
+
+    try {
+      commentsService
+        .deleteComment(commentId)
+        .then((_res: any) => {
+          logger.log('Comment deleted successfully');
+          removeComment(commentId);
+        })
+        .catch((err: FetchServerErrorResponse) => {
+          logger.log('Error occured by removing a comment:', err.errors.message);
+          setCommentDelErr(err.errors.message);
+        });
+    } catch (err) {
+      logger.log('Could not delete comment:', err);
+      setCommentDelErr('Deleting comment was unsuccessful.');
+    }
+  }
+
+  function removeComment(commentId: string) {
+    for (let i = 0; i < commentArray.length; i++) {
+      if (commentArray[i].uuid === commentId) {
+        commentArray.splice(i, 1);
+      }
+    }
+
+    setCommentArray([...commentArray]);
+  }
+
+  function getUserImage(url: string | null) {
+    return (url === null || url === '') ? '/assets/ProfilePictureDefault.png' : url
   }
 
   function addToFavorites(pinId: string) {
@@ -221,16 +306,24 @@ function MapPoint({ ...props }: MappointProps) {
           <div className="mb-4 text-3xl text-center">
             <h1>{props.title}</h1>
           </div>
-          <div className="mb-[10%] text-center">
-            {props.rating !== null &&
-              <ul title={`Average Rating: ${props.rating.toString()}`}>
+          <div className="box-border mb-[10%] text-center">
+            {props.ratings === null ? (
+              <ul title="Unrated">
                 {allStars.map((star, index) => (
                   <li key={index} className="inline">
                     {star}
                   </li>
                 ))}
               </ul>
-            }
+            ) : (
+              <ul title={`Average Rating: ${averageRating.toString()}`}>
+                {allStars.map((star, index) => (
+                  <li key={index} className="inline-block cursor-pointer hover:mb-[-2px] hover:border-b-star-color hover:border-b-2" onClick={() => handleRating(index)}>
+                    {star}
+                  </li>
+                ))}
+              </ul>
+            )}
             <div className="relative w-full h-9 mt-4">
               <motion.button
                 initial={{ opacity: 1 }}
@@ -255,7 +348,7 @@ function MapPoint({ ...props }: MappointProps) {
                   exit={{ opacity: 0 }}
                   type="button"
                   className="absolute top-0 right-[50%] left-[50%] w-[7.75rem] h-9 translate-x-[-50%] text-default-font bg-dark-seaweed rounded-md"
-                  onClick={() => setShowRating(!showRating)}>{`${props.rating} Stars`}</motion.button>
+                  onClick={() => setShowRating(!showRating)}>{`${averageRating} Stars`}</motion.button>
               )}
             </div>
           </div>
@@ -333,39 +426,54 @@ function MapPoint({ ...props }: MappointProps) {
             </div>
             {/* Kommentare */}
             <div className="mb-5">
-              <form onSubmit={handleSubmit}>
-                <h3 className="mb-.5 text-lg">Comments</h3>
+              <form onSubmit={handleSubmit} className="mb-4">
+                <h3 className="text-lg">Comments</h3>
                 <textarea
                   id="commentsTextArea"
                   value={comment}
                   className="w-full px-3 py-2 mt-1 text-white bg-transparent border rounded-md border-lighter-sea"
                   onChange={handleChange}
                   onKeyDown={handleKeyDown}
-                  placeholder="Add a comment..."
-                  // rows="1"
-                ></textarea>
+                  onFocus={() => setCommentAddErr('')}
+                  placeholder="Add a comment..."></textarea>
+                <AnimatePresence>
+                  {commentAddErr !== '' && (
+                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
+                      <p className="input-error-text mt-1 text-danger">{commentAddErr}</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
                 <input
                   type="submit"
                   value="Post comment"
                   id="signup-btn-submit"
-                  className="flex-auto w-full p-2 mt-1 mb-5 text-dark-sea bg-bright-seaweed rounded-md transition-colors cursor-pointer hover:bg-hovered-seaweed"
+                  className="flex-auto w-full h-12 mt-2 mb-4 text-dark-sea bg-bright-seaweed rounded-full transition-colors cursor-pointer hover:bg-hovered-seaweed"
                 />
               </form>
               <ul>
                 {props.comments.length === 0 ? (
-                  <p className="min-h-[65px] flex flex-col justify-around p-3 mb-3 bg-dark-seaweed rounded-xl">There are no existing comments yet...</p>
+                  <p className="min-h-[65px] flex flex-col justify-around p-3 mb-3 bg-dark-seaweed rounded-xl">There are no comments yet...</p>
                 ) : (
                   <>
                     <AnimatePresence>
-                      {showComments().map((comment: CommentProps, index) => (
+                      {showComments().map((comment: CommentProps) => (
                         <motion.div
-                          key={index}
+                          key={"comment-" + comment.uuid}
                           className="relative min-h-[65px] flex flex-col justify-around p-3 pb-9 mb-3 bg-dark-seaweed rounded-xl"
                           initial={{ y: -100, opacity: 0 }}
                           animate={{ y: 0, opacity: 1 }}
                           exit={{ y: -100, opacity: 0, position: 'absolute' }}>
                           <p className="text-white">{comment.text}</p>
-                          <p className="absolute right-5 bottom-2 font-light text-bright-seaweed">{comment.author.username}</p>
+                          <p className="absolute right-12 bottom-2 font-light text-bright-seaweed">{comment.author.username}</p>
+                          <div
+                            style={{ backgroundImage: `url('${getUserImage(comment.author.cloud_pic)}')` }}
+                            className="full absolute right-5 bottom-2.5 w-5 h-5 bg-no-repeat bg-center bg-cover rounded-full">
+                          </div>
+                          {comment.author.uuid === props.userId && (
+                            <p className="absolute bottom-2 left-2 cursor-pointer" onClick={() => handleDeleteSubmit(comment.uuid)}>
+                              <DeleteSvg width="auto" height="1.3rem" fill="#DD4352"></DeleteSvg>
+                            </p>
+                          )}
                         </motion.div>
                       ))}
                     </AnimatePresence>
@@ -391,6 +499,14 @@ function MapPoint({ ...props }: MappointProps) {
                   </>
                 )}
               </ul>
+              {/* Error messages for deleting comments */}
+              {commentDelErr !== '' && (
+                <div className="w-full flex justify-center">
+                  <div className="fixed bottom-0 w-4/5 min-w-[300px]">
+                    <InfoPopup text={commentDelErr} exp={4000} />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

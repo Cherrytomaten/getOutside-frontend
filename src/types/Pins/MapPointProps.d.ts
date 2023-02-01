@@ -1,4 +1,4 @@
-export type PinProps = {
+type MapPointProps = {
   uuid: string;
   title: string;
   description: string;
@@ -6,10 +6,5 @@ export type PinProps = {
   openingHours: OpeningProps;
   ratings: RatingProps[];
   comments: CommentProps[];
-  image: ImageProps[];
-  category: string | null;
-  creator: string;
-  longitude: number;
-  latitude: number;
-  created: string;
+  image: ImageProps;
 };
