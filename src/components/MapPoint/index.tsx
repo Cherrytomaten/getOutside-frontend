@@ -264,6 +264,7 @@ function MapPoint({ ...props }: MappointProps) {
   function getBgImg() {
     return (props.image[0]?.cloud_pic === undefined || props?.image[0].cloud_pic === "") ? '/assets/mappoint-placeholder-img.jpg' : props?.image[0].cloud_pic;
   }
+  
   return (
     <main id={'mappoint-id-' + props.uuid} className="relative w-full h-full min-h-screen flex justify-center p-5 mb-12 text-default-font lg:pt-14">
       <div id="card-wrapper" className="min-w-0 max-w-xl lg:w-full lg:max-w-4xl lg:flex lg:flex-col lg:justify-start lg:items-center">
@@ -316,7 +317,7 @@ function MapPoint({ ...props }: MappointProps) {
                 ))}
               </ul>
             ) : (
-              <ul title={`Average Rating: ${averageRating.toString()}`}>
+              <ul title={`Average Rating: ${averageRating !== undefined ? averageRating.toString() : ""}`}>
                 {allStars.map((star, index) => (
                   <li key={index} className="inline-block cursor-pointer hover:mb-[-2px] hover:border-b-star-color hover:border-b-2" onClick={() => handleRating(index)}>
                     {star}

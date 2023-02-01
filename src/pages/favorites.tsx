@@ -83,6 +83,15 @@ function Favorites(props: FavoritePageProps) {
       })
   }
 
+  function getFavPinBgImg(favElem: PinProps): string {
+    if (favElem.image.length > 0 && favElem.image[0].cloud_pic !== undefined && favElem.image[0].cloud_pic !== '') {
+      return favElem.image[0].cloud_pic;
+    } else {
+      return '/assets/mappoint-placeholder-img.jpg'
+    }
+  }
+  console.log(favs)
+
   if (initLoad) {
     return (
       <main className="relative w-full h-[calc(100%-56px)] flex justify-center items-center pb-20 text-white lg:pb-10 lg:mt-14">
@@ -116,7 +125,7 @@ function Favorites(props: FavoritePageProps) {
                   className="w-full min-h-[7rem] grid grid-cols-4 mb-2 overflow-hidden border rounded-l-full border-lighter-sea cursor-pointer xs:grid-cols-3">
                   <div
                     style={{
-                      backgroundImage: `url('${"https://cherrytomaten.herokuapp.com" + favElem.pin.image[0]?.image}')`,
+                      backgroundImage: `url('${getFavPinBgImg(favElem.pin)}')`,
                       backgroundPosition: "40% 50%",
                     }}
                     className={`relative w-full h-full flex flex-col justify-center items-center overflow-hidden bg-cover bg-dark-seaweed bg-no-repeat`}>
