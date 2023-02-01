@@ -9,6 +9,7 @@ import { userDataService } from '@/services/UserData';
 import { PersonalUserDataProps } from '@/types/User/PersonalUserDataProps';
 import { FetchServerErrorResponse } from '@/types/Server/FetchServerErrorResponse';
 import { ChangePasswordProps } from '@/types/User/ChangePasswordProps';
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 type EditProfileProps = EditPersonalProps & {
   setLocalProps: Dispatch<SetStateAction<ProfileProps>>;
@@ -72,6 +73,7 @@ function EditProfile(profileProps: EditProfileProps) {
     err: '',
   });
   const emailRegex = new RegExp('[^@s]+@[^@s]+.[^@s]+');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // ######
   // validation methods
@@ -261,10 +263,14 @@ function EditProfile(profileProps: EditProfileProps) {
   // ######
   async function handlePersonalDataSubmit(e: FormEvent<HTMLButtonElement>): Promise<void> {
     e.preventDefault();
+    setSubmitPDMsg({
+      success: '',
+      err: '',
+    });
 
     if (isFormErrorFree(profileInfoErr)) {
-      userDataService
-        .updatePersonalData(profileInfoData)
+      setIsLoading(true);
+      userDataService.updatePersonalData(profileInfoData)
         .then((res: PersonalUserDataProps) => {
           profileProps.setLocalProps({
             ...profileProps.localProps,
@@ -273,6 +279,11 @@ function EditProfile(profileProps: EditProfileProps) {
             lname: res.lname,
             email: res.email,
           });
+          setIsLoading(false);
+          setSubmitPDMsg({
+            success: 'Your data was changed successfully!',
+            err: '',
+          });
         })
         .catch((err: FetchServerErrorResponse) => {
           logger.log(err.errors.message);
@@ -280,6 +291,7 @@ function EditProfile(profileProps: EditProfileProps) {
             success: '',
             err: 'An error occured: ' + err.errors.message,
           });
+          setIsLoading(false);
         });
     } else {
       setSubmitPDMsg({
@@ -309,9 +321,11 @@ function EditProfile(profileProps: EditProfileProps) {
         err: 'Please make sure that the repeated password corresponds to the new one.',
       });
     } else {
+      setIsLoading(true);
       userDataService
         .updateUserPassword(passwordData)
         .then((_res) => {
+          setIsLoading(false);
           setSubmitPWMsg({
             success: 'Password updated successfully.',
             err: '',
@@ -319,6 +333,7 @@ function EditProfile(profileProps: EditProfileProps) {
         })
         .catch((err: FetchServerErrorResponse) => {
           logger.log('Submitting Error occured:', err.errors.message);
+          setIsLoading(false);
           setSubmitPWMsg({
             success: '',
             err: 'An error occured: ' + err.errors.message,
@@ -640,6 +655,9 @@ function EditProfile(profileProps: EditProfileProps) {
           </div>
         </section>
       </form>
+      {isLoading &&
+        <LoadingSpinner />
+      }
     </div>
   );
 }

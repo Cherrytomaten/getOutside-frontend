@@ -8,16 +8,16 @@ import { useAuth } from '@/context/AuthContext';
 import { logger } from '@/util/logger';
 import { GetServerSidePropsContext } from 'next';
 import { BackendErrorResponse } from '@/types/Backend/BackendErrorResponse';
-import { AUTH_TOKEN } from '@/types/constants';
-import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
+import { PinProps } from '@/types/Pins';
+import { AUTH_TOKEN } from "@/types/constants";
+import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
+import { getUserFavorites } from "@/services/userFavorites";
+import { FavoritePinsList } from "@/types/Pins/FavoritePinsList";
 
-type MapPointPayloadProps = MapPointProps & {
-  category: any | null;
-  creator: string;
-  longitude: number;
-  latitude: number;
+type MappointProps = PinProps & {
+  isFavorite: boolean;
   userId: string;
-};
+}
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const mappointId: string | string[] | undefined = context.params?.pid;
@@ -34,35 +34,46 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     const authToken: TokenPayload = JSON.parse(tokenData);
 
-    return await axios
+    const mappointData: PinProps = await axios
       .get(`https://cherrytomaten.herokuapp.com/api/mappoint/${mappointId}`, {
         headers: {
           Authorization: 'Bearer ' + authToken.token,
         },
       })
-      .then((_res: AxiosResponse<MapPointPayloadProps>) => {
-        logger.log('Mappoint Backend Data:', _res.data);
-        return {
-          props: {
-            uuid: _res.data.uuid,
-            title: _res.data.title,
-            description: _res.data.description,
-            address: _res.data.address,
-            openingHours: _res.data.openingHours,
-            ratings: _res.data.ratings,
-            comments: _res.data.comments,
-            image: _res.data.image,
-            category: _res.data.category,
-            creator: _res.data.creator,
-            longitude: _res.data.longitude,
-            latitude: _res.data.latitude,
-            userId: authToken.userId,
-          },
-        };
+      .then((_res: AxiosResponse<PinProps>) => {
+        //logger.log('Mappoint Backend Data:', _res.data);
+        return _res.data;
       })
       .catch((_err: BackendErrorResponse) => {
         throw new Error('Internal Server Error.');
       });
+
+    const isFavorite = await getUserFavorites(authToken)
+      .then((res: FavoritePinsList) => {
+        return res.some(favElem => favElem.pin.uuid === mappointData.uuid);
+      })
+      .catch((_err: any) => {
+        return false;
+      })
+
+    return {
+      props: {
+        uuid: mappointData.uuid,
+        title: mappointData.title,
+        description: mappointData.description,
+        address: mappointData.address,
+        openingHours: mappointData.openingHours,
+        ratings: mappointData.ratings,
+        comments: mappointData.comments,
+        image: mappointData.image,
+        category: mappointData.category,
+        creator: mappointData.creator,
+        longitude: mappointData.longitude,
+        latitude: mappointData.latitude,
+        isFavorite: isFavorite,
+        userId: authToken.userId,
+      },
+    };
   } catch (err) {
     logger.log('Error requesting mappoint page: ', err);
     return {
@@ -71,7 +82,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
-function MapPointPage({ ...mapPointPayload }: MapPointPayloadProps) {
+function MapPointPage({ ...mapointPayload }: MappointProps) {
   const router = useRouter();
   const authenticationHook = useUserAuth();
   const { fetchUserAuthState } = useAuth();
@@ -89,19 +100,20 @@ function MapPointPage({ ...mapPointPayload }: MapPointPayloadProps) {
   return (
     <>
       <MapPoint
-        uuid={mapPointPayload.uuid}
-        title={mapPointPayload.title}
-        description={mapPointPayload.description}
-        address={mapPointPayload.address}
-        openingHours={mapPointPayload.openingHours}
-        ratings={mapPointPayload.ratings}
-        comments={mapPointPayload.comments}
-        image={mapPointPayload.image}
-        category={mapPointPayload.category}
-        creator={mapPointPayload.creator}
-        longitude={mapPointPayload.longitude}
-        latitude={mapPointPayload.latitude}
-        userId={mapPointPayload.userId}
+        uuid={mapointPayload.uuid}
+        title={mapointPayload.title}
+        description={mapointPayload.description}
+        address={mapointPayload.address}
+        openingHours={mapointPayload.openingHours}
+        ratings={mapointPayload.ratings}
+        comments={mapointPayload.comments}
+        image={mapointPayload.image}
+        category={mapointPayload.category}
+        creator={mapointPayload.creator}
+        longitude={mapointPayload.longitude}
+        latitude={mapointPayload.latitude}
+        isFavorite={mapointPayload.isFavorite}
+        userId={mapointPayload.userId}
       />
     </>
   );

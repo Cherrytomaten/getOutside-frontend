@@ -24,3 +24,19 @@
 - Add license
 - Update Readme
 - remove unused libraries
+
+### v1.2.0
+- Add change profil data
+- Add live tracking
+- Add password forgot
+- Add User email verification
+- bugfixes
+
+### v1.2.1
+- Fix iphone map scrolling
+
+### v1.3.0
+- Add favorite page
+- Allow to filter by favorites on map
+- Fix a inconsisten data bug caused by getServerSideProps
+- Add bookmark (favorite) function on mappoints

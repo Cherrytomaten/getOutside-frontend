@@ -1,6 +1,6 @@
 type ImageProps = {
-  src: string;
-  alt: string;
-  width: number;
-  height: number;
+  id: number;
+  image: string;
+  cloud_pic: string;
+  mappoint: string;
 };

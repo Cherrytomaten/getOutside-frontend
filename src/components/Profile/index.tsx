@@ -1,12 +1,14 @@
 import { useUserAuth } from '@/hooks/useUserAuth';
 import Link from 'next/link';
 import { useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosResponse } from "axios";
 import { logger } from '@/util/logger';
 import { ContentPopup } from '@/components/ContentPopup';
 import { EditProfile } from '@/components/Profile/EditProfile';
 import { ProfileProps } from '@/types/Profile/ProfileProps';
 import { imgCompressor } from '@/util/imgCompressor';
+import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { CloudImageProps } from "@/types/CloudImage";
 
 function ProfilePage({ ...props }: ProfileProps) {
   // Logout
@@ -33,6 +35,7 @@ function ProfilePage({ ...props }: ProfileProps) {
     pic: props.pic,
   });
   const [showEditPopup, setShowEditPopup] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function handlePictureInputChange(e: any) {
     if (e === undefined || e.target.files === undefined || e.target.files[0] === undefined) {
@@ -70,39 +73,64 @@ function ProfilePage({ ...props }: ProfileProps) {
     setPPicMessage({ message: 'Picture saved in clipboard.', err: false });
   }
 
+  async function setProfilPictureOnServer(img: CloudImageProps): Promise<boolean> {
+    return await axios.put('/api/user/pfp/set', {
+      url: img.secure_url
+    })
+      .then((_res) => {
+        return Promise.resolve(true);
+      })
+      .catch((_err) => {
+        logger.log(_err);
+        return Promise.resolve(false)
+      })
+  }
+
   async function uploadProfilePic() {
+    setIsLoading(true);
+
     let form_data = new FormData();
-    logger.log('profilePic: ', profilePic);
     form_data.append('file', profilePic);
-    logger.log('formdata: ', form_data);
+    form_data.append('upload_preset', 'profile_picture');
 
     return await axios
-      .put('/api/user/pfp/set', form_data)
-      .then((_res: any) => {
-        setProfilePic(null);
-        setPPicMessage({ message: '', err: false });
-        logger.log('Success');
-        // return Promise.resolve(res.data);
+      .post('/api/image-upload', form_data)
+      .then(async (_res: AxiosResponse<CloudImageProps>) => {
+
+        const setPfpOnServer = await setProfilPictureOnServer(_res.data);
+        setIsLoading(false);
+
+        if (setPfpOnServer) {
+          setProfilePic(null);
+          setPPicMessage({ message: '', err: false });
+          setLocalProps({
+            ...localProps,
+            pic: _res.data.secure_url
+          });
+        } else {
+          setPPicMessage({ message: 'Couldn\'t upload image to server!', err: false });
+        }
       })
       .catch((_err: any) => {
         setProfilePic(null);
         setPPicMessage({ message: '', err: false });
         logger.log('Error');
-        // return Promise.reject(err.response.data);
+        setIsLoading(false);
       });
   }
 
   return (
-    <main id={'profile_page_' + localProps.username} className="relative w-full h-[calc(100vh-56px)] flex justify-center items-center text-white lg:mt-14">
+    <main id={'profile_page_' + localProps.username} className="relative w-full h-[calc(100%-56px)] flex justify-center items-center pb-12 text-white lg:mt-14">
       <div id="profile-wrapper" className="w-full h-full flex flex-col justify-start items-center">
         <section id="header-section" className="w-full flex flex-col justify-start items-center">
           <h1 className="py-14 text-4xl">
             Welcome <span className="text-bright-seaweed">{localProps.username}</span>!
           </h1>
           <div className="relative flex flex-col justify-center items-center">
-            <div id="img-container" className="relative w-48 h-48 overflow-hidden rounded-full md:w-64 md:h-64 lg:w-96 lg:h-96">
+            <div id="img-container" className="relative flex-auto w-48 min-w-[10rem] max-w-[14rem] h-48 min-h-[10rem] max-h-[14rem] flex flex-col justify-center items-center overflow-hidden rounded-full">
+            {/* <div id="img-container" className="relative w-48 h-48 overflow-hidden rounded-full md:w-64 md:h-64 lg:w-96 lg:h-96"> */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={localProps.pic === null || localProps.pic === '' ? placeholderImage : localProps.pic} alt="Profilbild" />
+              <img src={localProps.pic === null || localProps.pic === '' ? placeholderImage : localProps.pic} alt="" className="w-auto min-w-full max-w-[unset] min-h-full max-h-[unset]" />
             </div>
             <div id="btns-container" className="flex flex-row justify-center items-center transition-all">
               <input type="file" id="upload-profile-pic-btn" name="profile-pic-upload" title="Upload Profile Picture" className="hidden" accept="image/*" onChange={handlePictureInputChange} />
@@ -136,11 +164,11 @@ function ProfilePage({ ...props }: ProfileProps) {
         {/* SECTION 2 */}
         <section id="settings-section" className="w-full max-w-[430px] flex flex-col justify-center items-center mt-16 mb-12 bg-darker-sea">
           <div className="w-full h-14 flex flex-row justify-between items-center px-6 border-b-2 border-dark-sea">
-            <p>Firstname</p>
+            <p>First name</p>
             <p className="text-bright-seaweed">{localProps.fname === '' ? 'No Information' : localProps.fname}</p>
           </div>
           <div className="w-full h-14 flex flex-row justify-between items-center px-6 border-b-2 border-dark-sea">
-            <p>Lastname</p>
+            <p>Last name</p>
             <p className="text-bright-seaweed">{localProps.lname === '' ? 'No Information' : localProps.lname}</p>
           </div>
           <div className="w-full h-14 flex flex-row justify-between items-center px-6 border-b-2 border-dark-sea">
@@ -180,6 +208,9 @@ function ProfilePage({ ...props }: ProfileProps) {
           </div>
         </section>
       </div>
+      {isLoading &&
+        <LoadingSpinner />
+      }
     </main>
   );
 }

@@ -48,7 +48,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
             fname: _res.data.first_name,
             lname: _res.data.last_name,
             email: _res.data.email,
-            pfp: _res.data.cloud_pic,
+            pic: _res.data.cloud_pic,
           },
         };
       })

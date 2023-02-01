@@ -4,7 +4,7 @@ import { LatLngExpression } from 'leaflet';
 import { FilterMenu } from '@/components/Map/FilterMenu';
 import { PinProps } from '@/types/Pins';
 import { ActivityType } from '@/types/Pins/ActivityType';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from 'framer-motion';
 import { RadiusMenu } from '@/components/Map/RadiusMenu';
 import { Filter } from '@/resources/svg/Filter';
@@ -16,21 +16,24 @@ import { useManageMapData } from '@/hooks/useManageMapData';
 import { ActivityIcon } from '@/resources/leafletIcons/ActivityIcon';
 import { SmallSpinner } from '@/components/SmallSpinner';
 import { Radius } from '@/resources/svg/Radius';
+import { FavoritePinsList } from "@/types/Pins/FavoritePinsList";
 
 type MapProps = {
-  cookiedCategories: string[];
-  cookiedRadius: number;
+  cookiedCategories: string[] | undefined;
+  cookiedRadius: number | undefined;
+  cookiedShowOnlyFav: boolean | undefined;
+  favoritePinsList: FavoritePinsList
 };
 
-function Map({ cookiedCategories, cookiedRadius }: MapProps) {
+function Map({ cookiedCategories, cookiedRadius, cookiedShowOnlyFav, favoritePinsList }: MapProps) {
   const [showCatFilter, setShowCatFilter] = useState<boolean>(false);
   const [showRadiusFilter, setShowRadiusFilter] = useState<boolean>(false);
-
   const [allCategories, setAllCategories] = useState<string[]>([]);
-  const [categoryFilter, setCategoryFilter] = useState<ActivityType[]>(cookiedCategories);
-  const [radius, setRadius] = useState<number>(cookiedRadius);
+  const [categoryFilter, setCategoryFilter] = useState<ActivityType[] | undefined>(cookiedCategories);
+  const [radius, setRadius] = useState<number | undefined>(cookiedRadius);
   const [locationPreference, setLocationPreference] = useState<boolean | null>(null);
   const [userLocation, setUserLocation] = useState<LatLngExpression>(DEFAULT_POSITION);
+  const [onlyShowFavs, setOnlyShowFavs] = useState<boolean | undefined>(cookiedShowOnlyFav);
   const { fetchPinDataQueryState } = useManageMapData({
     radius: radius,
     location: userLocation,
@@ -39,22 +42,48 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
     allCats: allCategories,
     setAllCats: setAllCategories,
     locationPreference: locationPreference,
+    showOnlyFav: onlyShowFavs
   });
+
+  // update fav filter
+  useEffect(() => {
+    setOnlyShowFavs(cookiedShowOnlyFav)
+  }, [cookiedShowOnlyFav]);
+
+  // update radius filter
+  useEffect(() => {
+    setRadius(cookiedRadius)
+  }, [cookiedRadius]);
+
+  // update category filter
+  useEffect(() => {
+    setCategoryFilter(cookiedCategories)
+  }, [cookiedCategories]);
+
+
+  function isPinFavorite(pinId: string): boolean {
+    return favoritePinsList.some(favElem => favElem.pin.uuid === pinId);
+  }
 
   const mapElem = useMemo(
     () => (
-      <MapContainer className="w-screen h-[calc(100vh-56px)] lg:mt-14" center={userLocation} zoom={13} minZoom={7} maxZoom={20} scrollWheelZoom={true} preferCanvas={true}>
+      <MapContainer className="w-screen h-full" center={userLocation} zoom={13} minZoom={7} maxZoom={20} scrollWheelZoom={true} preferCanvas={true}>
         <TileLayer
           attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org">OpenMapTiles</a>, &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
           url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
         />
 
         <LocationTracker setUserLocation={setUserLocation} locationPref={locationPreference} setLocationPref={setLocationPreference} />
-        <Circle center={userLocation} radius={radius} pathOptions={{ color: '#3ED598', weight: 2, opacity: 0.8, fillColor: '#82e7bd', fillOpacity: 0.05 }} />
+        <Circle center={userLocation} radius={radius ?? 0} pathOptions={{ color: '#3ED598', weight: 2, opacity: 0.8, fillColor: '#82e7bd', fillOpacity: 0.05 }} />
 
         <div>
           {fetchPinDataQueryState.context.pins.map((pinElemData: PinProps) => {
-            if (pinElemData.category === null || !categoryFilter.includes(pinElemData.category)) {
+            if (pinElemData.category === null || (categoryFilter !== undefined && !categoryFilter.includes(pinElemData.category))) {
+              return null;
+            }
+
+            // don't show pin if only favs should be shown and the current pin isn't one of them
+            if (onlyShowFavs && !isPinFavorite(pinElemData.uuid)) {
               return null;
             }
 
@@ -69,7 +98,8 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
         </div>
       </MapContainer>
     ),
-    [categoryFilter, fetchPinDataQueryState.context.pins, locationPreference, radius, userLocation]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [categoryFilter, fetchPinDataQueryState.context.pins, locationPreference, radius, userLocation, onlyShowFavs]
   );
 
   return (
@@ -83,9 +113,9 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
           aria-label="Category filter"
           title="Select categories"
           onClick={() => setShowCatFilter(true)}>
-          <Filter width="100%" height="auto" fill="#fff"></Filter>
+          <Filter width="100%" height="100%" fill="#fff"></Filter>
           <div className="z-10 absolute -right-2 -bottom-2 w-7 h-7 flex flex-col justify-center items-center bg-white rounded-full">
-            <span className="text-xs">{categoryFilter.length}</span>
+            <span className="text-xs">{categoryFilter?.length ?? 0}</span>
           </div>
         </div>
 
@@ -95,12 +125,12 @@ function Map({ cookiedCategories, cookiedRadius }: MapProps) {
           aria-label="Filter filter"
           title="Select radius"
           onClick={() => setShowRadiusFilter(true)}>
-          <Radius width="100%" height="auto" fill="#fff"></Radius>
+          <Radius width="100%" height="100%" fill="#fff"></Radius>
         </div>
       </div>
 
       <ContentPopup trigger={showCatFilter} setTrigger={setShowCatFilter}>
-        <FilterMenu allCategories={allCategories} categoryFilter={categoryFilter} setCatFilter={setCategoryFilter} setTrigger={setShowCatFilter} />
+        <FilterMenu allCategories={allCategories} categoryFilter={categoryFilter} setCatFilter={setCategoryFilter} setTrigger={setShowCatFilter} onlyShowFavs={onlyShowFavs} setOnlyShowFavs={setOnlyShowFavs} />
       </ContentPopup>
 
       <ContentPopup trigger={showRadiusFilter} setTrigger={setShowRadiusFilter}>

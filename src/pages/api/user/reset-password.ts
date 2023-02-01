@@ -33,13 +33,13 @@ type ForgotPasswordResponse = NextApiResponse<ResetPasswordResponseBody | FetchS
  */
 export default async function handler(_req: ResetPasswordRequest, res: ForgotPasswordResponse) {
   // wrong request method
-  if (_req.method !== 'PUT') {
+  if (_req.method !== 'POST') {
     return res.status(405).json({ errors: { message: 'Given request method is not allowed here.' } });
   }
 
   return await axios({
-    method: 'put',
-    url: 'https://cherrytomaten.herokuapp.com/authentication/user/password/reset/',
+    method: 'post',
+    url: 'https://cherrytomaten.herokuapp.com/authentication/user/password/reset',
     maxBodyLength: 104857600, //100mb
     maxContentLength: 104857600, //100mb
     data: {

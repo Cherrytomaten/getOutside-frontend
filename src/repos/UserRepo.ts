@@ -2,13 +2,17 @@ import { IUserAuthRepo } from '@/types/Repo/IUserAuthRepo';
 import axios from 'axios';
 import { FetchUserAuthResponseProps } from '@/types/Auth/FetchUserAuthResponseProps';
 import { deleteCookies, getCookie, setCookies } from '@/util/cookieManager';
-import { ACTIVE_CATEGORIES, AUTH_REFRESH_TOKEN, AUTH_TOKEN, RADIUS_FILTER } from '@/types/constants';
+import { ACTIVE_CATEGORIES, AUTH_REFRESH_TOKEN, AUTH_TOKEN, RADIUS_FILTER, SHOW_ONLY_FAV } from "@/types/constants";
 import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
 import { UserAuthProps } from '@/types/User';
 import { logger } from '@/util/logger';
 import { WrapperServerErrorResponse } from '@/types/Server/WrapperServerErrorResponse';
 import { ResetPasswordProps } from '@/types/User/ResetPasswordProps';
 import { UserDataProps } from '@/types/User/UserDataProps';
+
+// Currently the token exp. dates are not correctly set, so they'll be set manually for now
+const accessTokenExp: number = 2880000; // 48 min
+const refreshTokenExp: number = 604800000; // 1 week
 
 /**
  * This class offers a general interface to access different functions from every file where this class
@@ -32,12 +36,12 @@ class UserAuthRepo implements IUserAuthRepo {
           {
             name: AUTH_TOKEN,
             value: res.data.access,
-            exp: res.data.access.expiration,
+            exp: accessTokenExp,
           },
           {
             name: AUTH_REFRESH_TOKEN,
             value: res.data.refresh,
-            exp: res.data.refresh.expiration,
+            exp: refreshTokenExp,
           },
         ]);
         return Promise.resolve(res.data);
@@ -74,12 +78,12 @@ class UserAuthRepo implements IUserAuthRepo {
           {
             name: AUTH_TOKEN,
             value: res.data.access,
-            exp: res.data.access.expiration,
+            exp: accessTokenExp,
           },
           {
             name: AUTH_REFRESH_TOKEN,
             value: res.data.refresh,
-            exp: res.data.refresh.expiration,
+            exp: refreshTokenExp,
           },
         ]);
         return Promise.resolve(res.data);
@@ -104,12 +108,12 @@ class UserAuthRepo implements IUserAuthRepo {
           {
             name: AUTH_TOKEN,
             value: res.data.access,
-            exp: res.data.access.expiration,
+            exp: accessTokenExp,
           },
           {
             name: AUTH_REFRESH_TOKEN,
             value: res.data.refresh,
-            exp: res.data.refresh.expiration,
+            exp: refreshTokenExp,
           },
         ]);
         return Promise.resolve(res.data);
@@ -149,7 +153,7 @@ class UserAuthRepo implements IUserAuthRepo {
    */
   public async resetPassword({ user_id, user_mail, confirmation_token, password, password2 }: ResetPasswordProps): Promise<void | WrapperServerErrorResponse> {
     return await axios
-      .put('/api/user/reset-password', {
+      .post('/api/user/reset-password', {
         user_id: user_id,
         user_mail: user_mail,
         confirmation_token: confirmation_token,
@@ -169,7 +173,7 @@ class UserAuthRepo implements IUserAuthRepo {
    */
   public logout() {
     const refToken = getCookie(AUTH_REFRESH_TOKEN);
-    deleteCookies([AUTH_TOKEN, AUTH_REFRESH_TOKEN, ACTIVE_CATEGORIES, RADIUS_FILTER]);
+    deleteCookies([AUTH_TOKEN, AUTH_REFRESH_TOKEN, ACTIVE_CATEGORIES, RADIUS_FILTER, SHOW_ONLY_FAV]);
 
     axios
       .post('/api/auth/revoke', {
