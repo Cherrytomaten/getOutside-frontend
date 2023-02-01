@@ -137,6 +137,17 @@
     @apply -mt-0.5;
 }
 
+.leaflet-popup-content {
+    @apply !m-0;
+}
+.map-popup-image {
+    margin-left: -1px;
+    margin-top: -1px;
+    width: calc(100% + 2px);
+    border-top-right-radius: 11px;
+    border-top-left-radius: 11px;
+}
+
 #map-popup-container a {
     @apply text-dark-sea;
 }

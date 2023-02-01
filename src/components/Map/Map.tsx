@@ -129,6 +129,16 @@ function Map({ cookiedCategories, cookiedRadius, cookiedShowOnlyFav, favoritePin
         </div>
       </div>
 
+      <div className="z-[999] absolute right-4 bottom-4 md:right-8">
+        <div
+          className="w-12 h-12 flex flex-col justify-center items-center px-3 mt-3 bg-bright-seaweed rounded-full shadow-md transition-colors cursor-pointer xs:hover:bg-hovered-seaweed"
+          role="button"
+          aria-label="Add a mappoint"
+          title="Add mappoint">
+          <Radius width="100%" height="100%" fill="#fff"></Radius>
+        </div>
+      </div>
+
       <ContentPopup trigger={showCatFilter} setTrigger={setShowCatFilter}>
         <FilterMenu allCategories={allCategories} categoryFilter={categoryFilter} setCatFilter={setCategoryFilter} setTrigger={setShowCatFilter} onlyShowFavs={onlyShowFavs} setOnlyShowFavs={setOnlyShowFavs} />
       </ContentPopup>
