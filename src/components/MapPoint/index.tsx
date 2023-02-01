@@ -1,5 +1,5 @@
 import CloseSvg from '@/resources/svg/Close';
-import RenderStars from '@/components/MapPoint/StarRendering';
+import { RenderStars, calcAverage } from '@/components/MapPoint/StarRendering';
 import { useEffect, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import ExpandSvg from '@/resources/svg/Expand';
@@ -10,6 +10,7 @@ import { commentsService } from '@/services/Comments';
 import { FetchServerErrorResponse } from '@/types/Server/FetchServerErrorResponse';
 import DeleteSvg from '@/resources/svg/Delete';
 import { InfoPopup } from '@/components/InfoPopup';
+import { ratingService } from '@/services/Ratings';
 
 type MapPointPayloadProps = MapPointProps & {
   category: any | null;
@@ -20,8 +21,8 @@ type MapPointPayloadProps = MapPointProps & {
 };
 
 function MapPoint({ ...props }: MapPointPayloadProps) {
-  const allStars: JSX.Element[] = RenderStars(props.ratings, '34', '34');
-  const averageRating: number = calcAverage(props.ratings);
+  const [allStars, setAllStars] = useState<JSX.Element[]>(RenderStars(props.ratings, '34', '34'));
+  const [averageRating, setAverageRating] = useState<number>(calcAverage(props.ratings));
   const minimumComments: number = 2;
   const [counter, setCounter] = useState<number>(minimumComments); // Counter for number of shown comments
   const [comment, setComment] = useState('');
@@ -67,20 +68,26 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
     }
   }
 
-  // calculate average rating
-  function calcAverage(ratings: RatingProps[]): number {
-    if (ratings === null || ratings === undefined || ratings.length < 1) {
-      return 0;
+  function handleRating(index: number) {
+    try {
+      if (index === undefined || index === null) {
+        throw new Error('Rating Index must not be null!');
+      }
+
+      ratingService
+        .postNewRating(index + 1, props.uuid) // index starts with 0
+        .then((res: any) => {
+          logger.log('Rating successful.');
+          logger.log('res-rating:', res.data.rating);
+          setAverageRating(calcAverage(props.ratings, res.data.rating, res.data.creator));
+          setAllStars(RenderStars(props.ratings, '34', '34', res.data.rating, res.data.creator));
+        })
+        .catch((err: FetchServerErrorResponse) => {
+          logger.log('Error occured by rating:', err.errors.message);
+        });
+    } catch (err: any) {
+      logger.log('Error occured by rating:', err);
     }
-
-    let sum: number = 0;
-
-    for (let rating of ratings) {
-      sum += rating.rating;
-    }
-
-    let average: number = sum / ratings.length;
-    return average;
   }
 
   // display a number of comments depending on the counter (Hook)
@@ -124,6 +131,11 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
 
     if (comment && commentAddErr === '')
       try {
+        if (comment.length > 255) {
+          setCommentAddErr('Comment can not be longer than 255 Characters!');
+          throw new Error('Comment can not be longer than 255 Characters.');
+        }
+
         commentsService
           .postNewComment({ mappointId: mappointId, text: comment })
           .then((res: any) => {
@@ -217,7 +229,7 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
           <div className="mb-4 text-3xl text-center">
             <h1>{props.title}</h1>
           </div>
-          <div className="mb-[10%] text-center">
+          <div className="box-border mb-[10%] text-center">
             {props.ratings === null ? (
               <ul title="Unrated">
                 {allStars.map((star, index) => (
@@ -229,7 +241,7 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
             ) : (
               <ul title={`Average Rating: ${averageRating.toString()}`}>
                 {allStars.map((star, index) => (
-                  <li key={index} className="inline">
+                  <li key={index} className="inline-block cursor-pointer hover:mb-[-2px] hover:border-b-star-color hover:border-b-2" onClick={() => handleRating(index)}>
                     {star}
                   </li>
                 ))}

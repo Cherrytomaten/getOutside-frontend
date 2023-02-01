@@ -3,14 +3,13 @@ import RatingStarFilled from '@/resources/svg/RatingStarFilled';
 import RatingStarHalf from '@/resources/svg/RatingStarHalf';
 import { logger } from '@/util/logger';
 
-function RenderStars(ratings: RatingProps[], width: string, height: string) {
+function RenderStars(ratings: RatingProps[] | null, width: string, height: string, newRating?: number, creator?: string): JSX.Element[] {
   let finalStars: JSX.Element[] = [];
   let isDecimalNumber: boolean = false;
   let decimalNumber: number = 0;
 
   // return 5 empty stars if format does not match
-  if (ratings === null || ratings.length < 1 || ratings === undefined) {
-    logger.log('Pin rating does not fit expected value!');
+  if ((ratings === null || ratings.length < 1 || ratings === undefined) && !newRating) {
     for (let i = 1; i <= 5; i++) {
       finalStars.push(<RatingStar width={width} height={height} />);
     }
@@ -18,7 +17,12 @@ function RenderStars(ratings: RatingProps[], width: string, height: string) {
   }
 
   // calc average rating
-  let avrgRating: number = calcAverage(ratings);
+  let avrgRating: number = 0;
+  if (newRating && creator) {
+    avrgRating = calcAverage(ratings, newRating, creator);
+  } else {
+    avrgRating = calcAverage(ratings);
+  }
 
   // extract decimal place if number is not an Integer
   if (!Number.isInteger(avrgRating)) {
@@ -47,22 +51,47 @@ function RenderStars(ratings: RatingProps[], width: string, height: string) {
   return finalStars;
 }
 
-function extractDecimalPlace(num: number) {
+function extractDecimalPlace(num: number): number {
   const roundedToOneDecimalPlace: number = Math.floor(num * 10) / 10;
   const cache: string = roundedToOneDecimalPlace.toString().split('.')[1];
 
   return Number(cache);
 }
 
-function calcAverage(ratings: RatingProps[]): number {
-  let sum: number = 0;
+function calcAverage(ratings: RatingProps[] | null, newRating?: number, creator?: string): number {
+  if (newRating === undefined || newRating === null || creator === undefined || creator === null) {
+    if (ratings === null || ratings === undefined || ratings.length < 1) {
+      return 0;
+    }
 
-  for (let rating of ratings) {
-    sum += rating.rating;
+    let sum: number = 0;
+
+    for (let rating of ratings) {
+      sum += rating.rating;
+    }
+
+    let average: number = sum / ratings.length;
+    return Math.round(average * 10) / 10;
+  } else {
+    if (ratings === null || ratings === undefined || ratings.length < 1) {
+      return newRating;
+    }
+
+    let sum: number = 0;
+    let length: number = 0;
+
+    for (let rating of ratings) {
+      if (rating.creator !== creator) {
+        sum += rating.rating;
+      } else {
+        sum += newRating;
+      }
+      length++;
+    }
+
+    let average: number = sum / length;
+    return Math.round(average * 10) / 10;
   }
-
-  let average: number = sum / ratings.length;
-  return average;
 }
 
-export default RenderStars;
+export { RenderStars, calcAverage };
