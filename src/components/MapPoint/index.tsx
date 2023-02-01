@@ -166,7 +166,7 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
         author: {
           username: res.username,
           uuid: authorId,
-          profile_picture: res.pfp,
+          cloud_pic: res.pfp,
         },
         text: comment,
         uuid: commentId,
@@ -205,6 +205,10 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
     }
 
     setCommentArray([...commentArray]);
+  }
+
+  function getUserImage(url: string | null) {
+    return (url === null || url === '') ? '/assets/ProfilePictureDefault.png' : url
   }
 
   return (
@@ -387,7 +391,11 @@ function MapPoint({ ...props }: MapPointPayloadProps) {
                           animate={{ y: 0, opacity: 1 }}
                           exit={{ y: -100, opacity: 0, position: 'absolute' }}>
                           <p className="text-white">{comment.text}</p>
-                          <p className="absolute right-5 bottom-2 font-light text-bright-seaweed">{comment.author.username}</p>
+                          <p className="absolute right-12 bottom-2 font-light text-bright-seaweed">{comment.author.username}</p>
+                          <div
+                            style={{ backgroundImage: `url('${getUserImage(comment.author.cloud_pic)}')` }}
+                            className="full absolute right-5 bottom-2.5 w-5 h-5 bg-no-repeat bg-center bg-cover rounded-full">
+                          </div>
                           {comment.author.uuid === props.userId && (
                             <p className="absolute bottom-2 left-2 cursor-pointer" onClick={() => handleDeleteSubmit(comment.uuid)}>
                               <DeleteSvg width="auto" height="1.3rem" fill="#DD4352"></DeleteSvg>

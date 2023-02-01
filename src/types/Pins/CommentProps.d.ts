@@ -1,7 +1,7 @@
 type CommentProps = {
   author: {
     username: string;
-    profile_picture: string | null;
+    cloud_pic: string | null;
     uuid: string;
   };
   text: string;
