@@ -4,8 +4,30 @@ import { AUTH_TOKEN } from '@/types/constants';
 import { logger } from '@/util/logger';
 import axios from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 
-export default async function handler(_req: NextApiRequest, res: NextApiResponse) {
+type RatingRequest = NextApiRequest & {
+  body: {
+    mappointId: string;
+    rating: number
+  }
+}
+
+type RatingResponseBody = {
+  creator: string;
+  id: number;
+  mappoint: string;
+  rating: number;
+}
+
+type RatingResponse = NextApiResponse<RatingResponseBody | FetchServerErrorResponse>
+
+/**
+ * Set a rating from 0 to 5 for a mappoint
+ * @param _req mappointId for the point which should be rated and a rating
+ * @param res data of the just created rating object or an error response
+ */
+export default async function handler(_req: RatingRequest, res: RatingResponse) {
   // wrong request method
   if (_req.method !== 'POST') {
     return res.status(405).json({
@@ -42,10 +64,10 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
       })
       .catch((err: BackendErrorResponse) => {
         logger.log('api rating error: ', err);
-        if (err.response?.data === undefined) {
+        if (err.response?.data?.detail === undefined) {
           return res.status(err.response?.status ? err.response?.status : 500).json({ errors: { message: 'A server error occured.' } });
         }
-        return res.status(err.response.status).json({ errors: { message: err.response.data } });
+        return res.status(err.response.status).json({ errors: { message: err.response.data.detail } });
       });
   } catch (err) {
     logger.log('api Error adding comment:', err);

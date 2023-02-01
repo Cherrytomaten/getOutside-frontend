@@ -4,8 +4,22 @@ import { AUTH_TOKEN } from '@/types/constants';
 import { logger } from '@/util/logger';
 import axios from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { FetchServerErrorResponse } from "@/types/Server/FetchServerErrorResponse";
 
-export default async function handler(_req: NextApiRequest, res: NextApiResponse) {
+type DeleteCommentRequest = NextApiRequest & {
+  query: {
+    commentId: string;
+  }
+}
+
+type DeleteCommentResponse = NextApiResponse<void | FetchServerErrorResponse>;
+
+/**
+ * Delete a comment
+ * @param _req contains the comment id in the request body
+ * @param res void or an error response
+ */
+export default async function handler(_req: DeleteCommentRequest, res: DeleteCommentResponse) {
   // wrong request method
   if (_req.method !== 'DELETE') {
     return res.status(405).json({
@@ -25,7 +39,7 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
     }
 
     return await axios
-      .delete(`http://cherrytomaten.herokuapp.com/api/mappoint/detail/comments/${_req.body.commentId}`, {
+      .delete(`http://cherrytomaten.herokuapp.com/api/mappoint/detail/comments/${_req.query.commentId}`, {
         headers: {
           Authorization: 'Bearer ' + authToken.token,
         },
@@ -35,10 +49,10 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
       })
       .catch((err: BackendErrorResponse) => {
         logger.log('api delete comment error: ', err);
-        if (err.response?.data === undefined) {
+        if (err.response?.data?.detail === undefined) {
           return res.status(err.response?.status ? err.response?.status : 500).json({ errors: { message: 'A server error occured.' } });
         }
-        return res.status(err.response.status).json({ errors: { message: err.response.data } });
+        return res.status(err.response.status).json({ errors: { message: err.response.data.detail } });
       });
   } catch (err) {
     logger.log('api Error deleting comment:', err);

@@ -27,7 +27,7 @@ class Comments {
   async deleteComment(commentId: string): Promise<AxiosResponse<any>> {
     return await axios
       .delete('/api/pins/delete-comment', {
-        data: {
+        params: {
           commentId: commentId,
         },
       })
