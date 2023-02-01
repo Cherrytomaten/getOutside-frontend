@@ -655,9 +655,7 @@ function EditProfile(profileProps: EditProfileProps) {
           </div>
         </section>
       </form>
-      {isLoading &&
-        <LoadingSpinner />
-      }
+      {isLoading && <LoadingSpinner />}
     </div>
   );
 }

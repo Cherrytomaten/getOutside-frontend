@@ -13,6 +13,15 @@ type ChangePasswordRequest = NextApiRequest & {
   };
 };
 
+type ChangePasswordServerError = {
+  response: AxiosResponse<ChangePasswordServerErrorProps>;
+};
+
+type ChangePasswordServerErrorProps = {
+  old_password?: { old_password: string };
+  detail?: string;
+};
+
 /**
  * Change common user data like email, fname, lname & email.
  * @param _req expects a cookie header with the AUTH_TOKEN & body with ALWAYS the username, email, fname & lname.
@@ -52,9 +61,12 @@ export default async function handler(_req: ChangePasswordRequest, res: NextApiR
       .then((_res: AxiosResponse) => {
         return res.status(_res.status).end();
       })
-      .catch((err: BackendErrorResponse) => {
+      .catch((err: ChangePasswordServerError) => {
         logger.log('error response:', err.response);
-        if (err.response?.data === undefined) {
+        if (err.response?.data?.old_password?.old_password !== undefined) {
+          return res.status(err.response.status).json({ errors: { message: err.response.data.old_password.old_password } });
+        }
+        if (err.response?.data?.detail === undefined) {
           return res.status(err.response?.status ? err.response?.status : 500).json({ errors: { message: 'A server error occured.' } });
         }
         return res.status(err.response.status).json({ errors: { message: err.response.data.detail } });
