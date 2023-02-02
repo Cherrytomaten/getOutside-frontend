@@ -312,7 +312,7 @@ function MapPoint({ ...props }: MappointProps) {
                 ))}
               </ul>
             ) : (
-              <ul title={`Average Rating: ${averageRating.toString()}`}>
+              <ul title={`Average Rating: ${averageRating !== undefined ? averageRating.toString() : ""}`}>
                 {allStars.map((star, index) => (
                   <li
                     key={index}

@@ -90,7 +90,6 @@ function Favorites(props: FavoritePageProps) {
       return '/assets/mappoint-placeholder-img.jpg'
     }
   }
-  console.log(favs)
 
   if (initLoad) {
     return (

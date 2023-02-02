@@ -12,16 +12,21 @@ type LocationTrackerProps = {
   setUserLocation: Dispatch<SetStateAction<LatLngExpression>>;
   locationPref: boolean | null;
   setLocationPref: Dispatch<SetStateAction<boolean | null>>;
+  inAddPointMode: boolean;
+  setAddpointCords: Dispatch<SetStateAction<LatLngTuple | null>>
 };
 
-function LocationTracker({ setUserLocation, setLocationPref, locationPref }: LocationTrackerProps) {
+function LocationTracker({ setUserLocation, setLocationPref, locationPref, inAddPointMode, setAddpointCords }: LocationTrackerProps) {
   const [userPos, setUserPos] = useState<LatLngTuple | undefined>(undefined);
   const trackingWatcherStarted = useRef(false);
   const initialTrack = useRef(true);
 
   const map = useMapEvents({
     click(e) {
-      console.log("E", e.latlng);
+      if (!inAddPointMode) {
+        return;
+      }
+      setAddpointCords([e.latlng.lat, e.latlng.lng]);
     },
     locationfound(e: LocationEvent) {
       if (userPos !== undefined) {
