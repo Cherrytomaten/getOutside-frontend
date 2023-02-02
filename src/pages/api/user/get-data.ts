@@ -11,7 +11,7 @@ type UserDataResponseBody = {
   first_name: string;
   last_name: string;
   email: string;
-  profile_picture: string;
+  cloud_pic: string;
 };
 
 type UserDataResponse = NextApiResponse<UserDataProps | FetchServerErrorResponse>;
@@ -47,7 +47,7 @@ export default async function handler(_req: NextApiRequest, res: UserDataRespons
           fname: _res.data.first_name,
           lname: _res.data.last_name,
           email: _res.data.email,
-          pfp: _res.data.profile_picture,
+          pfp: _res.data.cloud_pic,
         });
       })
       .catch((err: BackendErrorResponse) => {

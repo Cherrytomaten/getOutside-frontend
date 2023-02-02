@@ -1,31 +1,35 @@
 import { TokenPayload } from '@/types/Auth/TokenPayloadProps';
 import { AUTH_TOKEN } from '@/types/constants';
-import axios from 'axios';
-import formidable from 'formidable';
 import { NextApiRequest, NextApiResponse } from 'next';
+import axios, { AxiosResponse } from "axios";
 
-type PicDataRequest = NextApiRequest & {
-  body: {
-    form_data: any;
-  };
+type UploadPfpRequest = NextApiRequest & {
+  body: { url: string };
 };
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
+type UploadPfpResponseBody = {
+  url: string;
+}
+
+type UploadPfpErrorResponseProps = {
+  error: string;
 };
 
-export default async function handler(_req: PicDataRequest, res: NextApiResponse) {
+type UploadPfpErrorResponse = {
+  response: AxiosResponse<UploadPfpErrorResponseProps>;
+};
+
+/**
+ * Set a profile image
+ * @param _req contains the url of the picture
+ * @param res the url as confirmation of the now saved profile picture or an error response
+ */
+export default async function handler(_req: UploadPfpRequest, res: NextApiResponse) {
   // wrong request method
   if (_req.method !== 'PUT') {
     return res.status(405).json({
       errors: { message: 'Given request method is not allowed here.' },
     });
-  }
-
-  if (_req.body === null) {
-    return res.status(400).json({ errors: { message: 'Given resource must not be null!' } });
   }
 
   try {
@@ -36,41 +40,24 @@ export default async function handler(_req: PicDataRequest, res: NextApiResponse
 
     const authToken: TokenPayload = JSON.parse(authTokenString);
 
-    // const form = new formidable.IncomingForm();
-    // form.uploadDir = "./";
-    // form.keepExtensions = true;
-    // form.parse(_req, (err, fields, files) => {
-    //   console.log(files);
-    // });
-
-    const data = await new Promise(function (resolve, reject) {
-      const form = new formidable.IncomingForm({ keepExtensions: true });
-      form.parse(_req, function (err, fields, files) {
-        if (err) return reject(err);
-        resolve({ fields, files });
-      });
-    });
-
     return await axios
-      .put(
-        `https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}`,
-        {
-          name: 'abd',
-        },
-        {
-          headers: {
-            Authorization: 'Bearer ' + authToken.token,
-          },
-          maxContentLength: 100000000,
-          maxBodyLength: 1000000000,
+      .put(`https://cherrytomaten.herokuapp.com/authentication/user/upload/${authToken.userId}/`, {
+        cloud_pic: _req.body.url
+      }, {
+        headers: {
+          Authorization: 'Bearer ' + authToken.token,
         }
-      )
-      .then((_res: any) => {
-        return res.status(_res.status);
       })
-      .catch((err: any) => {
-        return res.status(err.response.status).json({ error: { message: err.message } });
+      .then((_res: AxiosResponse<UploadPfpResponseBody>) => {
+        return res.status(201).json(_res.data);
+      })
+      .catch((err: UploadPfpErrorResponse) => {
+        if (err.response?.data?.error === undefined) {
+          return res.status(err.response.status).json({ errors: { message: 'A server error occured.' } });
+        }
+        return res.status(err.response.status).json({ errors: { message: err.response.data.error } });
       });
+
   } catch (_err) {
     return res.status(400).json({
       error: { message: 'Uploading the profile picture went wrong.' },

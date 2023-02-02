@@ -5,7 +5,7 @@ function NotFoundPage() {
   return (
     <main className="w-full h-screen flex flex-col justify-center items-center overflow-x-hidden">
       <div className="w-full h-16 max-h-64 flex justify-center mb-2 -ml-2">
-        <LogoNew width="auto" height="100%" />
+        <LogoNew width="100%" height="100%" />
       </div>
       <div className="text-center">
         <p className="mb-5 text-lg font-thin text-center text-orange-sun">404</p>

@@ -15,6 +15,11 @@ type PinsApiRequest = NextApiRequest & {
   };
 };
 
+/**
+ * Get all pins that are in the selected range
+ * @param _req location of the user and the desired radius in the request body
+ * @param res array of all pins in range
+ */
 export default async function handler(_req: PinsApiRequest, res: NextApiResponse) {
   // wrong request method
   if (_req.method !== 'GET') {
@@ -38,7 +43,6 @@ export default async function handler(_req: PinsApiRequest, res: NextApiResponse
         },
       })
       .then((_res: any) => {
-        logger.log('Mappoints response data: ', _res.data);
         let pins: PinProps[] = _res.data;
 
         const pinsInRange: PinProps[] = pins.filter((pin) => {

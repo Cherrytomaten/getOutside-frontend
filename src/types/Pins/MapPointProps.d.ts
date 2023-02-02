@@ -4,7 +4,7 @@ type MapPointProps = {
   description: string;
   address: string;
   openingHours: OpeningProps;
-  rating: number;
+  ratings: RatingProps[];
   comments: CommentProps[];
   image: ImageProps;
 };

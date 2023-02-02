@@ -1,4 +1,9 @@
 type CommentProps = {
-  author: string;
+  author: {
+    username: string;
+    cloud_pic: string | null;
+    uuid: string;
+  };
   text: string;
+  uuid: string;
 };

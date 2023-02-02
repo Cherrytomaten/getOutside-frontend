@@ -46,7 +46,7 @@ function SuccessfullSignup({ username, email }: SuccessfullSignupProps) {
   return (
     <main id="successfull-signup-container" className="w-full h-screen flex flex-col justify-start items-center overflow-x-hidden">
       <div className="w-full h-2/5 max-h-64 flex justify-center my-[6vh]">
-        <LogoNew width="auto" height="100%" />
+        <LogoNew width="100%" height="100%" />
       </div>
       <h2 className="px-3 pb-3 text-2xl text-center text-white xs:text-3xl">
         Welcome <span className="text-bright-seaweed">{username}</span>!

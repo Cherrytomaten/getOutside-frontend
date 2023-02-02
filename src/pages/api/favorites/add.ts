@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios, { AxiosResponse } from 'axios';
 import { FetchServerErrorResponse } from '@/types/Server/FetchServerErrorResponse';
+import { AUTH_TOKEN } from "@/types/constants";
+import { TokenPayload } from "@/types/Auth/TokenPayloadProps";
 
 type AddFavoriteRequest = NextApiRequest & {
   body: { pinId: string };
@@ -21,7 +23,7 @@ type AddFavoriteResponse = NextApiResponse<AddFavoriteResponseBody | FetchServer
 /**
  * Add a mappoint to the current users favorite list
  * @param _req containing the pinId in the body
- * @param res Ids of the involded user / pin to confirm the success or error response
+ * @param res returns ids of the involded user / pin to confirm the success and the uuid of the database entry for the favorite pin entry or an error response.
  */
 export default async function handler(_req: AddFavoriteRequest, res: AddFavoriteResponse) {
   // wrong request method
@@ -29,19 +31,34 @@ export default async function handler(_req: AddFavoriteRequest, res: AddFavorite
     return res.status(405).json({ errors: { message: 'Given request method is not allowed here.' } });
   }
 
-  return await axios
-    .post('https://cherrytomaten.herokuapp.com/api/favorites/pin/', {
-      pin: _req.body.pinId,
-    })
-    .then((_res: AxiosResponse<AddFavoriteResponseBody>) => {
-      return res.status(201).json(_res.data);
-    })
-    .catch((err: AddFavoriteErrorResponse) => {
-      if (err.response?.data?.res === undefined) {
-        return res.status(err.response.status).json({ errors: { message: 'A server error occured.' } });
-      }
-      return res.status(err.response.status).json({ errors: { message: err.response.data.res } });
-    });
+  try {
+    const authTokenString = _req.cookies[AUTH_TOKEN];
+    if (authTokenString === undefined || authTokenString === 'undefined') {
+      return res.status(400).json({ errors: { message: 'Wrong token format.' } });
+    }
+
+    const authToken: TokenPayload = JSON.parse(authTokenString);
+
+    return await axios
+      .post('https://cherrytomaten.herokuapp.com/api/favorites/pin/', {
+        pin: _req.body.pinId,
+      }, {
+        headers: {
+          Authorization: 'Bearer ' + authToken.token,
+        },
+      })
+      .then((_res: AxiosResponse<AddFavoriteResponseBody>) => {
+        return res.status(201).json(_res.data);
+      })
+      .catch((err: AddFavoriteErrorResponse) => {
+        if (err.response?.data?.res === undefined) {
+          return res.status(err.response.status).json({ errors: { message: 'A server error occured.' } });
+        }
+        return res.status(err.response.status).json({ errors: { message: err.response.data.res } });
+      });
+  } catch (_err) {
+    return res.status(400).json({ errors: { message: 'Wrong token format.' } });
+  }
 }
 
 /*
