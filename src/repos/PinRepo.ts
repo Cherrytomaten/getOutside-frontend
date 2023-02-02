@@ -2,6 +2,7 @@ import { LatLngExpression } from 'leaflet';
 import axios from 'axios';
 import { PinProps } from '@/types/Pins';
 import { WrapperServerErrorResponse } from '@/types/Server/WrapperServerErrorResponse';
+import { AddPinProps } from "@/types/Pins/AddPinProps";
 
 class PinRepo {
   /**
@@ -24,6 +25,18 @@ class PinRepo {
       .catch((err: WrapperServerErrorResponse) => {
         return Promise.reject(err.response.data);
       });
+  }
+
+  public async AddMappoint(pin: AddPinProps) {
+    return await axios.post('/api/pins/add-pin', {
+      pin
+    })
+      .then((res: { data: { uuid: string } }) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((err: WrapperServerErrorResponse) => {
+        return Promise.reject(err.response.data);
+      })
   }
 }
 
