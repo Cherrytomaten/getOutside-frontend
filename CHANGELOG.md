@@ -44,3 +44,6 @@
 - Adding & deleting comments
 - Rating a mappoint
 - Show a profile picture on each comment
+- User can now add mappoints
+- map pin popup preview now shows an image
+- mappoints now have a slider if several images are present for that spot
