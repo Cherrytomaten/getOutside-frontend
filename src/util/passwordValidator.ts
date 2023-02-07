@@ -10,7 +10,7 @@ function validatePassword(password: string): ValidateProps {
     }
     return {
       validated: false,
-      message: 'The choosen password is too weak!\n It should contain at least one big letter, one number and the length should be at minimum of 8 characters.',
+      message: 'The chosen password is too weak!\n It should consist of at least 8 characters, including a capital letter, a number and a special character.',
     };
   }
 }

@@ -176,12 +176,10 @@ function AddMappointMenu({ coords }: AddMappointMenuProps) {
   return (
     <div className="hide-scrollbar w-full h-full flex flex-col justify-start items-center pt-20 overflow-y-scroll">
       <h3 className="mb-6 text-5xl text-center text-white">Add mappoint</h3>
-      <form id="add-point-form"
-            className="flex-auto w-4/5 max-w-md flex flex-col justify-start items-center pb-10 xs:px-5"
-            onSubmit={(e) => handleSubmit(e)}>
+      <form id="add-point-form" className="flex-auto w-4/5 max-w-md flex flex-col justify-start items-center pb-10 xs:px-5" onSubmit={(e) => handleSubmit(e)}>
         <div
           className={`${
-            formErrors.title !== "" ? "mb-3" : ""
+            formErrors.title !== '' ? 'mb-3' : ''
           } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}>
           <label htmlFor="add-pin-title" className="invisible w-0 h-0">
             Title
@@ -189,48 +187,48 @@ function AddMappointMenu({ coords }: AddMappointMenuProps) {
           <input
             type="text"
             className={`${
-              formErrors.title !== "" ? "border-danger" : "border-bright-seaweed hover:border-hovered-seaweed"
+              formErrors.title !== '' ? 'border-danger' : 'border-bright-seaweed hover:border-hovered-seaweed'
             } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, title: e.target.value })}
-            onClick={() => setFormErrors({ ...formErrors, title: "" })}
-            onFocus={() => setFormErrors({ ...formErrors, title: "" })}
+            onClick={() => setFormErrors({ ...formErrors, title: '' })}
+            onFocus={() => setFormErrors({ ...formErrors, title: '' })}
             placeholder="Title*"
             id="add-pin-title"
           />
           <AnimatePresence>
-            {formErrors.title !== "" && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }} transition={{ ease: "easeOut", duration: 0.2 }}>
+            {formErrors.title !== '' && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
                 <p className="input-error-text mt-1 text-danger">{formErrors.title}</p>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        <div
-          className="relative w-full min-w-[220px] max-w-xs flex flex-col flex-wrap justify-center items-start py-3 mb-3 xs:w-full xs:flex-nowrap xs:justify-center">
+        <div className="relative w-full min-w-[220px] max-w-xs flex flex-col flex-wrap justify-center items-start py-3 mb-3 xs:w-full xs:flex-nowrap xs:justify-center">
           <label htmlFor="add-pin-category" className="invisible w-0 h-0">
             Category
           </label>
           <select
             id="add-pin-category"
-            className={`w-full p-2 text-white bg-dark-seaweed/25 border-solid border-2 rounded-md cursor-pointer ${formErrors.category !== "" ? "border-danger" : "border-bright-seaweed"}`}
+            className={`w-full p-2 text-white bg-dark-seaweed/25 border-solid border-2 rounded-md cursor-pointer ${formErrors.category !== '' ? 'border-danger' : 'border-bright-seaweed'}`}
             onChange={(e: ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, category: e.target.value })}
-            defaultValue={"select"}
-            onClick={() => setFormErrors({ ...formErrors, category: "" })}
-            onFocus={() => setFormErrors({ ...formErrors, category: "" })}
-          >
-            <option disabled={true} value="select">Select categorie*</option>
+            defaultValue={'select'}
+            onClick={() => setFormErrors({ ...formErrors, category: '' })}
+            onFocus={() => setFormErrors({ ...formErrors, category: '' })}>
+            <option disabled={true} value="select">
+              Select category*
+            </option>
             {pinCategories.map((catElem: { id: string }) => {
               return (
-                <option key={"cat-" + catElem.id} value={catElem.id}>{catElem.id}</option>
+                <option key={'cat-' + catElem.id} value={catElem.id}>
+                  {catElem.id}
+                </option>
               );
             })}
           </select>
           <AnimatePresence>
-            {formErrors.category !== "" && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }} transition={{ ease: "easeOut", duration: 0.2 }}>
+            {formErrors.category !== '' && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
                 <p className="input-error-text mt-1 text-danger">{formErrors.category}</p>
               </motion.div>
             )}
@@ -239,7 +237,7 @@ function AddMappointMenu({ coords }: AddMappointMenuProps) {
 
         <div
           className={`${
-            formErrors.address !== "" ? "mb-3" : ""
+            formErrors.address !== '' ? 'mb-3' : ''
           } w-full max-w-xs min-w-[220px] py-3 flex flex-col justify-center items-start flex-wrap xs:flex-nowrap xs:w-full xs:justify-center relative`}>
           <label htmlFor="add-pin-address" className="invisible w-0 h-0">
             Address
@@ -247,41 +245,38 @@ function AddMappointMenu({ coords }: AddMappointMenuProps) {
           <input
             type="text"
             className={`${
-              formErrors.address !== "" ? "border-danger" : "border-bright-seaweed hover:border-hovered-seaweed"
+              formErrors.address !== '' ? 'border-danger' : 'border-bright-seaweed hover:border-hovered-seaweed'
             } bg-transparent text-default-font border-b-2 border-solid w-full pt-2 pb-1 px-1 rounded-none appearance-none`}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, address: e.target.value })}
-            onClick={() => setFormErrors({ ...formErrors, address: "" })}
-            onFocus={() => setFormErrors({ ...formErrors, address: "" })}
+            onClick={() => setFormErrors({ ...formErrors, address: '' })}
+            onFocus={() => setFormErrors({ ...formErrors, address: '' })}
             placeholder="Address*"
             id="add-pin-address"
           />
           <AnimatePresence>
-            {formErrors.address !== "" && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }} transition={{ ease: "easeOut", duration: 0.2 }}>
+            {formErrors.address !== '' && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
                 <p className="input-error-text mt-1 text-danger">{formErrors.address}</p>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        <div
-          className="relative w-full min-w-[220px] max-w-xs flex flex-col flex-wrap justify-center items-start py-3 mt-2 xs:w-full xs:flex-nowrap xs:justify-center">
+        <div className="relative w-full min-w-[220px] max-w-xs flex flex-col flex-wrap justify-center items-start py-3 mt-2 xs:w-full xs:flex-nowrap xs:justify-center">
           <label htmlFor="add-pin-desc" className="invisible w-0 h-0">
             Description
           </label>
           <textarea
             placeholder="Description"
             rows={4}
-            className={`w-full max-h-40 p-1 text-default-font bg-transparent border-solid border-2 rounded-md appearance-none ${formErrors.description ? "border-danger" : "border-bright-seaweed"}`}
-            onClick={() => setFormErrors({ ...formErrors, description: "" })}
-            onFocus={() => setFormErrors({ ...formErrors, description: "" })}
+            className={`w-full max-h-40 p-1 text-default-font bg-transparent border-solid border-2 rounded-md appearance-none ${formErrors.description ? 'border-danger' : 'border-bright-seaweed'}`}
+            onClick={() => setFormErrors({ ...formErrors, description: '' })}
+            onFocus={() => setFormErrors({ ...formErrors, description: '' })}
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setFormData({ ...formData, desc: e.target.value })}
           />
           <AnimatePresence>
-            {formErrors.description !== "" && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }} transition={{ ease: "easeOut", duration: 0.2 }}>
+            {formErrors.description !== '' && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
                 <p className="input-error-text mt-1 text-danger">{formErrors.description}</p>
               </motion.div>
             )}
@@ -296,20 +291,18 @@ function AddMappointMenu({ coords }: AddMappointMenuProps) {
             multiple
             className="w-full text-white"
             onChange={(e: ChangeEvent<HTMLInputElement>) => handlePictureInputChange(e)}
-            onClick={() => setFormErrors({ ...formErrors, image: "" })}
+            onClick={() => setFormErrors({ ...formErrors, image: '' })}
           />
           <AnimatePresence>
-            {formErrors.image !== "" && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }} transition={{ ease: "easeOut", duration: 0.2 }}>
+            {formErrors.image !== '' && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
                 <p className="input-error-text mt-1 text-danger">{formErrors.image}</p>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        <div
-          className="relative w-full min-w-[220px] max-w-xs flex flex-col flex-wrap justify-center items-start py-3 mb-3 xs:w-full xs:flex-nowrap xs:justify-center">
+        <div className="relative w-full min-w-[220px] max-w-xs flex flex-col flex-wrap justify-center items-start py-3 mb-3 xs:w-full xs:flex-nowrap xs:justify-center">
           <h3 className="mb-1.5 text-lg text-white">Opening hours</h3>
           <label htmlFor="add-pin-oh-monday" className="invisible w-0 h-0">
             Monday
@@ -392,9 +385,8 @@ function AddMappointMenu({ coords }: AddMappointMenuProps) {
           />
         </div>
         <AnimatePresence>
-          {serverError !== "" && (
-            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }} transition={{ ease: "easeOut", duration: 0.2 }}>
+          {serverError !== '' && (
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }}>
               <p className="input-error-text mt-1 text-danger">{serverError}</p>
             </motion.div>
           )}
