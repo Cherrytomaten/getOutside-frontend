@@ -47,3 +47,7 @@
 - User can now add mappoints
 - map pin popup preview now shows an image
 - mappoints now have a slider if several images are present for that spot
+
+### v2.0.1
+- Typo fix on "Add Mappoint Popup"
+- Update password error message
