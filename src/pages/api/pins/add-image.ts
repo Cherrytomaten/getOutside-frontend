@@ -43,7 +43,7 @@ export default async function handler(_req: AddImageRequest, res: NextApiRespons
         },
       })
       .then((_res: any) => {
-        return res.status(200).end();
+        return res.status(201).end();
       })
       .catch((err: BackendErrorResponse) => {
         if (err.response?.data?.detail === undefined) {

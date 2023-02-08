@@ -50,7 +50,7 @@ export default async function handler(_req: AddMappointRequest, res: addMappoint
         },
       })
       .then((_res: AxiosResponse<{ uuid: string; }>) => {
-        return res.status(200).json(_res.data);
+        return res.status(201).json(_res.data);
       })
       .catch((err: BackendErrorResponse) => {
         if (err.response?.data?.detail === undefined) {
