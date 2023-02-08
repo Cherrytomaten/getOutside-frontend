@@ -52,5 +52,5 @@
 - Typo fix on "Add Mappoint Popup"
 - Update password error message
 
-### v2.0.1
+### v2.0.2
 - Adjust proxy api responses & status codes
