@@ -43,7 +43,7 @@ describe('check signup form process', () => {
 
     cy.get('#signup-btn-submit').click();
     cy.get('.input-error-text').its('length').should('eq', 1);
-    cy.get('.input-error-text').contains('The choosen password is too weak!');
+    cy.get('.input-error-text').contains('The chosen password is too weak!');
   });
 
   it('should notify the user if the passwords dont match', () => {
